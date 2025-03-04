@@ -1,57 +1,39 @@
-import Dashboard from '@/pages/dashboard.vue'
+import Dashboard from '@/views/dashboard/DashboardView.vue'
 
 export const routes = [
-  { path: '/', redirect: '/dashboard' },
+  { path: '/', redirect: '/Dashboard' },
   {
     path: '/',
     component: () => import('@/layouts/default.vue'),
     children: [
       {
-        path: 'dashboard',
+        path: '/Dashboard',
+        name:'Dashboard',
         component: Dashboard,
       },
       {
-        path: 'account-settings',
-        component: () => import('@/pages/account-settings.vue'),
-      },
-      {
-        path: 'typography',
-        component: () => import('@/pages/typography.vue'),
-      },
-      {
-        path: 'icons',
-        component: () => import('@/pages/icons.vue'),
-      },
-      {
-        path: 'cards',
-        component: () => import('@/pages/cards.vue'),
-      },
-      {
-        path: 'tables',
-        component: () => import('@/pages/tables.vue'),
-      },
-      {
-        path: 'form-layouts',
-        component: () => import('@/pages/form-layouts.vue'),
-      },
-      {
-        path: 'VerifyShahkar',
+        path: '/VerifyShahkar',
+        name:'VerifyShahkar',
         component: () => import('@/views/verify/VerifyShahkar.vue'),
       },
       {
-        path: 'VerifyCart',
+        path: '/VerifyCart',
+        name:'VerifyCart',
         component: () => import('@/views/verify/VerifyCart.vue'),
       },
       {
-        path: 'VerifyCredit',
+        path: '/VerifyCredit',
+        name:'VerifyCredit',
         component: () => import('@/views/verify/VerifyCredit.vue'),
       },
       {
-        path: 'VerifyPerson',
+        path: '/VerifyPerson',
+        name:'VerifyPerson',
         component: () => import('@/views/verify/VerifyPerson.vue'),
       },
       {
-        path: 'VerifyPostcode',
+        path: '/VerifyPostcode',
+        name:'VerifyPostcode',
         component: () => import('@/views/verify/VerifyPostcode.vue'),
       }
     ],
@@ -60,14 +42,6 @@ export const routes = [
     path: '/',
     component: () => import('@/layouts/blank.vue'),
     children: [
-      {
-        path: 'login',
-        component: () => import('@/pages/login.vue'),
-      },
-      {
-        path: 'register',
-        component: () => import('@/pages/register.vue'),
-      },
       {
         path: '/:pathMatch(.*)*',
         component: () => import('@/pages/[...error].vue'),
