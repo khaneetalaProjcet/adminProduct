@@ -1,3 +1,5 @@
+import Dashboard from '@/pages/dashboard.vue'
+
 export const routes = [
   { path: '/', redirect: '/dashboard' },
   {
@@ -6,7 +8,7 @@ export const routes = [
     children: [
       {
         path: 'dashboard',
-        component: () => import('@/pages/dashboard.vue'),
+        component: Dashboard,
       },
       {
         path: 'account-settings',
@@ -33,23 +35,23 @@ export const routes = [
         component: () => import('@/pages/form-layouts.vue'),
       },
       {
-        path:'VerifyShahkar',
+        path: 'VerifyShahkar',
         component: () => import('@/views/verify/VerifyShahkar.vue'),
       },
       {
-        path:'VerifyCart',
+        path: 'VerifyCart',
         component: () => import('@/views/verify/VerifyCart.vue'),
       },
       {
-        path:'VerifyCredit',
+        path: 'VerifyCredit',
         component: () => import('@/views/verify/VerifyCredit.vue'),
       },
       {
-        path:'VerifyPerson',
+        path: 'VerifyPerson',
         component: () => import('@/views/verify/VerifyPerson.vue'),
       },
       {
-        path:'VerifyPostcode',
+        path: 'VerifyPostcode',
         component: () => import('@/views/verify/VerifyPostcode.vue'),
       }
     ],
