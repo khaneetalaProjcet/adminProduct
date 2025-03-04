@@ -32,167 +32,71 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
       icon: 'ri-user-follow-line',
       href: '#',
       to: '/VerifyPerson'
-      // badgeContent: 'Pro',
-      // badgeClass: 'bg-light-primary text-primary',
     }" />
     <VerticalNavLink :item="{
       title: 'کارت به شبا',
       icon: 'ri-bank-card-line',
       href: '#',
       to: '/VerifyCart'
-      // badgeContent: 'Pro',
-      // badgeClass: 'bg-light-primary text-primary',
     }" />
     <VerticalNavLink :item="{
       title: 'تطبیق کد ملی',
       icon: 'ri-id-card-line',
       href: '#',
       to: '/VerifyPostcode'
-      // badgeContent: 'Pro',
-      // badgeClass: 'bg-light-primary text-primary',
     }" />
     <VerticalNavLink :item="{
       title: 'استعلام اعتبار',
       icon: 'ri-bank-line',
       href: '#',
       to: '/VerifyCredit'
-      // badgeContent: 'Pro',
-      // badgeClass: 'bg-light-primary text-primary',
+    }" />
+  </VerticalNavGroup>
+
+  <VerticalNavGroup :item="{
+    title: 'کاربران',
+    icon: 'ri-user-line',
+  }">
+    <VerticalNavLink :item="{
+      title: 'اطلاعات',
+      icon: 'ri-id-card-line',
+      href: '#',
+      to: '/userView'
     }" />
   </VerticalNavGroup>
 
 
   <VerticalNavSectionTitle :item="{
-    heading: 'آمار',
+    heading: 'مالی',
   }" />
 
-  <!-- <VerticalNavLink
-    :item="{
-      title: 'Account Settings',
-      icon: 'ri-user-settings-line',
-      to: '/account-settings',
-    }"
-  />
 
-  <VerticalNavLink
-    :item="{
-      title: 'Login',
-      icon: 'ri-login-box-line',
-      to: '/login',
-    }"
-  />
-  <VerticalNavLink
-    :item="{
-      title: 'Register',
-      icon: 'ri-user-add-line',
-      to: '/register',
-    }"
-  />
-  <VerticalNavLink
-    :item="{
-      title: 'Error',
-      icon: 'ri-information-line',
-      to: '/no-existence',
-    }"
-  />
+  <VerticalNavGroup :item="{
+    title: 'کیف پول',
+    icon: 'ri-wallet-3-line',
+  }">
+    <VerticalNavLink :item="{
+      title: 'کیف پول کاربران',
+      icon: 'ri-money-dollar-box-line',
+      href: '#',
+      to: '/walletView'
+    }" />
+  </VerticalNavGroup>
 
-  
-  <VerticalNavSectionTitle
-    :item="{
-      heading: 'User Interface',
-    }"
-  />
-  <VerticalNavLink
-    :item="{
-      title: 'Typography',
-      icon: 'ri-text',
-      to: '/typography',
-    }"
-  />
-  <VerticalNavLink
-    :item="{
-      title: 'Icons',
-      icon: 'ri-remixicon-line',
-      to: '/icons',
-    }"
-  />
-  <VerticalNavLink
-    :item="{
-      title: 'Cards',
-      icon: 'ri-bar-chart-box-line',
-      to: '/cards',
-    }"
-  />
 
-  <VerticalNavSectionTitle
-    :item="{
-      heading: 'Forms & Tables',
-    }"
-  />
-  <VerticalNavLink
-    :item="{
-      title: 'Form Layouts',
-      icon: 'ri-layout-4-line',
-      to: '/form-layouts',
-    }"
-  />
-  <VerticalNavLink
-    :item="{
-      title: 'Form Validation',
-      icon: 'ri-checkbox-multiple-line',
-      href: 'https://demos.themeselection.com/materio-vuetify-vuejs-admin-template/demo-1/forms/form-validation',
-      target: '_blank',
-      badgeContent: 'Pro',
-      badgeClass: 'bg-light-primary text-primary',
-    }"
-  />
-  <VerticalNavLink
-    :item="{
-      title: 'Form Wizard',
-      icon: 'ri-git-commit-line',
-      href: 'https://demos.themeselection.com/materio-vuetify-vuejs-admin-template/demo-1/forms/form-wizard-numbered',
-      target: '_blank',
-      badgeContent: 'Pro',
-      badgeClass: 'bg-light-primary text-primary',
-    }"
-  />
-  <VerticalNavLink
-    :item="{
-      title: 'Tables',
-      icon: 'ri-table-alt-line',
-      to: '/tables',
-    }"
-  />
+  <VerticalNavSectionTitle :item="{
+    heading: 'معاملات',
+  }" />
 
-  <VerticalNavSectionTitle
-    :item="{
-      heading: 'Others',
-    }"
-  />
-  <VerticalNavLink
-    :item="{
-      title: 'Access Control',
-      icon: 'ri-shield-line',
-      href: 'https://demos.themeselection.com/materio-vuetify-vuejs-admin-template/demo-1/access-control',
-      target: '_blank',
-      badgeContent: 'Pro',
-      badgeClass: 'bg-light-primary text-primary',
-    }"
-  />
-  <VerticalNavLink
-    :item="{
-      title: 'Documentation',
-      icon: 'ri-article-line',
-      href: 'https://demos.themeselection.com/materio-vuetify-vuejs-admin-template/documentation/',
-      target: '_blank',
-    }"
-  />
-  <VerticalNavLink
-    :item="{
-      title: 'Raise Support',
-      href: 'https://github.com/themeselection/materio-vuetify-vuejs-admin-template-free/issues',
-      icon: 'ri-lifebuoy-line',
-      target: '_blank',
-    }"
-  /> -->
+<VerticalNavGroup :item="{
+    title: 'صندوق طلا',
+    icon: 'ri-line-chart-line',
+  }">
+    <VerticalNavLink :item="{
+      title: 'معامله صندوق طلا',
+      icon: 'ri-pie-chart-line',
+      href: '#',
+      to: '/goldboxView'
+    }" />
+  </VerticalNavGroup>
 </template>

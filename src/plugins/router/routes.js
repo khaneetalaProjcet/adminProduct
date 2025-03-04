@@ -35,7 +35,27 @@ export const routes = [
         path: '/VerifyPostcode',
         name:'VerifyPostcode',
         component: () => import('@/views/verify/VerifyPostcode.vue'),
-      }
+      },
+      {
+        path: '/userView',
+        name:'userView',
+        component: () => import('@/views/users/userView.vue'),
+      },
+      {
+        path: '/goldboxView',
+        name:'goldboxView',
+        component: () => import('@/views/goldbox/goldboxView.vue'),
+      },
+      {
+        path: '/walletView',
+        name:'walletView',
+        component: () => import('@/views/wallet/walletView.vue'),
+      },
+      {
+        path: '/managmentView',
+        name:'managmentView',
+        component: () => import('@/views/managment/managmentView.vue'),
+      },
     ],
   },
   {
