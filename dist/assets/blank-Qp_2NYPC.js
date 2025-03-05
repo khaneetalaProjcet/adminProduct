@@ -1,1 +1,0 @@
-import{_ as o,c as t,b as a,o as c,q as n}from"./index-CTY7vsOC.js";const s={},r={class:"layout-wrapper layout-blank","data-allow-mismatch":""};function _(l,i){const e=n("RouterView");return c(),t("div",r,[a(e)])}const p=o(s,[["render",_]]);export{p as default};

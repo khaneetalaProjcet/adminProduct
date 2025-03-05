@@ -1,1 +1,0 @@
-import{_ as o,c as n,a as r,o as t}from"./index-CTY7vsOC.js";const s={};function a(c,e){return t(),n("div",null,e[0]||(e[0]=[r("h1",null,"goldbox",-1)]))}const d=o(s,[["render",a]]);export{d as default};
