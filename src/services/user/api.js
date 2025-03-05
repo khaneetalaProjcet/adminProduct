@@ -1,8 +1,8 @@
 import axios from "axios";
 
 
-const VerifyTemplate = axios.create({
-    baseURL: "https://gateway.khaneetala.ir/v1",
+const UserTemplate = axios.create({
+    baseURL: "https://khaneetala.ir/api",
     timeout: 10000,
     headers: {
         "Content-Type": "application/json",
@@ -12,7 +12,7 @@ const VerifyTemplate = axios.create({
 
 
 // before request
-VerifyTemplate.interceptors.request.use(
+UserTemplate.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -27,7 +27,7 @@ VerifyTemplate.interceptors.request.use(
 
 
 // before response
-VerifyTemplate.interceptors.response.use(
+UserTemplate.interceptors.response.use(
     (response) => {
         return response;
     },
@@ -38,4 +38,4 @@ VerifyTemplate.interceptors.response.use(
     }
 );
 
-export default VerifyTemplate;
+export default UserTemplate;

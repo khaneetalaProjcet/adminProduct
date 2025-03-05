@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>wallet</h1>
+        <p>در حال تکمیل ...</p>
     </div>
 </template>
 

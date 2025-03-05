@@ -21,7 +21,6 @@
 
 <script setup>
 import { ref } from 'vue';
-import AuthService from '@/services/verify/verify';
 
 
 const credentials = ref({ number: "", date: "" });
@@ -29,12 +28,7 @@ const errormessage = ref(null);
 
 
 const verifyShahkar = async () => {
-    try {
-        const user = await AuthService.Shahkar(credentials.value);
-        console.log(user);
-    } catch (err) {
-        errormessage.value = "faild"
-    }
+
 }
 
 
