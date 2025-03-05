@@ -64,56 +64,56 @@
 </template>
 
 <script setup>
-import { Bar } from 'vue-chartjs'
-import {
-  Chart as ChartJS,
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-} from 'chart.js'
+// import { Bar } from 'vue-chartjs'
+// import {
+//   Chart as ChartJS,
+//   Title,
+//   Tooltip,
+//   Legend,
+//   BarElement,
+//   CategoryScale,
+//   LinearScale
+// } from 'chart.js'
 
-// ثبت کردن ماژول‌های موردنیاز Chart.js
-ChartJS.register(
-  Title,
-  Tooltip,
-  Legend,
-  BarElement,
-  CategoryScale,
-  LinearScale
-)
+// // ثبت کردن ماژول‌های موردنیاز Chart.js
+// ChartJS.register(
+//   Title,
+//   Tooltip,
+//   Legend,
+//   BarElement,
+//   CategoryScale,
+//   LinearScale
+// )
 
-ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement, PointElement, LineElement)
-const chartData = ref({
-  labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'],
-  datasets: [{ data: [40, 20, 12, 50, 96, 12, 8, 70, 59, 63, 48, 50], backgroundColor: '#00603A', }],
-})
-let delayed;
-const chartOptions = ref({
-  responsive: true,
-  animation: {
-    onComplete: () => {
-      delayed = true;
-    },
-    delay: (context) => {
-      let delay = 0;
-      if (context.type === 'data' && context.mode === 'default' && !delayed) {
-        delay = context.dataIndex * 300 + context.datasetIndex * 100;
-      }
-      return delay;
-    },
-  },
-  scales: {
-    x: {
-      stacked: true,
-    },
-    y: {
-      stacked: true
-    }
-  }
-})
+// ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement, PointElement, LineElement)
+// const chartData = ref({
+//   labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'],
+//   datasets: [{ data: [40, 20, 12, 50, 96, 12, 8, 70, 59, 63, 48, 50], backgroundColor: '#00603A', }],
+// })
+// let delayed;
+// const chartOptions = ref({
+//   responsive: true,
+//   animation: {
+//     onComplete: () => {
+//       delayed = true;
+//     },
+//     delay: (context) => {
+//       let delay = 0;
+//       if (context.type === 'data' && context.mode === 'default' && !delayed) {
+//         delay = context.dataIndex * 300 + context.datasetIndex * 100;
+//       }
+//       return delay;
+//     },
+//   },
+//   scales: {
+//     x: {
+//       stacked: true,
+//     },
+//     y: {
+//       stacked: true
+//     }
+//   }
+// })
 
 
 </script>
