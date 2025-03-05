@@ -7,15 +7,18 @@
         </div>
         <div class="my-2 d-flex justify-space-between align-center w-100">
           <p>کاربران احراز شده</p>
-          <p>2,500 نفر</p>
+          <v-progress-circular color="#d4af37" indeterminate :size="20" v-if="DahboardLoading"></v-progress-circular>
+          <p v-else>{{ Statistics.successUsers }} نفر</p>
         </div>
         <div class="my-2 d-flex justify-space-between align-center">
           <p>کاربران در انتظار</p>
-          <p>2,500 نفر</p>
+          <v-progress-circular color="#d4af37" indeterminate :size="20" v-if="DahboardLoading"></v-progress-circular>
+          <p v-else>{{ Statistics.failedUsers }} نفر</p>
         </div>
         <div class="my-2 d-flex justify-space-between align-center total">
           <p>همه کاربران</p>
-          <p>2,500 نفر</p>
+          <v-progress-circular color="#d4af37" indeterminate :size="20" v-if="DahboardLoading"></v-progress-circular>
+          <p v-else>{{ Statistics.allUsers }} نفر</p>
         </div>
       </div>
     </v-col>
@@ -26,15 +29,18 @@
         </div>
         <div class="my-2 d-flex justify-space-between align-center w-100">
           <p>معاملات موفق</p>
-          <p>14,000 معامله</p>
+          <v-progress-circular color="#d4af37" indeterminate :size="20" v-if="DahboardLoading"></v-progress-circular>
+          <p v-else>{{ Statistics.completeTransactions }} معامله</p>
         </div>
         <div class="my-2 d-flex justify-space-between align-center">
           <p>معاملات نامشخص</p>
-          <p>2,500 معامله</p>
+          <v-progress-circular color="#d4af37" indeterminate :size="20" v-if="DahboardLoading"></v-progress-circular>
+          <p v-else>{{ Statistics.pendingsTransactions }} معامله</p>
         </div>
         <div class="my-2 d-flex justify-space-between align-center total">
           <p>معاملات ناموفق</p>
-          <p>2,000 معامله</p>
+          <v-progress-circular color="#d4af37" indeterminate :size="20" v-if="DahboardLoading"></v-progress-circular>
+          <p v-else>{{ Statistics.failedTransactions }} معامله</p>
         </div>
       </div>
     </v-col>
@@ -45,25 +51,88 @@
         </div>
         <div class="my-2 d-flex justify-space-between align-center w-100">
           <p>طلای خریداری شده</p>
-          <p>2485 گرم</p>
+          <v-progress-circular color="#d4af37" indeterminate :size="20" v-if="DahboardLoading"></v-progress-circular>
+          <p v-else>{{ Statistics.allBuy }} گرم</p>
         </div>
         <div class="my-2 d-flex justify-space-between align-center">
           <p>طلای فروخته شده</p>
-          <p>1850 گرم</p>
+          <v-progress-circular color="#d4af37" indeterminate :size="20" v-if="DahboardLoading"></v-progress-circular>
+          <p v-else>{{ Statistics.allSell }} گرم</p>
         </div>
         <div class="my-2 d-flex justify-space-between align-center total">
           <p>مجموع طلای معامله شده</p>
-          <p>20000 گرم</p>
+          <v-progress-circular color="#d4af37" indeterminate :size="20" v-if="DahboardLoading"></v-progress-circular>
+          <p v-else>{{ Statistics.allWeight }} گرم</p>
         </div>
       </div>
     </v-col>
     <v-col cols="12">
-      <Bar id="my-chart-id" :options="chartOptions" :data="chartData" />
+      <!-- <Bar id="my-chart-id" :options="chartOptions" :data="chartData" /> -->
     </v-col>
   </v-row>
+  <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
+    {{ errorMsg }}
+  </v-alert>
 </template>
 
 <script setup>
+import DashboardService from '@/services/dashboard/dashboard';
+import { onMounted, ref } from 'vue';
+
+
+const DahboardLoading = ref(false);
+const Statistics = ref({
+  successUsers: '-',
+  failedUsers: '-',
+  allUsers: '-',
+  pendingsTransactions: '-',
+  failedTransactions: '-',
+  completeTransactions: '-',
+  allTransActions: '-',
+  allBuy: '-',
+  allSell: '-',
+  allWeight: '-',
+  buyChart: {},
+})
+const errorMsg = ref('');
+const alertError = ref(false);
+
+const GetStatistics = async () => {
+  try {
+    DahboardLoading.value = true;
+    const response = await DashboardService.Dashboard();
+    Statistics.value.allBuy = response.data.allBuy;
+    Statistics.value.allSell = response.data.allSell;
+    Statistics.value.allTransActions = response.data.allTransActions;
+    Statistics.value.allUsers = response.data.allUsers;
+    Statistics.value.allWeight = response.data.allWeight;
+    Statistics.value.completeTransactions = response.data.completeTransactions;
+    Statistics.value.failedTransactions = response.data.failedTransactions;
+    Statistics.value.failedUsers = response.data.failedUsers;
+    Statistics.value.pendingsTransactions = response.data.pendingsTransactions;
+    Statistics.value.successUsers = response.data.successUsers;
+    Statistics.value.buyChart = response.data.buyChart;
+    return response
+  } catch (error) {
+    errorMsg.value = error.response.data.msg || 'خطایی رخ داده است!';
+    alertError.value = true;
+    setTimeout(() => {
+      alertError.value = false;
+    }, 10000)
+  } finally {
+    DahboardLoading.value = false;
+  }
+}
+
+
+
+onMounted(() => {
+  GetStatistics();
+})
+
+
+
+
 // import { Bar } from 'vue-chartjs'
 // import {
 //   Chart as ChartJS,
@@ -146,5 +215,13 @@
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.k-alert {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 12px;
+  padding: 2px !important;
 }
 </style>
