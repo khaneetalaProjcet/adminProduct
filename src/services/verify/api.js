@@ -2,7 +2,7 @@ import axios from "axios";
 
 
 const VerifyTemplate = axios.create({
-    baseURL: "https://jsonplaceholder.typicode.com/",
+    baseURL: "https://gateway.khaneetala.ir/v1/admin",
     timeout: 10000,
     headers: {
         "Content-Type": "application/json",

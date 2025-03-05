@@ -6,6 +6,7 @@ import { registerPlugins } from '@core/utils/plugins'
 import '@core/scss/template/index.scss'
 import '@layouts/styles/index.scss'
 import "@/assets/styles/main.css"
+import "@/assets/styles/index.css"
 
 // Create vue app
 const app = createApp(App)
