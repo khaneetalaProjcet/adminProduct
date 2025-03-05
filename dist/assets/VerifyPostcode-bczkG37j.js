@@ -1,1 +1,0 @@
-import{_ as t,a as o,b as r,o as s}from"./index-B-tdYEh_.js";const n={};function a(c,e){return s(),o("div",null,e[0]||(e[0]=[r("h1",null,"test",-1)]))}const f=t(n,[["render",a]]);export{f as default};

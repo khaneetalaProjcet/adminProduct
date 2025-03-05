@@ -1,1 +1,0 @@
-import{_ as o,a as n,b as r,o as t}from"./index-B-tdYEh_.js";const s={};function a(l,e){return t(),n("div",null,e[0]||(e[0]=[r("h1",null,"goldbox",-1)]))}const d=o(s,[["render",a]]);export{d as default};

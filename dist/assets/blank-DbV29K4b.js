@@ -1,1 +1,0 @@
-import{_ as o,a as t,d as a,o as s,s as c}from"./index-B-tdYEh_.js";const n={},r={class:"layout-wrapper layout-blank","data-allow-mismatch":""};function _(l,d){const e=c("RouterView");return s(),t("div",r,[a(e)])}const m=o(n,[["render",_]]);export{m as default};

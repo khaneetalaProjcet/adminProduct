@@ -1,152 +1,153 @@
 <template>
-  <v-row>
-    <v-col>
-      <v-tabs v-model="tab" align-tabs="center">
-        <v-tab value="one">کاربران احراز شده</v-tab>
-        <v-tab value="two">کاربران درانتظار احراز</v-tab>
-      </v-tabs>
-    </v-col>
-    <v-col cols="12">
-      <v-card-text>
-        <v-tabs-window v-model="tab">
-          <v-tabs-window-item value="one">
-            <v-card title="کاربران احراز هویت شده">
-              <template v-slot:text>
-                <v-text-field v-model="search" label="جستجو" prepend-inner-icon="ri-search-line"></v-text-field>
-              </template>
-
-              <v-data-table :headers="userHeader" :items="userData" :search="search" :loading="userLoading">
-                <template v-slot:item.wallet.balance="{ item }">
-                  <p>{{ formatNumber(item.wallet.balance) }}</p>
+  <div>
+    <v-row>
+      <v-col>
+        <v-tabs v-model="tab" align-tabs="center">
+          <v-tab value="one">کاربران احراز شده</v-tab>
+          <v-tab value="two">کاربران درانتظار احراز</v-tab>
+        </v-tabs>
+      </v-col>
+      <v-col cols="12">
+        <v-card-text>
+          <v-tabs-window v-model="tab">
+            <v-tabs-window-item value="one">
+              <v-card title="کاربران احراز هویت شده">
+                <template v-slot:text>
+                  <v-text-field v-model="search" label="جستجو" prepend-inner-icon="ri-search-line"></v-text-field>
                 </template>
-                <template v-slot:item.action="{ item }">
-                  <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
-                    @click="userInfo(item)"></v-icon>
+
+                <v-data-table :headers="userHeader" :items="userData" :search="search" :loading="userLoading">
+                  <template v-slot:item.wallet.balance="{ item }">
+                    <p>{{ formatNumber(item.wallet.balance) }}</p>
+                  </template>
+                  <template v-slot:item.action="{ item }">
+                    <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
+                      @click="userInfo(item)"></v-icon>
+                  </template>
+                </v-data-table>
+              </v-card>
+            </v-tabs-window-item>
+
+            <v-tabs-window-item value="two">
+              <v-card title="کاربران در انتظار احراز">
+                <template v-slot:text>
+                  <v-text-field v-model="OldSearch" label="جستجو" prepend-inner-icon="ri-search-line"></v-text-field>
                 </template>
-              </v-data-table>
-            </v-card>
-          </v-tabs-window-item>
+                <v-data-table :headers="OldUserHeader" :items="OldUser" :search="OldSearch" :loading="userLoading">
+                  <template v-slot:item.wallet.balance="{ item }">
+                    <p>{{ formatNumber(item.wallet.balance) }}</p>
+                  </template>
+                  <template v-slot:item.action="{ item }">
+                    <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
+                      @click="userInfo(item)"></v-icon>
+                    <v-icon class="me-2" size="small" icon="ri-user-follow-line" color="#008000"
+                      @click="VerifyUser(item)"></v-icon>
+                  </template>
+                </v-data-table>
+              </v-card>
+            </v-tabs-window-item>
+          </v-tabs-window>
+        </v-card-text>
+      </v-col>
+    </v-row>
 
-          <v-tabs-window-item value="two">
-            <v-card title="کاربران در انتظار احراز">
-              <template v-slot:text>
-                <v-text-field v-model="OldSearch" label="جستجو" prepend-inner-icon="ri-search-line"></v-text-field>
-              </template>
-              <v-data-table :headers="OldUserHeader" :items="OldUser" :search="OldSearch" :loading="userLoading">
-                <template v-slot:item.wallet.balance="{ item }">
-                  <p>{{ formatNumber(item.wallet.balance) }}</p>
-                </template>
-                <template v-slot:item.action="{ item }">
-                  <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
-                    @click="userInfo(item)"></v-icon>
-                  <v-icon class="me-2" size="small" icon="ri-user-follow-line" color="#008000"
-                    @click="VerifyUser(item)"></v-icon>
-                </template>
-              </v-data-table>
-            </v-card>
-          </v-tabs-window-item>
-        </v-tabs-window>
-      </v-card-text>
-    </v-col>
-  </v-row>
-  <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
-    {{ errorMsg }}
-  </v-alert>
-
-  <!-- user info modal -->
-  <v-dialog v-model="UserInfoDialog" max-width="500" class="dialog">
-    <v-card class="dialog-card">
-      <div class="k-dialog-title">
-        <p>اطلاعات کاربران</p>
-      </div>
-      <div class="d-flex flex-column flex-md-row justify-space-between w-100 px-4 py-8 user-dialog-info">
-        <div class="d-flex flex-column w-100 px-4">
-          <div class="d-flex align-items-center my-2">
-            <p>نام: </p>
-            <p class="mx-2">{{ UserInfo.firstName }}</p>
-          </div>
-          <div class="d-flex align-items-center my-2">
-            <p>نام خانوادگی: </p>
-            <p class="mx-2">{{ UserInfo.lastName }}</p>
-          </div>
-          <div class="d-flex align-items-center my-2">
-            <p>نام پدر: </p>
-            <p class="mx-2">{{ UserInfo.fatherName }}</p>
-          </div>
-          <div class="d-flex align-items-center my-2 user-price">
-            <p>موجودی کیف پول: </p>
-            <p class="mx-2">{{ formatNumber(UserInfo.wallet.balance) }} ریال</p>
-          </div>
-        </div>
-        <div class="d-flex flex-column w-100 px-4">
-          <div class="d-flex align-items-center my-2">
-            <p>تاریخ تولد: </p>
-            <p class="mx-2">{{ UserInfo.birthDate }}</p>
-          </div>
-          <div class="d-flex align-items-center my-2">
-            <p>کد ملی: </p>
-            <p class="mx-2">{{ UserInfo.nationalCode }}</p>
-          </div>
-          <div class="d-flex align-items-center my-2">
-            <p>شماره همراه: </p>
-            <p class="mx-2">{{ UserInfo.phoneNumber }}</p>
-          </div>
-          <div class="d-flex align-items-center my-2 user-price">
-            <p>موجودی طلا: </p>
-            <p class="mx-2">{{ UserInfo.wallet.goldWeight }} گرم</p>
-          </div>
-        </div>
-      </div>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-
-        <v-btn text="بستن" @click="UserInfoDialog = false" size="large" class="m-3"></v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
-
-
-  <!-- verify user -->
-  <v-dialog v-model="VerifyDialog" max-width="500" class="dialog" persistent>
-    <v-form ref="form" @submit.prevent="sumbitVerify(item)">
+    <!-- user info modal -->
+    <v-dialog v-model="UserInfoDialog" max-width="500" class="dialog">
       <v-card class="dialog-card">
         <div class="k-dialog-title">
-          <p>احراز هویت</p>
+          <p>اطلاعات کاربران</p>
         </div>
-        <v-row class="my-5">
-          <v-col cols="12" md="6" class="my-3">
-            <v-text-field v-model="VerifyInfo.phoneNumber" label="شماره همراه" :rules="phoneRules"
-              @input="limitInput"></v-text-field>
-          </v-col>
-          <v-col cols="12" md="6" class="my-3">
-            <v-text-field v-model="VerifyInfo.nationalCode" label="کد ملی" :rules="nationalCodeRules"
-              @input="validateNationalCode"></v-text-field>
-          </v-col>
-          <v-col cols="12" md="4" class="my-3">
-            <v-select v-model="selectedDate" label="روز تولد" :items="persianDates" variant="outlined" item-title="name"
-              item-value="value" @update:model-value="onDateSelected" class="first-select"
-              :rules="[v => !!v || 'روز الزامی است']"></v-select>
-          </v-col>
-          <v-col cols="12" md="4" class="my-3">
-            <v-select v-model="selectedMonth" label="ماه تولد" :items="persianMonths" variant="outlined"
-              class="second-select" item-title="name" item-value="value" @update:model-value="onMonthSelected"
-              :rules="[v => !!v || 'ماه الزامی است']"></v-select>
-          </v-col>
-          <v-col cols="12" md="4" class="my-3">
-            <v-select v-model="selectedYear" label="سال تولد" :items="persianYears" variant="outlined"
-              class="third-select" item-title="name" item-value="value" @update:model-value="onYearSelected"
-              :rules="[v => !!v || 'سال الزامی است']"></v-select>
-          </v-col>
-        </v-row>
+        <div class="d-flex flex-column flex-md-row justify-space-between w-100 px-4 py-8 user-dialog-info">
+          <div class="d-flex flex-column w-100 px-4">
+            <div class="d-flex align-items-center my-2">
+              <p>نام: </p>
+              <p class="mx-2">{{ UserInfo.firstName }}</p>
+            </div>
+            <div class="d-flex align-items-center my-2">
+              <p>نام خانوادگی: </p>
+              <p class="mx-2">{{ UserInfo.lastName }}</p>
+            </div>
+            <div class="d-flex align-items-center my-2">
+              <p>نام پدر: </p>
+              <p class="mx-2">{{ UserInfo.fatherName }}</p>
+            </div>
+            <div class="d-flex align-items-center my-2 user-price">
+              <p>موجودی کیف پول: </p>
+              <p class="mx-2">{{ formatNumber(UserInfo.wallet.balance) }} ریال</p>
+            </div>
+          </div>
+          <div class="d-flex flex-column w-100 px-4">
+            <div class="d-flex align-items-center my-2">
+              <p>تاریخ تولد: </p>
+              <p class="mx-2">{{ UserInfo.birthDate }}</p>
+            </div>
+            <div class="d-flex align-items-center my-2">
+              <p>کد ملی: </p>
+              <p class="mx-2">{{ UserInfo.nationalCode }}</p>
+            </div>
+            <div class="d-flex align-items-center my-2">
+              <p>شماره همراه: </p>
+              <p class="mx-2">{{ UserInfo.phoneNumber }}</p>
+            </div>
+            <div class="d-flex align-items-center my-2 user-price">
+              <p>موجودی طلا: </p>
+              <p class="mx-2">{{ UserInfo.wallet.goldWeight }} گرم</p>
+            </div>
+          </div>
+        </div>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn text="بستن" @click="VerifyDialog = false" size="large" class="m-3"></v-btn>
-          <v-btn type="submit" size="large" class="m-3" variant="tonal" text="ثبت" :loading="verifyLoading"></v-btn>
+
+          <v-btn text="بستن" @click="UserInfoDialog = false" size="large" class="m-3"></v-btn>
         </v-card-actions>
       </v-card>
-    </v-form>
-  </v-dialog>
+    </v-dialog>
 
+
+    <!-- verify user -->
+    <v-dialog v-model="VerifyDialog" max-width="500" class="dialog" persistent>
+      <v-form ref="form" @submit.prevent="sumbitVerify(item)">
+        <v-card class="dialog-card">
+          <div class="k-dialog-title">
+            <p>احراز هویت</p>
+          </div>
+          <v-row class="my-5">
+            <v-col cols="12" md="6" class="my-3">
+              <v-text-field v-model="VerifyInfo.phoneNumber" label="شماره همراه" :rules="phoneRules"
+                @input="limitInput"></v-text-field>
+            </v-col>
+            <v-col cols="12" md="6" class="my-3">
+              <v-text-field v-model="VerifyInfo.nationalCode" label="کد ملی" :rules="nationalCodeRules"
+                @input="validateNationalCode"></v-text-field>
+            </v-col>
+            <v-col cols="12" md="4" class="my-3">
+              <v-select v-model="selectedDate" label="روز تولد" :items="persianDates" variant="outlined"
+                item-title="name" item-value="value" @update:model-value="onDateSelected" class="first-select"
+                :rules="[v => !!v || 'روز الزامی است']"></v-select>
+            </v-col>
+            <v-col cols="12" md="4" class="my-3">
+              <v-select v-model="selectedMonth" label="ماه تولد" :items="persianMonths" variant="outlined"
+                class="second-select" item-title="name" item-value="value" @update:model-value="onMonthSelected"
+                :rules="[v => !!v || 'ماه الزامی است']"></v-select>
+            </v-col>
+            <v-col cols="12" md="4" class="my-3">
+              <v-select v-model="selectedYear" label="سال تولد" :items="persianYears" variant="outlined"
+                class="third-select" item-title="name" item-value="value" @update:model-value="onYearSelected"
+                :rules="[v => !!v || 'سال الزامی است']"></v-select>
+            </v-col>
+          </v-row>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn text="بستن" @click="VerifyDialog = false" size="large" class="m-3"></v-btn>
+            <v-btn type="submit" size="large" class="m-3" variant="tonal" text="ثبت" :loading="verifyLoading"></v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-form>
+    </v-dialog>
+    <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
+      {{ errorMsg }}
+    </v-alert>
+  </div>
 </template>
 
 <script setup>
@@ -399,7 +400,7 @@ const Getuser = async () => {
     userData.value = response.data;
     return response
   } catch (error) {
-    errorMsg.value = error.response.data.msg || 'خطایی رخ داده است!';
+    errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
     alertError.value = true;
     setTimeout(() => {
       alertError.value = false;
@@ -416,7 +417,7 @@ const GetOldUser = async () => {
     OldUser.value = response.data;
     return response
   } catch (error) {
-    errorMsg.value = error.response.data.msg || 'خطایی رخ داده است!';
+    errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
     alertError.value = true;
     setTimeout(() => {
       alertError.value = false;
@@ -451,8 +452,9 @@ const sumbitVerify = async () => {
     Getuser();
     return response
   } catch (error) {
-    errorMsg.value = error.response.data.msg || 'خطایی رخ داده است!';
+    errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
     alertError.value = true;
+    console.log(alertError.value)
     setTimeout(() => {
       alertError.value = false;
     }, 10000)
@@ -522,10 +524,11 @@ onMounted(() => {
 <style scoped>
 .k-alert {
   position: absolute;
-  bottom: 10px;
-  right: 10px;
+  top: 10px;
+  left: 40%;
   font-size: 12px;
-  padding: 2px !important;
+  padding: 10px !important;
+  z-index: 10000;
 }
 
 .user-price {
