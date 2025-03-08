@@ -1,1 +1,0 @@
-import{_ as o,c as n,a as r,o as t}from"./index-Ugykp8v-.js";const s={};function a(c,e){return t(),n("div",null,e[0]||(e[0]=[r("p",null,"در حال تکمیل ...",-1)]))}const _=o(s,[["render",a]]);export{_ as default};
