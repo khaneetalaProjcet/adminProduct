@@ -81,7 +81,7 @@
                                 <v-col cols="6" md="3" class="my-3">
                                     <div class="content">
                                         <p class="title red">در انتظار برداشت: </p>
-                                        <p class="desc">{{ walletDetail.blocked }}</p>
+                                        <p class="desc">{{ formatNumber(walletDetail.blocked) }} ریال</p>
                                     </div>
                                 </v-col>
                                 <v-divider class="my-10"></v-divider>

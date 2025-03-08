@@ -81,6 +81,18 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
       href: '#',
       to: '/walletView'
     }" />
+    <VerticalNavLink :item="{
+      title: 'برداشت',
+      icon: 'ri-bar-chart-box-line',
+      href: '#',
+      to: '/withdrawWallet'
+    }" />
+    <VerticalNavLink :item="{
+      title: 'واریز',
+      icon: 'ri-refund-2-line',
+      href: '#',
+      to: '/depositWallet'
+    }" />
   </VerticalNavGroup>
 
 
@@ -88,7 +100,7 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     heading: 'معاملات',
   }" />
 
-<VerticalNavGroup :item="{
+  <VerticalNavGroup :item="{
     title: 'صندوق طلا',
     icon: 'ri-line-chart-line',
   }">

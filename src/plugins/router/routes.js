@@ -61,6 +61,18 @@ export const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: '/withdrawWallet',
+        name: 'withdrawWallet',
+        component: () => import('@/views/wallet/withdrawWalletView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/depositWallet',
+        name: 'depositWallet',
+        component: () => import('@/views/wallet/depositWalletView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: '/managmentView',
         name: 'managmentView',
         component: () => import('@/views/managment/managmentView.vue'),
