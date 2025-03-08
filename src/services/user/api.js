@@ -21,6 +21,11 @@ UserTemplate.interceptors.request.use(
         return config;
     },
     (error) => {
+        if (error.response.status == 401) {
+            console.log('log out', error)
+            localStorage.removeItem("token");
+            router.push('/login')
+        }
         return Promise.reject(error);
     }
 );
