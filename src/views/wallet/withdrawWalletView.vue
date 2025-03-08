@@ -35,7 +35,32 @@
                                 </v-data-table>
                             </v-card>
                         </v-tabs-window-item>
-                        <v-tabs-window-item value="two"></v-tabs-window-item>
+                        <v-tabs-window-item value="two">
+                            <v-card title="برداشت از کیف پول">
+                                <template v-slot:text>
+                                    <v-text-field v-model="CompleteWithdrawSearch" label="جستجو"
+                                        prepend-inner-icon="ri-search-line"></v-text-field>
+                                </template>
+                                <v-data-table :headers="CompleteWithdrawHeader" :items="CompleteWithdrawData"
+                                    :search="CompleteWithdrawSearch" :loading="CompleteWithdrawLoading">
+                                    <template v-slot:item.amount="{ item }">
+                                        <p>{{ formatNumber(item.amount) }}</p>
+                                    </template>
+                                    <template v-slot:item.status="{ item }">
+                                        <div>
+                                            <v-chip
+                                                :text="item.status == 'completed' ? 'پرداخت شده' : 'در انتظار پرداخت'"
+                                                :color="item.status == 'completed' ? '#00853f' : '#66666'"
+                                                size="small"></v-chip>
+                                        </div>
+                                    </template>
+                                    <!-- <template v-slot:item.action="{ item }">
+                                        <v-icon class="me-2" size="small" icon="ri-refund-2-line" color="#d4af37"
+                                            @click="CompleteWithdrawInfo(item)"></v-icon>
+                                    </template> -->
+                                </v-data-table>
+                            </v-card>
+                        </v-tabs-window-item>
                     </v-tabs-window>
                 </v-card-text>
             </v-col>
@@ -73,9 +98,10 @@
                 </div>
                 <div class="form-box">
                     <v-form ref="form" v-model="isValid" @submit.prevent="submitWithdraw">
-                        <v-text-field v-model="withdrawalId" label="شناسه پرداخت" :rules="withdrawalIdRule"
-                            @input="limitInput" class="my-2"></v-text-field>
-                        <v-btn type="submit" :disabled="!isValid" size="large" class="my-2" block>ثبت</v-btn>
+                        <v-text-field v-model="withdrawalDetail.withdrawalId" label="شناسه پرداخت"
+                            :rules="withdrawalIdRule" @input="limitInput" class="my-2"></v-text-field>
+                        <v-btn type="submit" :disabled="!isValid" size="large" class="my-2"
+                            :loading="WithdrawSubmitLoading" block>ثبت</v-btn>
                     </v-form>
                 </div>
                 <v-card-actions>
@@ -102,6 +128,7 @@ import { onMounted, ref } from 'vue';
 const errorMsg = ref('');
 const alertError = ref(false);
 const PendingWithdrawLoading = ref(false);
+const WithdrawSubmitLoading = ref(false);
 const tab = ref(null);
 const isValid = ref(false);
 const PendingWithdrawHeader = ref([
@@ -136,9 +163,50 @@ const PendingWithdrawHeader = ref([
 ]);
 const PendingWithdrawSearch = ref();
 const PendingWithdrawData = ref();
+const CompleteWithdrawSearch = ref();
+const CompleteWithdrawHeader = ref([
+    {
+        title: 'نام',
+        key: 'wallet.user.firstName',
+    },
+    {
+        title: 'نام خانوادگی',
+        key: 'wallet.user.lastName',
+    },
+    {
+        title: 'مبلغ (ریال)',
+        key: 'amount',
+    },
+    {
+        title: 'تاریخ',
+        key: 'date',
+    },
+    {
+        title: 'زمان',
+        key: 'time',
+    },
+    {
+        title: 'وضعیت',
+        key: 'status'
+    },
+    {
+        title: 'شناسه پرداخت',
+        key: 'withdrawalId'
+    },
+    // {
+    //     title: 'فعالیت',
+    //     key: 'action'
+    // }
+]);
+const CompleteWithdrawData = ref();
+const CompleteWithdrawLoading = ref();
 const WithdrawDetail = ref();
 const WithdrawDialog = ref(false);
-const withdrawalId = ref('');
+const withdrawalDetail = ref({
+    withdrawalId: '',
+    id: '',
+})
+
 const GetPendingWithdrawList = async () => {
     try {
         PendingWithdrawLoading.value = true;
@@ -156,6 +224,23 @@ const GetPendingWithdrawList = async () => {
     }
 };
 
+const GetCompleteWithdrawList = async () => {
+    try {
+        CompleteWithdrawLoading.value = true;
+        const response = await WalletService.CompleteWithdraw();
+        CompleteWithdrawData.value = response.data;
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        CompleteWithdrawLoading.value = false;
+    }
+};
+
 const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
@@ -163,6 +248,7 @@ const formatNumber = (num) => {
 const PendingWithdrawInfo = (item) => {
     WithdrawDialog.value = true;
     WithdrawDetail.value = item;
+    withdrawalDetail.value.id = item.id;
 }
 
 const withdrawalIdRule = [
@@ -170,15 +256,31 @@ const withdrawalIdRule = [
 ];
 
 const limitInput = () => {
-  withdrawalId.value = withdrawalId.value.replace(/\D/g, '');
+    withdrawalDetail.value.withdrawalId = withdrawalDetail.value.withdrawalId.replace(/\D/g, '');
 }
 
-const submitWithdraw = () => {
-
+const submitWithdraw = async () => {
+    try {
+        WithdrawSubmitLoading.value = true;
+        const response = await WalletService.SubmitWithdraw(withdrawalDetail.value);
+        GetPendingWithdrawList();
+        GetCompleteWithdrawList();
+        WithdrawDialog.value = false;
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        WithdrawSubmitLoading.value = false;
+    }
 }
 
 onMounted(() => {
     GetPendingWithdrawList();
+    GetCompleteWithdrawList();
 })
 
 
@@ -214,7 +316,7 @@ onMounted(() => {
     font-size: 14px;
 }
 
-.form-box{
+.form-box {
     width: 100%;
     padding: 2rem;
 }
