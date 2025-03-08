@@ -119,57 +119,6 @@
                 </v-dialog>
             </div>
         </template>
-
-        <!-- user info modal -->
-        <!-- <v-dialog v-model="UserInfoDialog" max-width="500" class="dialog">
-            <v-card class="dialog-card">
-                <div class="k-dialog-title">
-                    <p>اطلاعات کاربران</p>
-                </div>
-                <div class="d-flex flex-column flex-md-row justify-space-between w-100 px-4 py-8 user-dialog-info">
-                    <div class="d-flex flex-column w-100 px-4">
-                        <div class="d-flex align-items-center my-2">
-                            <p>نام: </p>
-                            <p class="mx-2">{{ UserInfo.firstName }}</p>
-                        </div>
-                        <div class="d-flex align-items-center my-2">
-                            <p>نام خانوادگی: </p>
-                            <p class="mx-2">{{ UserInfo.lastName }}</p>
-                        </div>
-                        <div class="d-flex align-items-center my-2">
-                            <p>نام پدر: </p>
-                            <p class="mx-2">{{ UserInfo.fatherName }}</p>
-                        </div>
-                        <div class="d-flex align-items-center my-2 user-price">
-                            <p>موجودی کیف پول: </p>
-                            <p class="mx-2">{{ formatNumber(UserInfo.wallet.balance) }} ریال</p>
-                        </div>
-                    </div>
-                    <div class="d-flex flex-column w-100 px-4">
-                        <div class="d-flex align-items-center my-2">
-                            <p>تاریخ تولد: </p>
-                            <p class="mx-2">{{ UserInfo.birthDate }}</p>
-                        </div>
-                        <div class="d-flex align-items-center my-2">
-                            <p>کد ملی: </p>
-                            <p class="mx-2">{{ UserInfo.nationalCode }}</p>
-                        </div>
-                        <div class="d-flex align-items-center my-2">
-                            <p>شماره همراه: </p>
-                            <p class="mx-2">{{ UserInfo.phoneNumber }}</p>
-                        </div>
-                        <div class="d-flex align-items-center my-2 user-price">
-                            <p>موجودی طلا: </p>
-                            <p class="mx-2">{{ UserInfo.wallet.goldWeight }} گرم</p>
-                        </div>
-                    </div>
-                </div>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn text="بستن" @click="UserInfoDialog = false" size="large" class="m-3"></v-btn>
-                </v-card-actions>
-            </v-card>
-        </v-dialog> -->
         <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton"
             closable>
             {{ errorMsg }}
@@ -305,10 +254,6 @@ onMounted(() => {
 
 .user-dialog-info {
     font-size: 14px;
-}
-
-.bottom-sheet {
-    height: 100% !important;
 }
 
 .wallet-info-box div.content {

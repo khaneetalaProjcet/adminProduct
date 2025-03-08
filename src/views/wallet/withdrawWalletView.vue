@@ -1,11 +1,221 @@
 <template>
     <div>
-        <h1>برداشت</h1>
+        <v-row>
+            <v-col>
+                <v-tabs v-model="tab" align-tabs="center">
+                    <v-tab value="one">در انتظار پرداخت</v-tab>
+                    <v-tab value="two">پرداخت شده</v-tab>
+                </v-tabs>
+            </v-col>
+            <v-col cols="12">
+                <v-card-text>
+                    <v-tabs-window v-model="tab">
+                        <v-tabs-window-item value="one">
+                            <v-card title="برداشت از کیف پول">
+                                <template v-slot:text>
+                                    <v-text-field v-model="PendingWithdrawSearch" label="جستجو"
+                                        prepend-inner-icon="ri-search-line"></v-text-field>
+                                </template>
+                                <v-data-table :headers="PendingWithdrawHeader" :items="PendingWithdrawData"
+                                    :search="PendingWithdrawSearch" :loading="PendingWithdrawLoading">
+                                    <template v-slot:item.amount="{ item }">
+                                        <p>{{ formatNumber(item.amount) }}</p>
+                                    </template>
+                                    <template v-slot:item.status="{ item }">
+                                        <div>
+                                            <v-chip :text="item.status == 'pending' ? 'در انتظار پرداخت' : 'پرداخت شده'"
+                                                :color="item.status == 'pending' ? '#ff0000' : '#66666'"
+                                                size="small"></v-chip>
+                                        </div>
+                                    </template>
+                                    <template v-slot:item.action="{ item }">
+                                        <v-icon class="me-2" size="small" icon="ri-refund-2-line" color="#d4af37"
+                                            @click="PendingWithdrawInfo(item)"></v-icon>
+                                    </template>
+                                </v-data-table>
+                            </v-card>
+                        </v-tabs-window-item>
+                        <v-tabs-window-item value="two"></v-tabs-window-item>
+                    </v-tabs-window>
+                </v-card-text>
+            </v-col>
+        </v-row>
+
+
+        <!-- Withdraw Dialog -->
+        <v-dialog v-model="WithdrawDialog" max-width="600" class="dialog">
+            <v-card class="dialog-card">
+                <div class="k-dialog-title">
+                    <p>اطلاعات برداشت</p>
+                </div>
+                <div class="d-flex flex-column flex-md-row justify-space-between w-100 px-4 py-8 user-dialog-info">
+                    <div class="d-flex flex-column w-100 px-4">
+                        <div class="d-flex align-items-center my-2">
+                            <p>نام: </p>
+                            <p class="mx-2">{{ WithdrawDetail.wallet.user.firstName }}</p>
+                        </div>
+                        <div class="d-flex align-items-center my-2">
+                            <p>مبلغ: </p>
+                            <p class="mx-2">{{ formatNumber(WithdrawDetail.amount) }} ریال</p>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column w-100 px-4">
+                        <div class="d-flex align-items-center my-2">
+                            <p>نام خانوادگی: </p>
+                            <p class="mx-2">{{ WithdrawDetail.wallet.user.lastName }}</p>
+                        </div>
+
+                        <div class="d-flex align-items-center my-2 user-price">
+                            <p>موجودی کیف پول: </p>
+                            <p class="mx-2">{{ formatNumber(WithdrawDetail.wallet.balance) }} ریال</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-box">
+                    <v-form ref="form" v-model="isValid" @submit.prevent="submitWithdraw">
+                        <v-text-field v-model="withdrawalId" label="شناسه پرداخت" :rules="withdrawalIdRule"
+                            @input="limitInput" class="my-2"></v-text-field>
+                        <v-btn type="submit" :disabled="!isValid" size="large" class="my-2" block>ثبت</v-btn>
+                    </v-form>
+                </div>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+
+                    <v-btn text="بستن" @click="WithdrawDialog = false" size="large" class="m-3"></v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+
+        <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton"
+            closable>
+            {{ errorMsg }}
+        </v-alert>
     </div>
 </template>
 
 <script setup>
+import WalletService from '@/services/wallet/wallet';
+import { onMounted, ref } from 'vue';
+
+
+const errorMsg = ref('');
+const alertError = ref(false);
+const PendingWithdrawLoading = ref(false);
+const tab = ref(null);
+const isValid = ref(false);
+const PendingWithdrawHeader = ref([
+    {
+        title: 'نام',
+        key: 'wallet.user.firstName',
+    },
+    {
+        title: 'نام خانوادگی',
+        key: 'wallet.user.lastName',
+    },
+    {
+        title: 'مبلغ (ریال)',
+        key: 'amount',
+    },
+    {
+        title: 'تاریخ',
+        key: 'date',
+    },
+    {
+        title: 'زمان',
+        key: 'time',
+    },
+    {
+        title: 'وضعیت',
+        key: 'status'
+    },
+    {
+        title: 'فعالیت',
+        key: 'action'
+    }
+]);
+const PendingWithdrawSearch = ref();
+const PendingWithdrawData = ref();
+const WithdrawDetail = ref();
+const WithdrawDialog = ref(false);
+const withdrawalId = ref('');
+const GetPendingWithdrawList = async () => {
+    try {
+        PendingWithdrawLoading.value = true;
+        const response = await WalletService.PendingWithdraw();
+        PendingWithdrawData.value = response.data;
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        PendingWithdrawLoading.value = false;
+    }
+};
+
+const formatNumber = (num) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+const PendingWithdrawInfo = (item) => {
+    WithdrawDialog.value = true;
+    WithdrawDetail.value = item;
+}
+
+const withdrawalIdRule = [
+    (v) => !!v || 'شناسه پرداخت نمی‌تواند خالی باشد',
+];
+
+const limitInput = () => {
+  withdrawalId.value = withdrawalId.value.replace(/\D/g, '');
+}
+
+const submitWithdraw = () => {
+
+}
+
+onMounted(() => {
+    GetPendingWithdrawList();
+})
+
 
 </script>
 
-<style scoped></style>
+<style scoped>
+.k-alert {
+    position: absolute;
+    top: 10px;
+    left: 40%;
+    font-size: 12px;
+    padding: 10px !important;
+    z-index: 100000;
+}
+
+.dialog-card {
+    padding: 0.5rem !important;
+}
+
+.k-dialog-title {
+    border-radius: 0.5rem 0.5rem 0 0 !important;
+    background-color: #d4af37;
+    padding: 0.5rem;
+}
+
+.k-dialog-title p {
+    margin: 0.5rem;
+    font-size: 18px;
+    color: #fff;
+}
+
+.user-dialog-info {
+    font-size: 14px;
+}
+
+.form-box{
+    width: 100%;
+    padding: 2rem;
+}
+</style>

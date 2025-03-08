@@ -52,7 +52,7 @@
     </v-row>
 
     <!-- user info modal -->
-    <v-dialog v-model="UserInfoDialog" max-width="500" class="dialog">
+    <v-dialog v-model="UserInfoDialog" max-width="600" class="dialog">
       <v-card class="dialog-card">
         <div class="k-dialog-title">
           <p>اطلاعات کاربران</p>
@@ -105,7 +105,7 @@
 
 
     <!-- verify user -->
-    <v-dialog v-model="VerifyDialog" max-width="500" class="dialog" persistent>
+    <v-dialog v-model="VerifyDialog" max-width="600" class="dialog" persistent>
       <v-form ref="form" @submit.prevent="sumbitVerify(item)">
         <v-card class="dialog-card">
           <div class="k-dialog-title">
