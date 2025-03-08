@@ -11,7 +11,6 @@ const AuthService = {
     async Login(loginInfo) {
         const body = JSON.stringify(loginInfo);
         const response = await VerifyTemplate.post("/admin/login", body);
-        console.log(response)
         const token = response.data.data.token;
         localStorage.setItem("token", token);
         return response.data

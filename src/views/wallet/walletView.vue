@@ -1,35 +1,20 @@
 <template>
     <div>
         <v-row>
-            <v-col>
-                <v-tabs v-model="tab" align-tabs="center">
-                    <v-tab value="one">واریز</v-tab>
-                    <v-tab value="two">برداشت</v-tab>
-                </v-tabs>
-            </v-col>
             <v-col cols="12">
                 <v-card-text>
-                    <v-tabs-window v-model="tab">
-                        <v-tabs-window-item value="one">
-                            <v-card title="واریزی ها">
-                                <template v-slot:text>
-                                    <v-text-field v-model="search" label="جستجو"
-                                        prepend-inner-icon="ri-search-line"></v-text-field>
-                                </template>
-
-                                <!-- <v-data-table :headers="userHeader" :items="userData" :search="search"
-                                    :loading="userLoading">
-                                    <template v-slot:item.wallet.balance="{ item }">
-                                        <p>{{ formatNumber(item.wallet.balance) }}</p>
-                                    </template>
-                                    <template v-slot:item.action="{ item }">
-                                        <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
-                                            @click="userInfo(item)"></v-icon>
-                                    </template>
-                                </v-data-table> -->
-                            </v-card>
-                        </v-tabs-window-item>
-                    </v-tabs-window>
+                    <v-card title="کیف پول ها">
+                        <v-data-table :headers="walletHeader" :items="walletData" :search="search"
+                            :loading="walletLoading">
+                            <!-- <template v-slot:item.wallet.balance="{ item }">
+                                    <p>{{ formatNumber(item.wallet.balance) }}</p>
+                                </template> -->
+                            <template v-slot:item.action="{ item }">
+                                <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
+                                    @click="walletInfo(item)"></v-icon>
+                            </template>
+                        </v-data-table>
+                    </v-card>
                 </v-card-text>
             </v-col>
         </v-row>
@@ -92,18 +77,17 @@
 </template>
 
 <script setup>
-import UserService from '@/services/user/user';
+import WalletService from '@/services/wallet/wallet';
 import { onMounted, ref } from 'vue';
 
 const search = ref('');
-const tab = ref(null);
 const errorMsg = ref('');
 const alertError = ref(false);
 const walletLoading = ref(false);
 const walletHeader = ref([
     {
         title: 'نام',
-        key: 'firstName',
+        key: 'user.firstName',
     },
     {
         title: 'نام خانوادگی',
@@ -132,11 +116,12 @@ const walletHeader = ref([
 ]);
 const walletData = ref();
 
-const GetWithdraw = async () => {
+const GetWallet = async () => {
     try {
-        userLoading.value = true;
-        const response = await UserService.Alluser();
-        userData.value = response.data;
+        walletLoading.value = true;
+        const response = await WalletService.AllWallet();
+        walletData.value = response.data;
+        console.log(walletData.value)
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -145,13 +130,14 @@ const GetWithdraw = async () => {
             alertError.value = false;
         }, 10000)
     } finally {
-        userLoading.value = false;
+        walletLoading.value = false;
     }
 };
 
+const walletInfo = () => { }
+
 onMounted(() => {
-    // Getuser();
-    // GetOldUser();
+    GetWallet();
 })
 
 

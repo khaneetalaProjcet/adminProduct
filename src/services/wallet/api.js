@@ -1,8 +1,8 @@
 import axios from "axios";
 
 
-const VerifyTemplate = axios.create({
-    baseURL: "https://gateway.khaneetala.ir/v1",
+const WalletTemplate = axios.create({
+    baseURL: "https://khaneetala.ir/api/admin",
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",
@@ -12,7 +12,7 @@ const VerifyTemplate = axios.create({
 
 
 // before request
-VerifyTemplate.interceptors.request.use(
+WalletTemplate.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -21,26 +21,24 @@ VerifyTemplate.interceptors.request.use(
         return config;
     },
     (error) => {
-        if (error.response.status == 401) {
-            console.log('log out', error)
-            localStorage.removeItem("token");
-            router.push('/login')
-        }
         return Promise.reject(error);
     }
 );
 
 
-// before response
-VerifyTemplate.interceptors.response.use(
+// after response
+WalletTemplate.interceptors.response.use(
     (response) => {
         return response;
     },
     (error) => {
-        // مدیریت خطاهای API
+        if (error.response.status == 401) {
+            localStorage.removeItem("token");
+            router.push('/login');
+        }
         console.error("API Error:", error.response || error.message);
         return Promise.reject(error);
     }
 );
 
-export default VerifyTemplate;
+export default WalletTemplate;

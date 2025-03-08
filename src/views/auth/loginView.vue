@@ -59,7 +59,6 @@ const submitLogin = async () => {
         router.push('/Dashboard')
         return response
     } catch (error) {
-        console.log(error)
         errorMsg.value =  error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {

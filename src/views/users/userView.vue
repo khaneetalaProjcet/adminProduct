@@ -454,7 +454,6 @@ const sumbitVerify = async () => {
   } catch (error) {
     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
     alertError.value = true;
-    console.log(alertError.value)
     setTimeout(() => {
       alertError.value = false;
     }, 10000)

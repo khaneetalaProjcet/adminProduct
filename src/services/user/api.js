@@ -21,23 +21,21 @@ UserTemplate.interceptors.request.use(
         return config;
     },
     (error) => {
-        if (error.response.status == 401) {
-            console.log('log out', error)
-            localStorage.removeItem("token");
-            router.push('/login')
-        }
         return Promise.reject(error);
     }
 );
 
 
-// before response
+// after response
 UserTemplate.interceptors.response.use(
     (response) => {
         return response;
     },
     (error) => {
-        // مدیریت خطاهای API
+        if (error.response.status == 401) {
+            localStorage.removeItem("token");
+            router.push('/login')
+        }
         console.error("API Error:", error.response || error.message);
         return Promise.reject(error);
     }
