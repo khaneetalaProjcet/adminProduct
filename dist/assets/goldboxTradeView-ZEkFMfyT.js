@@ -1,0 +1,1 @@
+import{_ as o,c as r,a as n,o as t}from"./index-wToI4KX1.js";const a={};function s(c,e){return t(),r("div",null,e[0]||(e[0]=[n("p",null,"در حال تکمیل ...",-1)]))}const d=o(a,[["render",s]]);export{d as default};
