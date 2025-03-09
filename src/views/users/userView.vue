@@ -33,7 +33,7 @@
                 <template v-slot:text>
                   <v-text-field v-model="OldSearch" label="جستجو" prepend-inner-icon="ri-search-line"></v-text-field>
                 </template>
-                <v-data-table :headers="OldUserHeader" :items="OldUser" :search="OldSearch" :loading="userLoading">
+                <v-data-table :headers="OldUserHeader" :items="OldUser" :search="OldSearch" :loading="oldUserLoading">
                   <template v-slot:item.wallet.balance="{ item }">
                     <p>{{ formatNumber(item.wallet.balance) }}</p>
                   </template>
@@ -155,6 +155,7 @@ import UserService from '@/services/user/user';
 import { onMounted, ref } from 'vue';
 
 const userLoading = ref(false);
+const oldUserLoading = ref(false);
 const search = ref('');
 const OldSearch = ref('')
 const tab = ref(null);
@@ -412,7 +413,7 @@ const Getuser = async () => {
 
 const GetOldUser = async () => {
   try {
-    userLoading.value = true;
+    oldUserLoading.value = true;
     const response = await UserService.oldUser();
     OldUser.value = response.data;
     return response
@@ -423,7 +424,7 @@ const GetOldUser = async () => {
       alertError.value = false;
     }, 10000)
   } finally {
-    userLoading.value = false;
+    oldUserLoading.value = false;
   }
 };
 

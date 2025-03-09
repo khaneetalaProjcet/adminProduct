@@ -34,7 +34,7 @@ UserTemplate.interceptors.response.use(
     (error) => {
         if (error.response.status == 401) {
             localStorage.removeItem("token");
-            router.push('/login')
+            router.push('/login');
         }
         console.error("API Error:", error.response || error.message);
         return Promise.reject(error);
