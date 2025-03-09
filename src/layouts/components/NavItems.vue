@@ -105,10 +105,22 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     icon: 'ri-line-chart-line',
   }">
     <VerticalNavLink :item="{
-      title: 'معامله صندوق طلا',
+      title: 'خرید',
+      icon: 'ri-bar-chart-line',
+      href: '#',
+      to: '/goldboxBuy'
+    }" />
+    <VerticalNavLink :item="{
+      title: 'فروش',
+      icon: 'ri-bar-chart-grouped-line',
+      href: '#',
+      to: '/goldboxSell'
+    }" />
+    <VerticalNavLink :item="{
+      title: 'ثبت معامله',
       icon: 'ri-pie-chart-line',
       href: '#',
-      to: '/goldboxView'
+      to: '/goldboxTrade'
     }" />
   </VerticalNavGroup>
 </template>

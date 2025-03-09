@@ -49,9 +49,21 @@ export const routes = [
         meta: { requiresAuth: true }
       },
       {
-        path: '/goldboxView',
-        name: 'goldboxView',
-        component: () => import('@/views/goldbox/goldboxView.vue'),
+        path: '/goldboxTrade',
+        name: 'goldboxTrade',
+        component: () => import('@/views/goldbox/goldboxTradeView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/goldboxSell',
+        name: 'goldboxSell',
+        component: () => import('@/views/goldbox/goldboxSellView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/goldboxBuy',
+        name: 'goldboxBuy',
+        component: () => import('@/views/goldbox/goldboxBuyView.vue'),
         meta: { requiresAuth: true }
       },
       {
