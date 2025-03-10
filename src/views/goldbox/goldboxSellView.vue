@@ -21,6 +21,9 @@
                                     <template v-slot:item.totalPrice="{ item }">
                                         <p>{{ formatNumber(item.totalPrice) }}</p>
                                     </template>
+                                    <template v-slot:item.goldWeight="{ item }">
+                                        <p>{{ (+item.goldWeight).toFixed(2) }}</p>
+                                    </template>
                                     <template v-slot:item.status="{ item }">
                                         <div>
                                             <v-chip :text="item.status == 'completed' ? 'موفق' : 'نامشخص'"
@@ -42,10 +45,12 @@
                                     <template v-slot:item.totalPrice="{ item }">
                                         <p>{{ formatNumber(item.totalPrice) }}</p>
                                     </template>
+                                    <template v-slot:item.goldWeight="{ item }">
+                                        <p>{{ (+item.goldWeight).toFixed(2) }}</p>
+                                    </template>
                                     <template v-slot:item.status="{ item }">
                                         <div>
-                                            <v-chip
-                                                :text="item.status == 'failed' ? 'ناموفق' : 'نامشخص'"
+                                            <v-chip :text="item.status == 'failed' ? 'ناموفق' : 'نامشخص'"
                                                 :color="item.status == 'failed' ? '#ff0000' : '#66666'"
                                                 size="small"></v-chip>
                                         </div>
@@ -98,6 +103,10 @@ const CompleteGoldBoxSellHeader = ref([
         key: 'totalPrice',
     },
     {
+        title: 'وزن طلا (گرم)',
+        key: 'goldWeight',
+    },
+    {
         title: 'تاریخ',
         key: 'date',
     },
@@ -115,7 +124,7 @@ const CompleteGoldBoxSellHeader = ref([
     },
 ]);
 const FailedGoldBoxSellHeader = ref([
-{
+    {
         title: 'نام',
         key: 'seller.firstName',
     },
@@ -126,6 +135,10 @@ const FailedGoldBoxSellHeader = ref([
     {
         title: 'مبلغ خرید (ریال)',
         key: 'totalPrice',
+    },
+    {
+        title: 'وزن طلا (گرم)',
+        key: 'goldWeight',
     },
     {
         title: 'تاریخ',

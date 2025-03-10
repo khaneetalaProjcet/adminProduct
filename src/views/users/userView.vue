@@ -20,6 +20,12 @@
                   <template v-slot:item.wallet.balance="{ item }">
                     <p>{{ formatNumber(item.wallet.balance) }}</p>
                   </template>
+                  <template v-slot:item.isHaveBank="{ item }">
+                    <v-icon size="small" icon="ri-close-line" color="#c9190c"
+                      v-if="item.isHaveBank == true"></v-icon>
+                    <v-icon size="small" icon="ri-check-line" color="#0b8707"
+                      v-else-if="item.isHaveBank == false"></v-icon>
+                  </template>
                   <template v-slot:item.action="{ item }">
                     <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
                       @click="userInfo(item)"></v-icon>
@@ -190,6 +196,10 @@ const userHeader = ref([
   {
     title: 'شهر',
     key: 'officeName',
+  },
+  {
+    title: 'کارت بانکی',
+    key: 'isHaveBank'
   },
   {
     title: 'فعالیت',

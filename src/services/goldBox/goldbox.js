@@ -1,3 +1,4 @@
+import VerifyTemplate from "../verify/api";
 import GoldBoxTemplate from "./api";
 
 
@@ -18,6 +19,15 @@ const GoldBoxService = {
 
     async SellGoldBox(item) {
         const response = await GoldBoxTemplate.get(`/transactions/sell?type=${item}`);
+        return response.data
+    },
+
+    async AuthNumberTradeGoldbox(item) {
+        const body = JSON.stringify({
+            'phoneNumber': item
+        });
+        console.log(body)
+        const response = await VerifyTemplate.post(`/old/identity/status`, body);
         return response.data
     },
 }
