@@ -26,8 +26,28 @@ const GoldBoxService = {
         const body = JSON.stringify({
             'phoneNumber': item
         });
-        console.log(body)
         const response = await VerifyTemplate.post(`/old/identity/status`, body);
+        return response.data
+    },
+
+    async AuthIdentityOldUser(item) {
+        const body = JSON.stringify({
+            'phoneNumber': item.phoneNumber,
+            'birthDate': item.birthDate,
+            'nationalCode': item.nationalCode,
+        });
+        const response = await VerifyTemplate.post(`old/approve/${item.id}`, body);
+        return response.data
+    },
+
+    async AuthIdentityNewUser(item) {
+        console.log(item)
+        const body = JSON.stringify({
+            'phoneNumber': item.phoneNumber,
+            'birthDate': item.birthDate,
+            'nationalCode': item.nationalCode,
+        });
+        const response = await VerifyTemplate.post(`old/approve/newuser`, body);
         return response.data
     },
 }
