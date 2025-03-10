@@ -69,7 +69,8 @@
                                                 <p class="mb-0">{{ userInfo.nationalCode }}</p>
                                             </div>
                                         </v-col>
-                                        <v-col cols="12" md="3" class="my-3">
+
+                                        <!-- <v-col cols="12" md="3" class="my-3">
                                             <v-text-field v-model="userInfo.birthDate" label="تاریخ تولد"
                                                 variant="outlined"
                                                 v-if="userVerificationDetail.userVerified == false"></v-text-field>
@@ -77,18 +78,15 @@
                                                 <p class="mb-0">تاریخ تولد : </p>
                                                 <p class="mb-0">{{ userInfo.birthDate }}</p>
                                             </div>
-                                        </v-col>
+                                        </v-col> -->
                                         <v-col cols="12" md="3" class="my-3">
-                                            <!-- <v-text-field v-model="tradeForm.phoneNumber" label="شماره همراه"
-                                                variant="outlined" disabled></v-text-field> -->
                                             <div class="d-flex">
                                                 <p class="mb-0">شماره همراه : </p>
                                                 <p class="mb-0">{{ tradeForm.phoneNumber }}</p>
                                             </div>
                                         </v-col>
+                                        <v-col v-if="userVerificationDetail.userVerified == true" cols="12" md="3" class="my-3 d-none d-md-flex"></v-col>
                                         <v-col cols="12" md="3" class="my-3">
-                                            <!-- <v-text-field v-model="userInfo.gender" label="جنسیت" variant="outlined"
-                                                disabled></v-text-field> -->
                                             <div class="d-flex">
                                                 <p class="mb-0">جنسیت : </p>
                                                 <p class="mb-0" v-if="userInfo.gender == true">مرد</p>
@@ -96,40 +94,30 @@
                                             </div>
                                         </v-col>
                                         <v-col cols="12" md="3" class="my-3">
-                                            <!-- <v-text-field v-model="userInfo.firstName" label="نام" variant="outlined"
-                                                disabled></v-text-field> -->
                                             <div class="d-flex">
                                                 <p class="mb-0">نام : </p>
                                                 <p class="mb-0">{{ userInfo.firstName }}</p>
                                             </div>
                                         </v-col>
                                         <v-col cols="12" md="3" class="my-3">
-                                            <!-- <v-text-field v-model="userInfo.lastName" label="نام خانوادگی"
-                                                variant="outlined" disabled></v-text-field> -->
                                             <div class="d-flex">
                                                 <p class="mb-0">نام خانوادگی : </p>
                                                 <p class="mb-0">{{ userInfo.lastName }}</p>
                                             </div>
                                         </v-col>
                                         <v-col cols="12" md="3" class="my-3">
-                                            <!-- <v-text-field v-model="userInfo.fatherName" label="نام پدر"
-                                                variant="outlined" disabled></v-text-field> -->
                                             <div class="d-flex">
                                                 <p class="mb-0">نام پدر : </p>
                                                 <p class="mb-0">{{ userInfo.fatherName }}</p>
                                             </div>
                                         </v-col>
                                         <v-col cols="12" md="3" class="my-3">
-                                            <!-- <v-text-field v-model="userInfo.officeName" label="شهر" variant="outlined"
-                                                disabled></v-text-field> -->
                                             <div class="d-flex">
                                                 <p class="mb-0">شهر : </p>
                                                 <p class="mb-0">{{ userInfo.officeName }}</p>
                                             </div>
                                         </v-col>
                                         <v-col cols="12" md="3" class="my-3">
-                                            <!-- <v-text-field v-model="userInfo.isHaveBank" label="کارت بانکی"
-                                                variant="outlined" disabled></v-text-field> -->
                                             <div class="d-flex">
                                                 <p class="mb-0">کارت بانکی : </p>
                                                 <v-icon size="small" icon="ri-close-line" color="#c9190c"
