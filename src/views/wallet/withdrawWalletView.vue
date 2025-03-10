@@ -256,7 +256,11 @@ const withdrawalIdRule = [
 ];
 
 const limitInput = () => {
-    withdrawalDetail.value.withdrawalId = withdrawalDetail.value.withdrawalId.replace(/\D/g, '');
+    withdrawalDetail.value.withdrawalId = withdrawalDetail.value.withdrawalId
+        .replace(/[٠-٩۰-۹]/g, (d) =>
+            String.fromCharCode(d.charCodeAt(0) - (d.charCodeAt(0) >= 0x06F0 ? 1728 : 1584))
+        )
+        .replace(/\D/g, '')
 }
 
 const submitWithdraw = async () => {

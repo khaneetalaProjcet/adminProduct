@@ -1,3 +1,7 @@
 .alert-animatiton {
     animation: fade-in-out 5s forwards;
 }
+
+.my-perian-datepicker {
+    padding: 0.5rem !important;
+}

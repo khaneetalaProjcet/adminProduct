@@ -11,8 +11,8 @@
 
         <v-card class="mx-2 mx-md-auto pa-8" elevation="4" max-width="448" rounded="lg">
             <v-form ref="form" @submit.prevent="submitLogin">
-                <v-text-field v-model="login.phoneNumber" label="شماره همراه" class="my-6 login-input" :rules="phoneRules"
-                    @input="limitInput"></v-text-field>
+                <v-text-field v-model="login.phoneNumber" label="شماره همراه" class="my-6 login-input"
+                    :rules="phoneRules" @input="limitInput"></v-text-field>
                 <v-text-field v-model="login.password" label="رمز عبور" class="my-6 login-input"
                     :append-inner-icon="visible ? 'ri-eye-line' : 'ri-eye-off-line'"
                     :type="visible ? 'text' : 'password'" @click:append-inner="visible = !visible"></v-text-field>
@@ -46,11 +46,14 @@ const phoneRules = [
     (v) => v.startsWith('09') || 'شماره همراه باید با 09 شروع شود',
 ];
 
-
 const limitInput = () => {
-    login.value.phoneNumber = login.value.phoneNumber.replace(/\D/g, '').slice(0, 11);
-}
-
+    login.value.phoneNumber = login.value.phoneNumber
+        .replace(/[٠-٩۰-۹]/g, (d) =>
+            String.fromCharCode(d.charCodeAt(0) - (d.charCodeAt(0) >= 0x06F0 ? 1728 : 1584))
+        )
+        .replace(/\D/g, '')
+        .slice(0, 11);
+};
 
 const submitLogin = async () => {
     try {
@@ -59,7 +62,7 @@ const submitLogin = async () => {
         router.push('/Dashboard')
         return response
     } catch (error) {
-        errorMsg.value =  error.response.data.error || 'خطایی رخ داده است!';
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
             alertError.value = false;

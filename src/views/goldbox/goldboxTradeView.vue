@@ -70,7 +70,8 @@
                                             </div>
                                         </v-col>
                                         <v-col cols="4" md="3" class="my-3"
-                                            v-if="userVerificationDetail.userVerified == false"></v-col>
+                                            v-if="userVerificationDetail.userVerified == false">
+                                        </v-col>
                                         <v-col cols="4" md="2" class="my-3"
                                             v-if="userVerificationDetail.userVerified == false">
                                             <v-select v-model="selectedDate" label="روز تولد" :items="persianDates"
@@ -151,11 +152,12 @@
                             <v-card-actions class="btn-box">
                                 <v-btn @click="prevStep" size="large">قبلی</v-btn>
                                 <v-btn @click="identity" color="primary" size="large" variant="elevated"
-                                    :disabled="!isFormValid" v-if="userVerificationDetail.userVerified == false">
+                                    :disabled="!isFormValid" v-if="userVerificationDetail.userVerified == false"
+                                    :loading="stepTwoLoading">
                                     استعلام هویت
                                 </v-btn>
                                 <v-btn @click="nextStep" color="primary" size="large" variant="elevated"
-                                    :disabled="!isFormValid" v-else>
+                                    :loading="stepTwoLoading" v-else>
                                     بعدی
                                 </v-btn>
                             </v-card-actions>
@@ -168,9 +170,38 @@
                             <v-form :ref="(el) => setFormRef(el, 3)">
                                 <v-container>
                                     <v-row>
-                                        <v-col cols="12" md="6">
-                                            <v-text-field v-model="tradeForm.fullName" label="نام و نام خانوادگی"
-                                                variant="outlined" :rules="[requiredRule]"></v-text-field>
+                                        <v-col cols="12">
+                                            <div class="w-100 d-flex justify-space-between align-items-center">
+                                                <h3 class="trade-step-title">ثبت خرید</h3>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12" md="5">
+                                            <v-text-field v-model="tradeBuyForm.price" label="مبلغ"
+                                                variant="outlined"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="3">
+                                            <persian-date-picker v-model="date"></persian-date-picker>
+                                        </v-col>
+                                        <v-col cols="12" md="3">
+                                            <persian-date-picker type="time" v-model="time"></persian-date-picker>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12" md="5">
+                                            <v-text-field v-model="tradeBuyForm.price" label="مبلغ"
+                                                variant="outlined"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="2">
+                                            <div class="d-flex justify-center align-center h-100">
+                                                <v-icon class="me-2" size="small" icon="ri-arrow-left-right-line"
+                                                    color="#0b8707"></v-icon>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="12" md="5">
+                                            <v-text-field v-model="tradeBuyForm.weight" label="وزن"
+                                                variant="outlined"></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-container>
@@ -261,6 +292,8 @@ const errorMsg = ref('');
 const successMsg = ref('');
 const alertError = ref(false);
 const alertSuccess = ref(false);
+const date = ref('');
+const time = ref('');
 const tradeForm = ref({
     phoneNumber: '',
     email: '',
@@ -268,6 +301,11 @@ const tradeForm = ref({
     address: '',
     confirmCode: ''
 });
+const tradeBuyForm = ref({
+    price: '',
+    weight: '',
+    livePrice: '',
+})
 
 
 const userVerificationDetail = ref({
@@ -498,13 +536,29 @@ const AuthNumber = async () => {
     }
 };
 
+const TradeBuy = async () => {
+    try {
+        stepThreeLoading.value = true;
+        // const response = await GoldBoxService.AuthNumberTradeGoldbox();
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        stepThreeLoading.value = false;
+    }
+}
+
 const TradeRequest = async () => {
     if (step.value === 1) {
         return await AuthNumber();
     } else if (step.value === 2) {
-
+        return true
     } else if (step.value === 3) {
-
+        return await TradeBuy();
     } else if (step.value === 4) {
 
     } else if (step.value === 5) {
@@ -521,6 +575,13 @@ const identity = async () => {
             stepTwoLoading.value = true;
             userInfo.value.phoneNumber = tradeForm.value.phoneNumber;
             const response = await GoldBoxService.AuthIdentityOldUser(userInfo.value);
+            userInfo.value.fatherName = response.data.fatherName;
+            userInfo.value.gender = response.data.gender;
+            userInfo.value.isHaveBank = response.data.isHaveBank;
+            userInfo.value.officeName = response.data.officeName;
+            userInfo.value.firstName = response.data.firstName;
+            userInfo.value.lastName = response.data.lastName;
+            userVerificationDetail.value.userVerified = true;
             return response
         } catch (error) {
             errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -536,6 +597,13 @@ const identity = async () => {
             stepTwoLoading.value = true;
             userInfo.value.phoneNumber = tradeForm.value.phoneNumber;
             const response = await GoldBoxService.AuthIdentityNewUser(userInfo.value);
+            userInfo.value.fatherName = response.data.fatherName;
+            userInfo.value.gender = response.data.gender;
+            userInfo.value.isHaveBank = response.data.isHaveBank;
+            userInfo.value.officeName = response.data.officeName;
+            userInfo.value.firstName = response.data.firstName;
+            userInfo.value.lastName = response.data.lastName;
+            userVerificationDetail.value.userVerified = true;
             return response
         } catch (error) {
             errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -597,7 +665,6 @@ const nextStep = async () => {
         const { valid } = await form.validate();
         if (valid) {
             const apiSuccess = await TradeRequest();
-            console.log(apiSuccess)
             if (apiSuccess)
                 step.value++;
         }
@@ -618,7 +685,6 @@ const submitForm = async () => {
         const { valid } = await form.validate();
         if (valid) {
             alert('فرم با موفقیت ارسال شد!');
-            console.log(tradeForm.value);
         }
     }
 };

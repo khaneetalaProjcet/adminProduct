@@ -41,13 +41,12 @@ const GoldBoxService = {
     },
 
     async AuthIdentityNewUser(item) {
-        console.log(item)
         const body = JSON.stringify({
             'phoneNumber': item.phoneNumber,
             'birthDate': item.birthDate,
             'nationalCode': item.nationalCode,
         });
-        const response = await VerifyTemplate.post(`old/approve/newuser`, body);
+        const response = await VerifyTemplate.post(`old/approvenew`, body);
         return response.data
     },
 }

@@ -21,8 +21,7 @@
                     <p>{{ formatNumber(item.wallet.balance) }}</p>
                   </template>
                   <template v-slot:item.isHaveBank="{ item }">
-                    <v-icon size="small" icon="ri-close-line" color="#c9190c"
-                      v-if="item.isHaveBank == true"></v-icon>
+                    <v-icon size="small" icon="ri-close-line" color="#c9190c" v-if="item.isHaveBank == true"></v-icon>
                     <v-icon size="small" icon="ri-check-line" color="#0b8707"
                       v-else-if="item.isHaveBank == false"></v-icon>
                   </template>
@@ -474,7 +473,12 @@ const sumbitVerify = async () => {
 }
 
 const limitInput = () => {
-  VerifyInfo.value.phoneNumber = VerifyInfo.value.phoneNumber.replace(/\D/g, '').slice(0, 11);
+  VerifyInfo.value.phoneNumber = VerifyInfo.value.phoneNumber
+    .replace(/[٠-٩۰-۹]/g, (d) =>
+      String.fromCharCode(d.charCodeAt(0) - (d.charCodeAt(0) >= 0x06F0 ? 1728 : 1584))
+    )
+    .replace(/\D/g, '')
+    .slice(0, 11);
 }
 
 const validateNationalCode = () => {
