@@ -1,12 +1,12 @@
-import ApiTemplate from "./api";
+import GoldPriceTemplate from "./api";
 
 
-export const GetGoldPrice = async () => {
-    try {
-        const response = await ApiTemplate.get("posts");
+const GoldPriceService = {
+    async GoldPriceByTime(date) {
+        const response = await GoldPriceTemplate.get(`/goldPrice/${date}`);
         return response.data;
-    } catch (error) {
-        throw new Error(error.response.data.message || "Failed to fetch gold price");
-    }
+    },
 };
 
+
+export default GoldPriceService

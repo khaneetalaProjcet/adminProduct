@@ -1,8 +1,8 @@
 import axios from "axios";
 
 
-const ApiTemplate = axios.create({
-    baseURL: "https://jsonplaceholder.typicode.com/",
+const GoldPriceTemplate = axios.create({
+    baseURL: "https://khaneetala.ir/api",
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",
@@ -12,7 +12,7 @@ const ApiTemplate = axios.create({
 
 
 // before request
-ApiTemplate.interceptors.request.use(
+GoldPriceTemplate.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -27,7 +27,7 @@ ApiTemplate.interceptors.request.use(
 
 
 // after response
-ApiTemplate.interceptors.response.use(
+GoldPriceTemplate.interceptors.response.use(
     (response) => {
         return response;
     },
@@ -41,4 +41,4 @@ ApiTemplate.interceptors.response.use(
     }
 );
 
-export default ApiTemplate;
+export default GoldPriceTemplate;

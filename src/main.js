@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from '@/App.vue'
 import { registerPlugins } from '@core/utils/plugins'
 import Vue3PersianDatetimePicker from 'vue3-persian-datetime-picker';
+import 'jalaali-js';
 
 
 

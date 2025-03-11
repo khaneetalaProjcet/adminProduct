@@ -176,22 +176,32 @@
                                             </div>
                                         </v-col>
                                     </v-row>
-                                    <v-row>
-                                        <v-col cols="12" md="5">
-                                            <v-text-field v-model="tradeBuyForm.price" label="مبلغ"
-                                                variant="outlined"></v-text-field>
+                                    <v-row class="mt-3 mb-6">
+                                        <v-col cols="12" md="3">
+                                            <persian-date-picker v-model="goldPriceForm.date"
+                                                placeholder="تاریخ"></persian-date-picker>
                                         </v-col>
                                         <v-col cols="12" md="3">
-                                            <persian-date-picker v-model="date"></persian-date-picker>
+                                            <persian-date-picker type="time" v-model="goldPriceForm.time"
+                                                placeholder="زمان"></persian-date-picker>
                                         </v-col>
                                         <v-col cols="12" md="3">
-                                            <persian-date-picker type="time" v-model="time"></persian-date-picker>
+                                            <div class="livePrice-box">
+                                                <p>قیمت طلا : </p>
+                                                <p>{{ goldPriceForm.buyPrice }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="12" md="3">
+                                            <v-btn @click="getGoldPrice" class="h-100" color="primary" size="large"
+                                                variant="elevated" block>
+                                                استعلام قیمت طلا
+                                            </v-btn>
                                         </v-col>
                                     </v-row>
                                     <v-row>
                                         <v-col cols="12" md="5">
-                                            <v-text-field v-model="tradeBuyForm.price" label="مبلغ"
-                                                variant="outlined"></v-text-field>
+                                            <v-text-field v-model="tradeBuyForm.price" label="مبلغ (ریال)"
+                                                variant="outlined" @input="buyGoldpriceConvert"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" md="2">
                                             <div class="d-flex justify-center align-center h-100">
@@ -200,8 +210,9 @@
                                             </div>
                                         </v-col>
                                         <v-col cols="12" md="5">
-                                            <v-text-field v-model="tradeBuyForm.weight" label="وزن"
-                                                variant="outlined"></v-text-field>
+                                            <v-text-field v-model="tradeBuyForm.weight" label="وزن (گرم)"
+                                                variant="outlined" :rules="validateWeight"
+                                                @input="buyGoldweightConvert"></v-text-field>
                                         </v-col>
                                     </v-row>
                                 </v-container>
@@ -276,6 +287,8 @@
 
 <script setup>
 import GoldBoxService from '@/services/goldBox/goldbox';
+import GoldPriceService from '@/services/priceApi/price';
+import jalaaliJs from 'jalaali-js';
 import { ref, computed } from 'vue';
 
 const step = ref(1);
@@ -285,6 +298,7 @@ const stepTwoLoading = ref(false);
 const stepThreeLoading = ref(false);
 const stepFourLoading = ref(false);
 const stepFiveLoading = ref(false);
+const GoldPriceLoading = ref(false)
 const selectedDate = ref();
 const selectedMonth = ref();
 const selectedYear = ref();
@@ -304,7 +318,14 @@ const tradeForm = ref({
 const tradeBuyForm = ref({
     price: '',
     weight: '',
-    livePrice: '',
+})
+
+const goldPriceForm = ref({
+    date: '',
+    time: '',
+    buyPrice: '',
+    sellPrice : '',
+    milliseconds: '',
 })
 
 
@@ -560,7 +581,7 @@ const TradeRequest = async () => {
     } else if (step.value === 3) {
         return await TradeBuy();
     } else if (step.value === 4) {
-
+        return true;
     } else if (step.value === 5) {
 
     } else if (step.value === 6) {
@@ -635,6 +656,11 @@ const nationalCodeRules = [
     }
 ];
 
+const validateWeight = [
+    (v) => !!v || 'مقدار ورودی نمی‌تواند خالی باشد', // بررسی خالی نبودن فیلد
+    (v) => /^\d+(\.\d{1,2})?$/.test(v) || 'فقط عدد مجاز است و حداکثر ۲ رقم اعشار', // بررسی
+];
+
 const validateNationalCode = () => {
     userInfo.value.nationalCode = userInfo.value.nationalCode.replace(/\D/g, '').slice(0, 10);
     nationalCodeRules.every(rule => rule(userInfo.value.nationalCode) === true);
@@ -688,6 +714,62 @@ const submitForm = async () => {
         }
     }
 };
+
+const convertDate = () => {
+    const [year, month, day] = goldPriceForm.value.date.split('/').map(Number);
+    const [hour, minute] = goldPriceForm.value.time.split(':').map(Number);
+    const gregorianDate = jalaaliJs.toGregorian(year, month, day);
+
+    const date = new Date(
+        gregorianDate.gy,
+        gregorianDate.gm - 1,
+        gregorianDate.gd,
+        hour,
+        minute,
+        0
+    );
+
+    goldPriceForm.value.milliseconds = date.getTime();
+}
+
+const getGoldPrice = async () => {
+    convertDate()
+    try {
+        GoldPriceLoading.value = true;
+        const response = await GoldPriceService.GoldPriceByTime(goldPriceForm.value.milliseconds);
+        goldPriceForm.value.buyPrice = response.buyPrice;
+        goldPriceForm.value.sellPrice = response.sellPrice;
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        GoldPriceLoading.value = false;
+    }
+}
+
+const buyGoldpriceConvert = () => {
+    tradeBuyForm.value.price = tradeBuyForm.value.price.replace(/[^0-9]/g, '');
+    tradeBuyForm.value.weight = (tradeBuyForm.value.price / goldPriceForm.value.buyPrice).toFixed(2);
+}
+
+
+const buyGoldweightConvert = () => {
+    tradeBuyForm.value.weight = tradeBuyForm.value.weight.replace(/[^0-9.]/g, '');
+    const parts = tradeBuyForm.value.weight.split('.');
+    if (parts.length > 1) {
+        tradeBuyForm.value.weight = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    if (parts.length > 1 && parts[1].length > 2) {
+        tradeBuyForm.value.weight = parts[0] + '.' + parts[1].slice(0, 2);
+    }
+
+    tradeBuyForm.value.price = parseInt(tradeBuyForm.value.weight * goldPriceForm.value.buyPrice);
+}
 </script>
 
 <style scoped>
@@ -731,5 +813,20 @@ const submitForm = async () => {
 .trade-step-title {
     padding-bottom: 0.5rem;
     border-bottom: 2px solid #d4af37;
+}
+
+.livePrice-box {
+    border: 1px solid #d4af37;
+    border-radius: 5px;
+    padding: 0.2rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    position: relative;
+}
+
+.livePrice-box p {
+    margin-bottom: 0 !important;
 }
 </style>
