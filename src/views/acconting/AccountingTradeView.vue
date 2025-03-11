@@ -5,7 +5,7 @@
                 <v-tabs v-model="tab" align-tabs="center">
                     <v-tab value="one">در انتظار بررسی</v-tab>
                     <v-tab value="two">بررسی شده</v-tab>
-                    <v-tab value="two">رد شده</v-tab>
+                    <v-tab value="three">رد شده</v-tab>
                 </v-tabs>
             </v-col>
             <v-col cols="12">
@@ -17,20 +17,21 @@
                                     <v-text-field v-model="PendingAccountingReviewSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
-                                <v-data-table :headers="PendingAccountingReviewHeader" :items="PendingAccountingReviewData"
-                                    :search="PendingAccountingReviewSearch" :loading="PendingAccountingReviewLoading">
-                                    <template v-slot:item.amount="{ item }">
-                                        <p>{{ formatNumber(item.amount) }}</p>
+                                <v-data-table :headers="PendingAccountingReviewHeader"
+                                    :items="PendingAccountingReviewData" :search="PendingAccountingReviewSearch"
+                                    :loading="PendingAccountingReviewLoading">
+                                    <template v-slot:item.totalPrice="{ item }">
+                                        <p>{{ formatNumber(item.totalPrice) }}</p>
                                     </template>
                                     <template v-slot:item.status="{ item }">
                                         <div>
-                                            <v-chip :text="item.status == 'pending' ? 'در انتظار پرداخت' : 'پرداخت شده'"
+                                            <v-chip :text="item.status == 'pending' ? 'در انتظار بررسی' : 'بررسی شده'"
                                                 :color="item.status == 'pending' ? '#ff0000' : '#66666'"
                                                 size="small"></v-chip>
                                         </div>
                                     </template>
                                     <template v-slot:item.action="{ item }">
-                                        <v-icon class="me-2" size="small" icon="ri-refund-2-line" color="#d4af37"
+                                        <v-icon class="me-2" size="small" icon="ri-survey-line" color="#d4af37"
                                             @click="PendingAccountingReviewInfo(item)"></v-icon>
                                     </template>
                                 </v-data-table>
@@ -42,15 +43,15 @@
                                     <v-text-field v-model="CompleteAccountingReviewSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
-                                <v-data-table :headers="CompleteAccountingReviewHeader" :items="CompleteAccountingReviewData"
-                                    :search="CompleteAccountingReviewSearch" :loading="CompleteAccountingReviewLoading">
+                                <v-data-table :headers="CompleteAccountingReviewHeader"
+                                    :items="CompleteAccountingReviewData" :search="CompleteAccountingReviewSearch"
+                                    :loading="CompleteAccountingReviewLoading">
                                     <template v-slot:item.amount="{ item }">
                                         <p>{{ formatNumber(item.amount) }}</p>
                                     </template>
                                     <template v-slot:item.status="{ item }">
                                         <div>
-                                            <v-chip
-                                                :text="item.status == 'completed' ? 'پرداخت شده' : 'در انتظار پرداخت'"
+                                            <v-chip :text="item.status == 'completed' ? 'بررسی شده' : 'در انتظار بررسی'"
                                                 :color="item.status == 'completed' ? '#00853f' : '#66666'"
                                                 size="small"></v-chip>
                                         </div>
@@ -63,7 +64,30 @@
                             </v-card>
                         </v-tabs-window-item>
                         <v-tabs-window-item value="three">
-
+                            <v-card title="معاملات رد شده صندوق طلا">
+                                <template v-slot:text>
+                                    <v-text-field v-model="rejectAccountingReviewSearch" label="جستجو"
+                                        prepend-inner-icon="ri-search-line"></v-text-field>
+                                </template>
+                                <v-data-table :headers="rejectAccountingReviewHeader"
+                                    :items="rejectAccountingReviewData" :search="rejectAccountingReviewSearch"
+                                    :loading="rejectAccountingReviewLoading">
+                                    <template v-slot:item.amount="{ item }">
+                                        <p>{{ formatNumber(item.amount) }}</p>
+                                    </template>
+                                    <template v-slot:item.status="{ item }">
+                                        <div>
+                                            <v-chip :text="item.status == 'rejectd' ? 'رد شده' : 'در انتظار بررسی'"
+                                                :color="item.status == 'rejectd' ? '#00853f' : '#66666'"
+                                                size="small"></v-chip>
+                                        </div>
+                                    </template>
+                                    <!-- <template v-slot:item.action="{ item }">
+                                        <v-icon class="me-2" size="small" icon="ri-refund-2-line" color="#d4af37"
+                                            @click="rejectAccountingReviewInfo(item)"></v-icon>
+                                    </template> -->
+                                </v-data-table>
+                            </v-card>
                         </v-tabs-window-item>
                     </v-tabs-window>
                 </v-card-text>
@@ -72,34 +96,73 @@
 
 
         <!-- AccountingReview Dialog -->
-        <v-dialog v-model="AccountingReviewDialog" max-width="600" class="dialog">
+        <v-dialog v-model="AccountingReviewDialog" max-width="700" class="dialog">
             <v-card class="dialog-card">
                 <div class="k-dialog-title">
                     <p>اطلاعات برداشت</p>
                 </div>
-                <div class="d-flex flex-column flex-md-row justify-space-between w-100 px-4 py-8 user-dialog-info">
-                    <div class="d-flex flex-column w-100 px-4">
-                        <div class="d-flex align-items-center my-2">
+                <v-row class="my-3 px-3">
+                    <v-col cols="6" md="4" class="my-1">
+                        <div class="d-flex align-items-center">
                             <p>نام: </p>
-                            <p class="mx-2">{{ AccountingReviewDetail.wallet.user.firstName }}</p>
+                            <p class="mx-2">{{ AccountingReviewDetail.buyer.firstName }}</p>
                         </div>
-                        <div class="d-flex align-items-center my-2">
-                            <p>مبلغ: </p>
-                            <p class="mx-2">{{ formatNumber(AccountingReviewDetail.amount) }} ریال</p>
-                        </div>
-                    </div>
-                    <div class="d-flex flex-column w-100 px-4">
-                        <div class="d-flex align-items-center my-2">
+                    </v-col>
+                    <v-col cols="6" md="4" class="my-1">
+                        <div class="d-flex align-items-center">
                             <p>نام خانوادگی: </p>
-                            <p class="mx-2">{{ AccountingReviewDetail.wallet.user.lastName }}</p>
+                            <p class="mx-2">{{ AccountingReviewDetail.buyer.lastName }}</p>
                         </div>
-
-                        <div class="d-flex align-items-center my-2 user-price">
-                            <p>موجودی کیف پول: </p>
-                            <p class="mx-2">{{ formatNumber(AccountingReviewDetail.wallet.balance) }} ریال</p>
+                    </v-col>
+                    <v-col cols="6" md="4" class="my-1">
+                        <div class="d-flex align-items-center">
+                            <p>کد ملی: </p>
+                            <p class="mx-2">{{ AccountingReviewDetail.buyer.nationalCode }}</p>
                         </div>
-                    </div>
-                </div>
+                    </v-col>
+                    <v-col cols="6" md="4" class="my-1">
+                        <div class="d-flex align-items-center">
+                            <p>شماره موبایل: </p>
+                            <p class="mx-2">{{ AccountingReviewDetail.buyer.phoneNumber }}</p>
+                        </div>
+                    </v-col>
+                    <v-col cols="6" md="4" class="my-1">
+                        <div class="d-flex align-items-center">
+                            <p>مبلغ کل: </p>
+                            <p class="mx-2">{{ formatNumber(AccountingReviewDetail.totalPrice) }} ریال</p>
+                        </div>
+                    </v-col>
+                    <v-col cols="6" md="4" class="my-1">
+                        <div class="d-flex align-items-center">
+                            <p>میزان طلا: </p>
+                            <p class="mx-2">{{ AccountingReviewDetail.goldWeight }} گرم</p>
+                        </div>
+                    </v-col>
+                    <v-col cols="6" md="4" class="my-1">
+                        <div class="d-flex align-items-center">
+                            <p>قیمت طلا : </p>
+                            <p class="mx-2">{{ formatNumber(AccountingReviewDetail.goldPrice) }} ریال</p>
+                        </div>
+                    </v-col>
+                    <v-col cols="6" md="4" class="my-1">
+                        <div class="d-flex align-items-center">
+                            <p>تاریخ : </p>
+                            <p class="mx-2">{{ AccountingReviewDetail.date }}</p>
+                        </div>
+                    </v-col>
+                    <v-col cols="6" md="4" class="my-1">
+                        <div class="d-flex align-items-center">
+                            <p>زمان : </p>
+                            <p class="mx-2">{{ AccountingReviewDetail.time }}</p>
+                        </div>
+                    </v-col>
+                    <v-col cols="6" class="my-1">
+                        <div class="d-flex align-items-center">
+                            <p>کارشناس ثبت کننده : </p>
+                            <p class="mx-2">{{ AccountingReviewDetail.adminId }}</p>
+                        </div>
+                    </v-col>
+                </v-row>
                 <div class="form-box">
                     <v-form ref="form" v-model="isValid" @submit.prevent="submitAccountingReview">
                         <v-text-field v-model="AccountingReviewalDetail.AccountingReviewalId" label="شناسه پرداخت"
@@ -125,6 +188,7 @@
 </template>
 
 <script setup>
+import AccountingService from '@/services/accounting/accounting';
 import WalletService from '@/services/wallet/wallet';
 import { onMounted, ref } from 'vue';
 
@@ -138,15 +202,23 @@ const isValid = ref(false);
 const PendingAccountingReviewHeader = ref([
     {
         title: 'نام',
-        key: 'wallet.user.firstName',
+        key: 'buyer.firstName',
     },
     {
         title: 'نام خانوادگی',
-        key: 'wallet.user.lastName',
+        key: 'buyer.lastName',
+    },
+    {
+        title: 'شناسه پرداخت',
+        key: 'invoiceId',
     },
     {
         title: 'مبلغ (ریال)',
-        key: 'amount',
+        key: 'totalPrice',
+    },
+    {
+        title: 'میزان طلا (گرم)',
+        key: 'goldWeight',
     },
     {
         title: 'تاریخ',
@@ -171,15 +243,23 @@ const CompleteAccountingReviewSearch = ref();
 const CompleteAccountingReviewHeader = ref([
     {
         title: 'نام',
-        key: 'wallet.user.firstName',
+        key: 'buyer.firstName',
     },
     {
         title: 'نام خانوادگی',
-        key: 'wallet.user.lastName',
+        key: 'buyer.lastName',
+    },
+    {
+        title: 'شناسه پرداخت',
+        key: 'invoiceId',
     },
     {
         title: 'مبلغ (ریال)',
-        key: 'amount',
+        key: 'totalPrice',
+    },
+    {
+        title: 'میزان طلا (گرم)',
+        key: 'goldWeight',
     },
     {
         title: 'تاریخ',
@@ -193,14 +273,6 @@ const CompleteAccountingReviewHeader = ref([
         title: 'وضعیت',
         key: 'status'
     },
-    {
-        title: 'شناسه پرداخت',
-        key: 'AccountingReviewalId'
-    },
-    // {
-    //     title: 'فعالیت',
-    //     key: 'action'
-    // }
 ]);
 const CompleteAccountingReviewData = ref();
 const CompleteAccountingReviewLoading = ref();
@@ -210,11 +282,49 @@ const AccountingReviewalDetail = ref({
     AccountingReviewalId: '',
     id: '',
 })
+const rejectAccountingReviewSearch = ref();
+const rejectAccountingReviewHeader = ref([
+    {
+        title: 'نام',
+        key: 'buyer.firstName',
+    },
+    {
+        title: 'نام خانوادگی',
+        key: 'buyer.lastName',
+    },
+    {
+        title: 'شناسه پرداخت',
+        key: 'invoiceId',
+    },
+    {
+        title: 'مبلغ (ریال)',
+        key: 'totalPrice',
+    },
+    {
+        title: 'میزان طلا (گرم)',
+        key: 'goldWeight',
+    },
+    {
+        title: 'تاریخ',
+        key: 'date',
+    },
+    {
+        title: 'زمان',
+        key: 'time',
+    },
+    {
+        title: 'وضعیت',
+        key: 'status'
+    },
+]
+);
+const rejectAccountingReviewData = ref();
+const rejectAccountingReviewLoading = ref();
 
 const GetPendingAccountingReviewList = async () => {
     try {
         PendingAccountingReviewLoading.value = true;
-        const response = await WalletService.PendingAccountingReview();
+        const response = await AccountingService.PendingAccountingList();
         PendingAccountingReviewData.value = response.data;
         return response
     } catch (error) {
@@ -231,7 +341,24 @@ const GetPendingAccountingReviewList = async () => {
 const GetCompleteAccountingReviewList = async () => {
     try {
         CompleteAccountingReviewLoading.value = true;
-        const response = await WalletService.CompleteAccountingReview();
+        const response = await AccountingService.CompleteAccountingList();
+        CompleteAccountingReviewData.value = response.data;
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        CompleteAccountingReviewLoading.value = false;
+    }
+};
+
+const GetRejectAccountingReviewList = async () => {
+    try {
+        CompleteAccountingReviewLoading.value = true;
+        const response = await AccountingService.rejectAccountingList();
         CompleteAccountingReviewData.value = response.data;
         return response
     } catch (error) {
@@ -251,8 +378,8 @@ const formatNumber = (num) => {
 
 const PendingAccountingReviewInfo = (item) => {
     AccountingReviewDialog.value = true;
+    console.log(item)
     AccountingReviewDetail.value = item;
-    AccountingReviewalDetail.value.id = item.id;
 }
 
 const AccountingReviewalIdRule = [
@@ -268,27 +395,28 @@ const limitInput = () => {
 }
 
 const submitAccountingReview = async () => {
-    try {
-        AccountingReviewSubmitLoading.value = true;
-        const response = await WalletService.SubmitAccountingReview(AccountingReviewalDetail.value);
-        GetPendingAccountingReviewList();
-        GetCompleteAccountingReviewList();
-        AccountingReviewDialog.value = false;
-        return response
-    } catch (error) {
-        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-        alertError.value = true;
-        setTimeout(() => {
-            alertError.value = false;
-        }, 10000)
-    } finally {
-        AccountingReviewSubmitLoading.value = false;
-    }
+    // try {
+    //     AccountingReviewSubmitLoading.value = true;
+    //     const response = await WalletService.SubmitAccountingReview(AccountingReviewalDetail.value);
+    //     GetPendingAccountingReviewList();
+    //     GetCompleteAccountingReviewList();
+    //     AccountingReviewDialog.value = false;
+    //     return response
+    // } catch (error) {
+    //     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+    //     alertError.value = true;
+    //     setTimeout(() => {
+    //         alertError.value = false;
+    //     }, 10000)
+    // } finally {
+    //     AccountingReviewSubmitLoading.value = false;
+    // }
 }
 
 onMounted(() => {
     GetPendingAccountingReviewList();
     GetCompleteAccountingReviewList();
+    GetRejectAccountingReviewList();
 })
 
 
@@ -312,10 +440,10 @@ onMounted(() => {
     border-radius: 0.5rem 0.5rem 0 0 !important;
     background-color: #d4af37;
     padding: 0.5rem;
+    margin: 0 !important;
 }
 
 .k-dialog-title p {
-    margin: 0.5rem;
     font-size: 18px;
     color: #fff;
 }
