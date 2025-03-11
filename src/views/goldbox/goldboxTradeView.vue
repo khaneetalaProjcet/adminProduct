@@ -176,7 +176,7 @@
                                             </div>
                                         </v-col>
                                     </v-row>
-                                    <v-row class="mt-3 mb-6">
+                                    <v-row class="">
                                         <v-col cols="12" md="3">
                                             <persian-date-picker v-model="goldPriceForm.date"
                                                 placeholder="تاریخ"></persian-date-picker>
@@ -199,8 +199,8 @@
                                         </v-col>
                                     </v-row>
                                     <v-row>
-                                        <v-col cols="12" md="5">
-                                            <v-text-field v-model="tradeBuyForm.price" label="مبلغ (ریال)"
+                                        <v-col cols="12" md="3">
+                                            <v-text-field v-model="tradeBuyForm.totalPrice" label="مبلغ (ریال)"
                                                 variant="outlined" @input="buyGoldpriceConvert"></v-text-field>
                                         </v-col>
                                         <v-col cols="12" md="2">
@@ -209,10 +209,18 @@
                                                     color="#0b8707"></v-icon>
                                             </div>
                                         </v-col>
-                                        <v-col cols="12" md="5">
-                                            <v-text-field v-model="tradeBuyForm.weight" label="وزن (گرم)"
+                                        <v-col cols="12" md="3">
+                                            <v-text-field v-model="tradeBuyForm.goldWeight" label="وزن (گرم)"
                                                 variant="outlined" :rules="validateWeight"
                                                 @input="buyGoldweightConvert"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="4">
+                                            <v-text-field v-model="tradeBuyForm.invoiceId" label="شناسه پرداخت"
+                                                variant="outlined" :rules="validateInvoice"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-textarea label="توضیحات (اختیاری)" variant="outlined"
+                                                v-model="tradeBuyForm.description"></v-textarea>
                                         </v-col>
                                     </v-row>
                                 </v-container>
@@ -233,9 +241,18 @@
                             <v-form :ref="(el) => setFormRef(el, 4)">
                                 <v-container>
                                     <v-row>
-                                        <v-col cols="12" md="6">
-                                            <v-text-field v-model="tradeForm.address" label="آدرس خود را وارد کنید"
-                                                variant="outlined" :rules="[requiredRule]"></v-text-field>
+                                        <v-col cols="12">
+                                            <div class="w-100 d-flex justify-space-between align-items-center">
+                                                <h3 class="trade-step-title">فاکتور فروش</h3>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>{{ }}</p>
+                                                <p>{{ }}</p>
+                                            </div>
                                         </v-col>
                                     </v-row>
                                 </v-container>
@@ -308,6 +325,7 @@ const alertError = ref(false);
 const alertSuccess = ref(false);
 const date = ref('');
 const time = ref('');
+const InvoiceForm = ref({})
 const tradeForm = ref({
     phoneNumber: '',
     email: '',
@@ -316,15 +334,19 @@ const tradeForm = ref({
     confirmCode: ''
 });
 const tradeBuyForm = ref({
-    price: '',
-    weight: '',
+    userId: '',
+    goldPrice: '',
+    goldWeight: '',
+    description: '',
+    totalPrice: '',
+    invoiceId: '',
 })
 
 const goldPriceForm = ref({
     date: '',
     time: '',
-    buyPrice: '',
-    sellPrice : '',
+    buyPrice: '67520000',
+    sellPrice: '',
     milliseconds: '',
 })
 
@@ -560,7 +582,9 @@ const AuthNumber = async () => {
 const TradeBuy = async () => {
     try {
         stepThreeLoading.value = true;
-        // const response = await GoldBoxService.AuthNumberTradeGoldbox();
+        tradeBuyForm.value.userId = userInfo.value.id;
+        tradeBuyForm.value.goldPrice = goldPriceForm.value.buyPrice;
+        const response = await GoldBoxService.CreateInvoiceTradeBuy(tradeBuyForm.value);
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -643,6 +667,10 @@ const phoneRules = [
     v => !!v || 'شماره همراه الزامی است',
     v => /^09\d{9}$/.test(v) || 'شماره معتبر نیست'
 ];
+
+const validateInvoice = [
+    v => !!v || 'شناسه پرداخت الزامی است',
+]
 
 const nationalCodeRules = [
     (v) => !!v || 'کد ملی الزامی است',
@@ -752,23 +780,22 @@ const getGoldPrice = async () => {
 }
 
 const buyGoldpriceConvert = () => {
-    tradeBuyForm.value.price = tradeBuyForm.value.price.replace(/[^0-9]/g, '');
-    tradeBuyForm.value.weight = (tradeBuyForm.value.price / goldPriceForm.value.buyPrice).toFixed(2);
+    tradeBuyForm.value.totalPrice = tradeBuyForm.value.totalPrice.replace(/[^0-9]/g, '');
+    tradeBuyForm.value.goldWeight = (tradeBuyForm.value.totalPrice / goldPriceForm.value.buyPrice).toFixed(2);
 }
 
-
 const buyGoldweightConvert = () => {
-    tradeBuyForm.value.weight = tradeBuyForm.value.weight.replace(/[^0-9.]/g, '');
-    const parts = tradeBuyForm.value.weight.split('.');
+    tradeBuyForm.value.goldWeight = tradeBuyForm.value.goldWeight.replace(/[^0-9.]/g, '');
+    const parts = tradeBuyForm.value.goldWeight.split('.');
     if (parts.length > 1) {
-        tradeBuyForm.value.weight = parts[0] + '.' + parts.slice(1).join('');
+        tradeBuyForm.value.goldWeight = parts[0] + '.' + parts.slice(1).join('');
     }
 
     if (parts.length > 1 && parts[1].length > 2) {
-        tradeBuyForm.value.weight = parts[0] + '.' + parts[1].slice(0, 2);
+        tradeBuyForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 2);
     }
 
-    tradeBuyForm.value.price = parseInt(tradeBuyForm.value.weight * goldPriceForm.value.buyPrice);
+    tradeBuyForm.value.totalPrice = parseInt(tradeBuyForm.value.goldWeight * goldPriceForm.value.buyPrice);
 }
 </script>
 
@@ -828,5 +855,12 @@ const buyGoldweightConvert = () => {
 
 .livePrice-box p {
     margin-bottom: 0 !important;
+}
+
+.invoice-box {
+    padding: 0.2rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>

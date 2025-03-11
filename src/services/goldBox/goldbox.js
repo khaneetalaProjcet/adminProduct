@@ -1,3 +1,4 @@
+import DashboardTemplate from "../dashboard/api";
 import VerifyTemplate from "../verify/api";
 import GoldBoxTemplate from "./api";
 
@@ -36,7 +37,7 @@ const GoldBoxService = {
             'birthDate': item.birthDate,
             'nationalCode': item.nationalCode,
         });
-        const response = await VerifyTemplate.post(`old/approve/${item.id}`, body);
+        const response = await VerifyTemplate.post(`/old/approve/${item.id}`, body);
         return response.data
     },
 
@@ -46,9 +47,17 @@ const GoldBoxService = {
             'birthDate': item.birthDate,
             'nationalCode': item.nationalCode,
         });
-        const response = await VerifyTemplate.post(`old/approvenew`, body);
+        const response = await VerifyTemplate.post(`/old/approvenew`, body);
         return response.data
     },
+
+    async CreateInvoiceTradeBuy(item) {
+        const body = JSON.stringify(item);
+        const response = await DashboardTemplate.post(`/call/create`, body);
+        return response.data
+    },
+
+
 }
 
 
