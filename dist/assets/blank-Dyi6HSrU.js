@@ -1,1 +1,0 @@
-import{_ as o,c as t,b as a,o as c,p as n}from"./index-W2K_4ALS.js";const s={},r={class:"layout-wrapper layout-blank","data-allow-mismatch":""};function _(l,p){const e=n("RouterView");return c(),t("div",r,[a(e)])}const m=o(s,[["render",_]]);export{m as default};

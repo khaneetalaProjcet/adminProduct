@@ -162,6 +162,12 @@
                             <p class="mx-2">{{ AccountingReviewDetail.adminId }}</p>
                         </div>
                     </v-col>
+                    <v-col cols="12" class="my-1">
+                        <div class="d-flex align-items-center">
+                            <p>توضیحات : </p>
+                            <p class="mx-2">{{ AccountingReviewDetail.description }}</p>
+                        </div>
+                    </v-col>
                 </v-row>
                 <div class="form-box">
                     <v-form ref="form" v-model="isValid" @submit.prevent="submitAccountingReview">
