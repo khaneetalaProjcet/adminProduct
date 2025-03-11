@@ -832,8 +832,9 @@ const submitForm = async () => {
     successModal.value = true;
     setInterval(() => {
         successModal.value = false;
+        tradeForm.value.phoneNumber = '';
         step.value = 1;
-    }, 6000)
+    }, 3000)
 };
 
 const convertDate = () => {
