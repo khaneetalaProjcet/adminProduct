@@ -22,7 +22,7 @@
                                         <p>{{ formatNumber(item.totalPrice) }}</p>
                                     </template>
                                     <template v-slot:item.goldWeight="{ item }">
-                                        <p>{{ (+item.goldWeight).toFixed(2) }}</p>
+                                        <p>{{ (+item.goldWeight).toFixed(3) }}</p>
                                     </template>
                                     <template v-slot:item.status="{ item }">
                                         <div>
@@ -46,7 +46,7 @@
                                         <p>{{ formatNumber(item.totalPrice) }}</p>
                                     </template>
                                     <template v-slot:item.goldWeight="{ item }">
-                                        <p>{{ (+item.goldWeight).toFixed(2) }}</p>
+                                        <p>{{ (+item.goldWeight).toFixed(3) }}</p>
                                     </template>
                                     <template v-slot:item.status="{ item }">
                                         <div>

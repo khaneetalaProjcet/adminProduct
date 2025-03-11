@@ -15,7 +15,7 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     heading: 'کاربران',
   }" />
 
-  <VerticalNavGroup :item="{
+  <!-- <VerticalNavGroup :item="{
     title: 'احراز هویت',
     icon: 'ri-fingerprint-line',
   }">
@@ -24,8 +24,6 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
       icon: 'ri-shield-keyhole-line',
       href: '#',
       to: '/VerifyShahkar'
-      // badgeContent: 'Pro',
-      // badgeClass: 'bg-light-primary text-primary',
     }" />
     <VerticalNavLink :item="{
       title: 'هویت حقیقی',
@@ -51,7 +49,7 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
       href: '#',
       to: '/VerifyCredit'
     }" />
-  </VerticalNavGroup>
+  </VerticalNavGroup> -->
 
   <VerticalNavGroup :item="{
     title: 'کاربران',
@@ -62,6 +60,8 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
       icon: 'ri-id-card-line',
       href: '#',
       to: '/userView'
+      // badgeContent: 'Pro',
+      // badgeClass: 'bg-light-primary text-primary',
     }" />
   </VerticalNavGroup>
 
@@ -69,6 +69,19 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
   <VerticalNavSectionTitle :item="{
     heading: 'مالی',
   }" />
+
+
+  <VerticalNavGroup :item="{
+    title: 'حسابداری',
+    icon: 'ri-user-line',
+  }">
+    <VerticalNavLink :item="{
+      title: 'بررسی معاملات',
+      icon: 'ri-survey-line',
+      href: '#',
+      to: '/AccountingTrade'
+    }" />
+  </VerticalNavGroup>
 
 
   <VerticalNavGroup :item="{

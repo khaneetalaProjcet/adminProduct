@@ -674,20 +674,20 @@ const TradeBuy = async () => {
         tradeBuyForm.value.userId = userInfo.value.id;
         tradeBuyForm.value.goldPrice = goldPriceForm.value.buyPrice;
         const response = await GoldBoxService.CreateInvoiceTradeBuy(tradeBuyForm.value);
-        InvoiceForm.value.adminId = response.invoice.adminId;
-        InvoiceForm.value.date = response.invoice.date;
-        InvoiceForm.value.time = response.invoice.time;
-        InvoiceForm.value.goldPrice = response.invoice.goldPrice;
-        InvoiceForm.value.goldWeight = response.invoice.goldWeight;
-        InvoiceForm.value.totalPrice = response.invoice.totalPrice;
-        InvoiceForm.value.user.firstName = response.invoice.buyer.firstName;
-        InvoiceForm.value.user.lastName = response.invoice.buyer.lastName;
-        InvoiceForm.value.user.fatherName = response.invoice.buyer.fatherName;
-        InvoiceForm.value.user.nationalCode = response.invoice.buyer.nationalCode;
-        InvoiceForm.value.user.phoneNumber = response.invoice.buyer.phoneNumber;
-        InvoiceForm.value.wallet.balance = response.wallet.balance;
-        InvoiceForm.value.wallet.blocked = response.wallet.blocked;
-        InvoiceForm.value.wallet.goldWeight = response.wallet.goldWeight;
+        InvoiceForm.value.adminId = response.data.invoice.adminId;
+        InvoiceForm.value.date = response.data.invoice.date;
+        InvoiceForm.value.time = response.data.invoice.time;
+        InvoiceForm.value.goldPrice = response.data.invoice.goldPrice;
+        InvoiceForm.value.goldWeight = response.data.invoice.goldWeight;
+        InvoiceForm.value.totalPrice = response.data.invoice.totalPrice;
+        InvoiceForm.value.user.firstName = response.data.invoice.buyer.firstName;
+        InvoiceForm.value.user.lastName = response.data.invoice.buyer.lastName;
+        InvoiceForm.value.user.fatherName = response.data.invoice.buyer.fatherName;
+        InvoiceForm.value.user.nationalCode = response.data.invoice.buyer.nationalCode;
+        InvoiceForm.value.user.phoneNumber = response.data.invoice.buyer.phoneNumber;
+        InvoiceForm.value.wallet.balance = response.data.wallet.balance;
+        InvoiceForm.value.wallet.blocked = response.data.wallet.blocked;
+        InvoiceForm.value.wallet.goldWeight = response.data.wallet.goldWeight;
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -783,7 +783,7 @@ const nationalCodeRules = [
 
 const validateWeight = [
     (v) => !!v || 'مقدار ورودی نمی‌تواند خالی باشد', // بررسی خالی نبودن فیلد
-    (v) => /^\d+(\.\d{1,2})?$/.test(v) || 'فقط عدد مجاز است و حداکثر ۲ رقم اعشار', // بررسی
+    (v) => /^\d+(\.\d{1,3})?$/.test(v) || 'فقط عدد مجاز است و حداکثر 3 رقم اعشار', // بررسی
 ];
 
 const validateNationalCode = () => {
@@ -875,8 +875,7 @@ const getGoldPrice = async () => {
 
 const buyGoldpriceConvert = () => {
     tradeBuyForm.value.totalPrice = tradeBuyForm.value.totalPrice.replace(/[^0-9]/g, '');
-    console.log(typeof (tradeBuyForm.value.totalPrice / goldPriceForm.value.buyPrice))
-    tradeBuyForm.value.goldWeight = (tradeBuyForm.value.totalPrice / goldPriceForm.value.buyPrice).toFixed(2);
+    tradeBuyForm.value.goldWeight = (tradeBuyForm.value.totalPrice / goldPriceForm.value.buyPrice).toFixed(3);
 }
 
 const buyGoldweightConvert = () => {
@@ -887,7 +886,7 @@ const buyGoldweightConvert = () => {
     }
 
     if (parts.length > 1 && parts[1].length > 2) {
-        tradeBuyForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 2);
+        tradeBuyForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 3);
     }
 
     tradeBuyForm.value.totalPrice = parseInt(tradeBuyForm.value.goldWeight * goldPriceForm.value.buyPrice);
