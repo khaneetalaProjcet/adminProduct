@@ -66,8 +66,20 @@
         </div>
       </div>
     </v-col>
-    <v-col cols="12">
-      <apexchart width="500" type="bar" :options="chartOptions" :series="series"></apexchart>
+    <v-col cols="12" md="6">
+      <div class="box">
+        <apexchart width="100%" type="bar" :options="MountlyBuychartOptions" :series="MountlyBuyseries"></apexchart>
+      </div>
+    </v-col>
+    <v-col cols="12" md="6">
+      <div class="box">
+        <apexchart width="100%" type="line" :options="DailyTradechartOptions" :series="DailyTradeseries"></apexchart>
+      </div>
+    </v-col>
+    <v-col cols="12" md="6">
+      <div class="box">
+        <apexchart width="100%" type="pie" :options="UserchartOptions" :series="Userseries"></apexchart>
+      </div>
     </v-col>
   </v-row>
   <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
@@ -97,21 +109,55 @@ const Statistics = ref({
 const errorMsg = ref('');
 const alertError = ref(false);
 
-const chartOptions = ref({
+const MountlyBuychartOptions = ref({
   chart: {
     id: "",
   },
   xaxis: {
     categories: [],
   },
-})
+});
 
-const series = ref([
+const MountlyBuyseries = ref([
   {
-    name: "series-1",
+    name: "میزان فروش صندوق طلا",
     data: [],
   },
-])
+]);
+
+
+const DailyTradechartOptions = ref({
+  chart: {
+    id: "",
+  },
+  xaxis: {
+    categories: [],
+  },
+});
+
+const DailyTradeseries = ref([
+  {
+    name: "میزان فروش صندوق طلا",
+    data: [],
+  },
+]);
+
+
+const UserchartOptions = ref({
+  chart: {
+    id: "",
+  },
+  xaxis: {
+    categories: [],
+  },
+});
+
+const Userseries = ref([
+  {
+    name: "میزان فروش صندوق طلا",
+    data: [],
+  },
+]);
 
 
 const GetStatistics = async () => {
@@ -129,22 +175,50 @@ const GetStatistics = async () => {
     Statistics.value.pendingsTransactions = response.data.pendingsTransactions;
     Statistics.value.successUsers = response.data.successUsers;
     Statistics.value.buyChart = response.data.buyChart;
-
-
-    chartOptions.value = {
-      ...chartOptions.value,
+    MountlyBuychartOptions.value = {
+      ...MountlyBuychartOptions.value,
       xaxis: {
-        categories: response.data.buyChart.label,
+        categories: response.data.barChart.label,
       },
     };
 
-    series.value = [
+    MountlyBuyseries.value = [
       {
-        name: "خرید طلا",
-        data: response.data.buyChart.data,
+        name: "فروش ماهانه صندوق طلا",
+        data: response.data.barChart.data,
       },
     ];
 
+
+    DailyTradechartOptions.value = {
+      ...DailyTradechartOptions.value,
+      xaxis: {
+        categories: response.data.lineChart.label,
+      },
+    };
+
+    DailyTradeseries.value = [
+      {
+        name: "فروش ماهانه صندوق طلا",
+        data: response.data.lineChart.data,
+      },
+    ];
+
+
+
+    UserchartOptions.value = {
+      ...UserchartOptions.value,
+      xaxis: {
+        categories: response.data.pieChart.label,
+      },
+    };
+
+    Userseries.value = [
+      {
+        name: "فروش ماهانه صندوق طلا",
+        data: response.data.pieChart.data,
+      },
+    ];
 
     return response
   } catch (error) {
