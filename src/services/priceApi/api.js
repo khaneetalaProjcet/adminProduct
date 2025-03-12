@@ -1,4 +1,7 @@
 import axios from "axios";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 
 const GoldPriceTemplate = axios.create({
@@ -17,6 +20,8 @@ GoldPriceTemplate.interceptors.request.use(
         const token = localStorage.getItem("token");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
+        } else {
+            router.replace('/login');;
         }
         return config;
     },
@@ -24,7 +29,6 @@ GoldPriceTemplate.interceptors.request.use(
         return Promise.reject(error);
     }
 );
-
 
 // after response
 GoldPriceTemplate.interceptors.response.use(
@@ -34,9 +38,7 @@ GoldPriceTemplate.interceptors.response.use(
     (error) => {
         if (error.response.status == 401) {
             localStorage.removeItem("token");
-            router.push('/login')
-        } else {
-            router.push('/login');
+            router.replace('/login');;
         }
         console.error("API Error:", error.response || error.message);
         return Promise.reject(error);

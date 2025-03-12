@@ -1,4 +1,7 @@
 import axios from "axios";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 
 const VerifyTemplate = axios.create({
@@ -34,7 +37,7 @@ VerifyTemplate.interceptors.response.use(
     (error) => {
         if (error.response.status == 401) {
             localStorage.removeItem("token");
-            router.push('/login')
+            router.replace('/login');
         }
         console.error("API Error:", error.response || error.message);
         return Promise.reject(error);

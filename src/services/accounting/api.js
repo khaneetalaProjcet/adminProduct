@@ -1,4 +1,7 @@
 import axios from "axios";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 
 const AccountingTemplate = axios.create({
@@ -18,7 +21,7 @@ AccountingTemplate.interceptors.request.use(
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
         } else {
-            router.push('/login');
+            router.replace('/login');
         }
         return config;
     },
@@ -36,7 +39,7 @@ AccountingTemplate.interceptors.response.use(
     (error) => {
         if (error.response.status == 401) {
             localStorage.removeItem("token");
-            router.push('/login');
+            router.replace('/login');;
         }
         console.error("API Error:", error.response || error.message);
         return Promise.reject(error);
