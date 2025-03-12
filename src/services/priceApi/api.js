@@ -6,7 +6,6 @@ const router = useRouter();
 
 const GoldPriceTemplate = axios.create({
     baseURL: "https://khaneetala.ir/api",
-    // timeout: 10000,
     headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",

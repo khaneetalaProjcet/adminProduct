@@ -6,7 +6,6 @@ const router = useRouter();
 
 const VerifyTemplate = axios.create({
     baseURL: "https://gateway.khaneetala.ir/v1",
-    // timeout: 10000,
     headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
