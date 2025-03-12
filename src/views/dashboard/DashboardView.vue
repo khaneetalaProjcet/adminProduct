@@ -67,7 +67,7 @@
       </div>
     </v-col>
     <v-col cols="12">
-      <!-- <Bar id="my-chart-id" :options="chartOptions" :data="chartData" /> -->
+      <apexchart width="500" type="bar" :options="chartOptions" :series="series"></apexchart>
     </v-col>
   </v-row>
   <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
@@ -97,6 +97,23 @@ const Statistics = ref({
 const errorMsg = ref('');
 const alertError = ref(false);
 
+const chartOptions = ref({
+  chart: {
+    id: "",
+  },
+  xaxis: {
+    categories: [],
+  },
+})
+
+const series = ref([
+  {
+    name: "series-1",
+    data: [],
+  },
+])
+
+
 const GetStatistics = async () => {
   try {
     DahboardLoading.value = true;
@@ -112,6 +129,23 @@ const GetStatistics = async () => {
     Statistics.value.pendingsTransactions = response.data.pendingsTransactions;
     Statistics.value.successUsers = response.data.successUsers;
     Statistics.value.buyChart = response.data.buyChart;
+
+
+    chartOptions.value = {
+      ...chartOptions.value,
+      xaxis: {
+        categories: response.data.buyChart.label,
+      },
+    };
+
+    series.value = [
+      {
+        name: "خرید طلا",
+        data: response.data.buyChart.data,
+      },
+    ];
+
+
     return response
   } catch (error) {
     errorMsg.value = error.response.data.msg || 'خطایی رخ داده است!';
@@ -126,63 +160,10 @@ const GetStatistics = async () => {
 
 
 
+
 onMounted(() => {
   GetStatistics();
 })
-
-
-
-
-// import { Bar } from 'vue-chartjs'
-// import {
-//   Chart as ChartJS,
-//   Title,
-//   Tooltip,
-//   Legend,
-//   BarElement,
-//   CategoryScale,
-//   LinearScale
-// } from 'chart.js'
-
-// // ثبت کردن ماژول‌های موردنیاز Chart.js
-// ChartJS.register(
-//   Title,
-//   Tooltip,
-//   Legend,
-//   BarElement,
-//   CategoryScale,
-//   LinearScale
-// )
-
-// ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale, ArcElement, PointElement, LineElement)
-// const chartData = ref({
-//   labels: ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'],
-//   datasets: [{ data: [40, 20, 12, 50, 96, 12, 8, 70, 59, 63, 48, 50], backgroundColor: '#00603A', }],
-// })
-// let delayed;
-// const chartOptions = ref({
-//   responsive: true,
-//   animation: {
-//     onComplete: () => {
-//       delayed = true;
-//     },
-//     delay: (context) => {
-//       let delay = 0;
-//       if (context.type === 'data' && context.mode === 'default' && !delayed) {
-//         delay = context.dataIndex * 300 + context.datasetIndex * 100;
-//       }
-//       return delay;
-//     },
-//   },
-//   scales: {
-//     x: {
-//       stacked: true,
-//     },
-//     y: {
-//       stacked: true
-//     }
-//   }
-// })
 
 
 </script>

@@ -2,6 +2,7 @@ import { createApp } from 'vue'
 import App from '@/App.vue'
 import { registerPlugins } from '@core/utils/plugins'
 import Vue3PersianDatetimePicker from 'vue3-persian-datetime-picker';
+import VueApexCharts from "vue3-apexcharts";
 import 'jalaali-js';
 
 
@@ -13,7 +14,8 @@ import "@/assets/styles/main.css"
 import "@/assets/styles/index.css"
 
 // Create vue app
-const app = createApp(App)
+const app = createApp(App);
+app.use(VueApexCharts);
 app.use(
     Vue3PersianDatetimePicker, {
     name: 'persian-date-picker',
