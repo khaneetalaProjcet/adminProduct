@@ -14,6 +14,13 @@ const AccountingService = {
         const response = await AccountingTemplate.get('/status/failed');
         return response.data;
     },
+    async SubmitAccountingReview(item) {
+        const body = JSON.stringify({
+            'description': item.description
+        });
+        const response = await AccountingTemplate.post(`/approve/${item.id}`, body);
+        return response.data;
+    },
 }
 
 

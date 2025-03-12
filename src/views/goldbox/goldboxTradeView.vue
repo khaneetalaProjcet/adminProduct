@@ -363,7 +363,7 @@
         {{ successMsg }}
     </v-alert>
 
-    <v-dialog v-model="successModal" max-width="500">
+    <v-dialog v-model="successModal" max-width="500" persistent>
         <v-card title="تایید فاکتور" class="modal-card">
             <v-icon class="mt-3 mb-6" icon="ri-checkbox-circle-fill" color="#0b8707"></v-icon>
             <h4>

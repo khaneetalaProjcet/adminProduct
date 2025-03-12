@@ -56,10 +56,6 @@
                                                 size="small"></v-chip>
                                         </div>
                                     </template>
-                                    <!-- <template v-slot:item.action="{ item }">
-                                        <v-icon class="me-2" size="small" icon="ri-refund-2-line" color="#d4af37"
-                                            @click="CompleteAccountingReviewInfo(item)"></v-icon>
-                                    </template> -->
                                 </v-data-table>
                             </v-card>
                         </v-tabs-window-item>
@@ -77,15 +73,11 @@
                                     </template>
                                     <template v-slot:item.status="{ item }">
                                         <div>
-                                            <v-chip :text="item.status == 'rejectd' ? 'رد شده' : 'در انتظار بررسی'"
-                                                :color="item.status == 'rejectd' ? '#00853f' : '#66666'"
+                                            <v-chip :text="item.status == 'failed' ? 'رد شده' : 'در انتظار بررسی'"
+                                                :color="item.status == 'failed' ? '#66666' : '#00853f'"
                                                 size="small"></v-chip>
                                         </div>
                                     </template>
-                                    <!-- <template v-slot:item.action="{ item }">
-                                        <v-icon class="me-2" size="small" icon="ri-refund-2-line" color="#d4af37"
-                                            @click="rejectAccountingReviewInfo(item)"></v-icon>
-                                    </template> -->
                                 </v-data-table>
                             </v-card>
                         </v-tabs-window-item>
@@ -99,7 +91,7 @@
         <v-dialog v-model="AccountingReviewDialog" max-width="700" class="dialog">
             <v-card class="dialog-card">
                 <div class="k-dialog-title">
-                    <p>اطلاعات برداشت</p>
+                    <p>اطلاعات فاکتور</p>
                 </div>
                 <v-row class="my-3 px-3">
                     <v-col cols="6" md="4" class="my-1">
@@ -171,8 +163,8 @@
                 </v-row>
                 <div class="form-box">
                     <v-form ref="form" v-model="isValid" @submit.prevent="submitAccountingReview">
-                        <v-text-field v-model="AccountingReviewalDetail.AccountingReviewalId" label="شناسه پرداخت"
-                            :rules="AccountingReviewalIdRule" @input="limitInput" class="my-2"></v-text-field>
+                        <v-textarea v-model="AccountingRevieItemDetail.description" label="توضیحات" variant="outlined"
+                            rows="2"></v-textarea>
                         <v-btn type="submit" :disabled="!isValid" size="large" class="my-2"
                             :loading="AccountingReviewSubmitLoading" block>ثبت</v-btn>
                     </v-form>
@@ -284,8 +276,8 @@ const CompleteAccountingReviewData = ref();
 const CompleteAccountingReviewLoading = ref();
 const AccountingReviewDetail = ref();
 const AccountingReviewDialog = ref(false);
-const AccountingReviewalDetail = ref({
-    AccountingReviewalId: '',
+const AccountingRevieItemDetail = ref({
+    description: '',
     id: '',
 })
 const rejectAccountingReviewSearch = ref();
@@ -365,7 +357,7 @@ const GetRejectAccountingReviewList = async () => {
     try {
         CompleteAccountingReviewLoading.value = true;
         const response = await AccountingService.rejectAccountingList();
-        CompleteAccountingReviewData.value = response.data;
+        rejectAccountingReviewData.value = response.data;
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -384,39 +376,28 @@ const formatNumber = (num) => {
 
 const PendingAccountingReviewInfo = (item) => {
     AccountingReviewDialog.value = true;
-    console.log(item)
     AccountingReviewDetail.value = item;
-}
-
-const AccountingReviewalIdRule = [
-    (v) => !!v || 'شناسه پرداخت نمی‌تواند خالی باشد',
-];
-
-const limitInput = () => {
-    AccountingReviewalDetail.value.AccountingReviewalId = AccountingReviewalDetail.value.AccountingReviewalId
-        .replace(/[٠-٩۰-۹]/g, (d) =>
-            String.fromCharCode(d.charCodeAt(0) - (d.charCodeAt(0) >= 0x06F0 ? 1728 : 1584))
-        )
-        .replace(/\D/g, '')
+    AccountingRevieItemDetail.value.id = item.id;
 }
 
 const submitAccountingReview = async () => {
-    // try {
-    //     AccountingReviewSubmitLoading.value = true;
-    //     const response = await WalletService.SubmitAccountingReview(AccountingReviewalDetail.value);
-    //     GetPendingAccountingReviewList();
-    //     GetCompleteAccountingReviewList();
-    //     AccountingReviewDialog.value = false;
-    //     return response
-    // } catch (error) {
-    //     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-    //     alertError.value = true;
-    //     setTimeout(() => {
-    //         alertError.value = false;
-    //     }, 10000)
-    // } finally {
-    //     AccountingReviewSubmitLoading.value = false;
-    // }
+    try {
+        AccountingReviewSubmitLoading.value = true;
+        const response = await WalletService.SubmitAccountingReview(AccountingRevieItemDetail.value);
+        GetPendingAccountingReviewList();
+        GetCompleteAccountingReviewList();
+        GetRejectAccountingReviewList();
+        AccountingReviewDialog.value = false;
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        AccountingReviewSubmitLoading.value = false;
+    }
 }
 
 onMounted(() => {
@@ -447,11 +428,15 @@ onMounted(() => {
     background-color: #d4af37;
     padding: 0.5rem;
     margin: 0 !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .k-dialog-title p {
     font-size: 18px;
     color: #fff;
+    margin: 0.5rem;
 }
 
 .user-dialog-info {

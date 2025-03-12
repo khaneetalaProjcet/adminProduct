@@ -76,7 +76,7 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     icon: 'ri-user-line',
   }">
     <VerticalNavLink :item="{
-      title: 'بررسی معاملات',
+      title: 'معاملات تلفنی',
       icon: 'ri-survey-line',
       href: '#',
       to: '/AccountingTrade'
