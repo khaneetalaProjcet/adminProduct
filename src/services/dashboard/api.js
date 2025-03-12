@@ -17,6 +17,8 @@ DashboardTemplate.interceptors.request.use(
         const token = localStorage.getItem("token");
         if (token) {
             config.headers.Authorization = `Bearer ${token}`;
+        } else {
+            router.push('/login');
         }
         return config;
     },
@@ -32,7 +34,10 @@ DashboardTemplate.interceptors.response.use(
         return response;
     },
     (error) => {
-        // مدیریت خطاهای API
+        if (error.response.status == 401) {
+            localStorage.removeItem("token");
+            router.push('/login');
+        }
         console.error("API Error:", error.response || error.message);
         return Promise.reject(error);
     }

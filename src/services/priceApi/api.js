@@ -35,6 +35,8 @@ GoldPriceTemplate.interceptors.response.use(
         if (error.response.status == 401) {
             localStorage.removeItem("token");
             router.push('/login')
+        } else {
+            router.push('/login');
         }
         console.error("API Error:", error.response || error.message);
         return Promise.reject(error);
