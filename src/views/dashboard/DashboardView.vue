@@ -76,7 +76,7 @@
         <apexchart width="100%" type="line" :options="DailyTradechartOptions" :series="DailyTradeseries"></apexchart>
       </div>
     </v-col>
-    <v-col cols="12" md="6">
+    <v-col cols="12" md="4">
       <div class="box">
         <apexchart width="100%" type="pie" :options="UserchartOptions" :series="Userseries"></apexchart>
       </div>
@@ -111,7 +111,16 @@ const alertError = ref(false);
 
 const MountlyBuychartOptions = ref({
   chart: {
-    id: "",
+    fontFamily: "YekanBakhFaNum",
+  },
+  title: {
+    text: "حجم معاملات ماهانه صندوق طلا",
+    align: "center",
+    style: {
+      fontSize: "16px",
+      fontWeight: "bold",
+      color: "#333",
+    },
   },
   xaxis: {
     categories: [],
@@ -122,13 +131,23 @@ const MountlyBuyseries = ref([
   {
     name: "میزان فروش صندوق طلا",
     data: [],
+    color: "#d4af37",
   },
 ]);
 
 
 const DailyTradechartOptions = ref({
   chart: {
-    id: "",
+    fontFamily: "YekanBakhFaNum",
+  },
+  title: {
+    text: "حجم معاملات روزانه صندوق طلا",
+    align: "center",
+    style: {
+      fontSize: "16px",
+      fontWeight: "bold",
+      color: "#333",
+    },
   },
   xaxis: {
     categories: [],
@@ -139,25 +158,30 @@ const DailyTradeseries = ref([
   {
     name: "میزان فروش صندوق طلا",
     data: [],
+    color: "#d4af37",
   },
 ]);
 
 
 const UserchartOptions = ref({
   chart: {
-    id: "",
+    type: "pie",
+    fontFamily: "YekanBakhFaNum",
   },
-  xaxis: {
-    categories: [],
+  title: {
+    text: "احراز هویت کاربران",
+    align: "center",
+    style: {
+      fontSize: "16px",
+      fontWeight: "bold",
+      color: "#333",
+    },
   },
+  colors: ["#fcc428", "#d4af37"],
+  labels: [],
 });
 
-const Userseries = ref([
-  {
-    name: "میزان فروش صندوق طلا",
-    data: [],
-  },
-]);
+const Userseries = ref([]);
 
 
 const GetStatistics = async () => {
@@ -208,17 +232,10 @@ const GetStatistics = async () => {
 
     UserchartOptions.value = {
       ...UserchartOptions.value,
-      xaxis: {
-        categories: response.data.pieChart.label,
-      },
+      labels: response.data.pieChart.label,
     };
 
-    Userseries.value = [
-      {
-        name: "فروش ماهانه صندوق طلا",
-        data: response.data.pieChart.data,
-      },
-    ];
+    Userseries.value = response.data.pieChart.data;
 
     return response
   } catch (error) {
