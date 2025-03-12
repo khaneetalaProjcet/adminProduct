@@ -18,7 +18,15 @@ const AccountingService = {
         const body = JSON.stringify({
             'description': item.description
         });
-        const response = await AccountingTemplate.post(`/approve/${item.id}`, body);
+        const response = await AccountingTemplate.put(`/approve/${item.id}`, body);
+        return response.data;
+    },
+
+    async RejectAccountingReview(item) {
+        const body = JSON.stringify({
+            'description': item.description
+        });
+        const response = await AccountingTemplate.put(`/reject/${item.id}`, body);
         return response.data;
     },
 }

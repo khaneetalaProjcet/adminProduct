@@ -162,11 +162,17 @@
                     </v-col>
                 </v-row>
                 <div class="form-box">
-                    <v-form ref="form" v-model="isValid" @submit.prevent="submitAccountingReview">
+                    <v-form ref="form" @submit.prevent="">
                         <v-textarea v-model="AccountingRevieItemDetail.description" label="توضیحات" variant="outlined"
                             rows="2"></v-textarea>
-                        <v-btn type="submit" :disabled="!isValid" size="large" class="my-2"
-                            :loading="AccountingReviewSubmitLoading" block>ثبت</v-btn>
+                        <div class="d-flex justify-space-between">
+                            <v-btn type="submit" size="large" class="my-2" color="#388E3C"
+                                :loading="AccountingReviewSubmitLoading" @click="submitAccountingReview">تایید
+                                پرداخت</v-btn>
+                            <v-btn type="submit" size="large" class="my-2" color="error"
+                                :loading="AccountingReviewRejectLoading" @click="rejectAccountingReview">رد
+                                پرداخت</v-btn>
+                        </div>
                     </v-form>
                 </div>
                 <v-card-actions>
@@ -195,8 +201,8 @@ const errorMsg = ref('');
 const alertError = ref(false);
 const PendingAccountingReviewLoading = ref(false);
 const AccountingReviewSubmitLoading = ref(false);
+const AccountingReviewRejectLoading = ref(false);
 const tab = ref(null);
-const isValid = ref(false);
 const PendingAccountingReviewHeader = ref([
     {
         title: 'نام',
@@ -383,11 +389,12 @@ const PendingAccountingReviewInfo = (item) => {
 const submitAccountingReview = async () => {
     try {
         AccountingReviewSubmitLoading.value = true;
-        const response = await WalletService.SubmitAccountingReview(AccountingRevieItemDetail.value);
+        const response = await AccountingService.SubmitAccountingReview(AccountingRevieItemDetail.value);
         GetPendingAccountingReviewList();
         GetCompleteAccountingReviewList();
         GetRejectAccountingReviewList();
         AccountingReviewDialog.value = false;
+        AccountingRevieItemDetail.value.description = '';
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -397,6 +404,27 @@ const submitAccountingReview = async () => {
         }, 10000)
     } finally {
         AccountingReviewSubmitLoading.value = false;
+    }
+}
+
+const rejectAccountingReview = async () => {
+    try {
+        AccountingReviewRejectLoading.value = true;
+        const response = await AccountingService.RejectAccountingReview(AccountingRevieItemDetail.value);
+        GetPendingAccountingReviewList();
+        GetCompleteAccountingReviewList();
+        GetRejectAccountingReviewList();
+        AccountingReviewDialog.value = false;
+        AccountingRevieItemDetail.value.description = '';
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        AccountingReviewRejectLoading.value = false;
     }
 }
 
