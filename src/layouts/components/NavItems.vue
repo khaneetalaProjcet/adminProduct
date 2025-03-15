@@ -152,4 +152,23 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
       to: '/installmentLanding'
     }" />
   </VerticalNavGroup>
+
+
+  <VerticalNavSectionTitle :item="{
+    heading: 'سرور',
+  }" />
+
+
+  <VerticalNavGroup :item="{
+    title: 'سرور',
+    icon: 'ri-computer-line',
+  }">
+    <VerticalNavLink :item="{
+      title: 'مانیتور سرور',
+      icon: 'ri-server-line',
+      href: '#',
+      to: '/serverMonitor'
+    }" />
+  </VerticalNavGroup>
+
 </template>
