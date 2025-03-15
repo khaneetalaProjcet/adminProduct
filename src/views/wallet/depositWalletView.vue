@@ -175,6 +175,10 @@ const PendingDepositHeader = ref([
         key: 'wallet.user.lastName',
     },
     {
+        title: 'شماره همراه',
+        key: 'wallet.user.phoneNumber',
+    },
+    {
         title: 'مبلغ (ریال)',
         key: 'amount',
     },
@@ -206,6 +210,10 @@ const CompleteDepositHeader = ref([
     {
         title: 'نام خانوادگی',
         key: 'wallet.user.lastName',
+    },
+    {
+        title: 'شماره همراه',
+        key: 'wallet.user.phoneNumber',
     },
     {
         title: 'مبلغ (ریال)',
@@ -240,6 +248,10 @@ const FailedDepositHeader = ref([
     {
         title: 'نام خانوادگی',
         key: 'wallet.user.lastName',
+    },
+    {
+        title: 'شماره همراه',
+        key: 'wallet.user.phoneNumber',
     },
     {
         title: 'مبلغ (ریال)',

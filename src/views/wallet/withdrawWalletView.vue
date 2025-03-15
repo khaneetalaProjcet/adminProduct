@@ -83,6 +83,14 @@
                             <p>مبلغ: </p>
                             <p class="mx-2">{{ formatNumber(WithdrawDetail.amount) }} ریال</p>
                         </div>
+                        <div class="d-flex align-items-center my-2">
+                            <p>شماره کارت: </p>
+                            <p class="mx-2">{{ WithdrawDetail.wallet.user.bankAccounts[0].cardNumber }}</p>
+                        </div>
+                        <div class="d-flex align-items-center my-2">
+                            <p>نام بانک: </p>
+                            <p class="mx-2">{{ WithdrawDetail.wallet.user.bankAccounts[0].name }}</p>
+                        </div>
                     </div>
                     <div class="d-flex flex-column w-100 px-4">
                         <div class="d-flex align-items-center my-2">
@@ -93,6 +101,10 @@
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>موجودی کیف پول: </p>
                             <p class="mx-2">{{ formatNumber(WithdrawDetail.wallet.balance) }} ریال</p>
+                        </div>
+                        <div class="d-flex align-items-center my-2">
+                            <p>شماره شبا: </p>
+                            <p class="mx-2">{{ WithdrawDetail.wallet.user.bankAccounts[0].shebaNumber }}</p>
                         </div>
                     </div>
                 </div>
@@ -141,6 +153,10 @@ const PendingWithdrawHeader = ref([
         key: 'wallet.user.lastName',
     },
     {
+        title: 'شماره همراه',
+        key: 'wallet.user.phoneNumber',
+    },
+    {
         title: 'مبلغ (ریال)',
         key: 'amount',
     },
@@ -172,6 +188,10 @@ const CompleteWithdrawHeader = ref([
     {
         title: 'نام خانوادگی',
         key: 'wallet.user.lastName',
+    },
+    {
+        title: 'شماره همراه',
+        key: 'wallet.user.phoneNumber',
     },
     {
         title: 'مبلغ (ریال)',

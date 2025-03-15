@@ -206,6 +206,10 @@ const PendingGoldBoxBuyHeader = ref([
         key: 'buyer.lastName',
     },
     {
+        title: 'شماره همراه',
+        key: 'buyer.phoneNumber',
+    },
+    {
         title: 'مبلغ خرید (ریال)',
         key: 'totalPrice',
     },
@@ -247,6 +251,10 @@ const CompleteGoldBoxBuyHeader = ref([
         key: 'buyer.lastName',
     },
     {
+        title: 'شماره همراه',
+        key: 'buyer.phoneNumber',
+    },
+    {
         title: 'مبلغ خرید (ریال)',
         key: 'totalPrice',
     },
@@ -279,6 +287,10 @@ const FailedGoldBoxBuyHeader = ref([
     {
         title: 'نام خانوادگی',
         key: 'buyer.lastName',
+    },
+    {
+        title: 'شماره همراه',
+        key: 'buyer.phoneNumber',
     },
     {
         title: 'مبلغ خرید (ریال)',
@@ -319,6 +331,10 @@ const InitGoldBoxBuyHeader = ref([
     {
         title: 'نام خانوادگی',
         key: 'buyer.lastName',
+    },
+    {
+        title: 'شماره همراه',
+        key: 'buyer.phoneNumber',
     },
     {
         title: 'مبلغ خرید (ریال)',

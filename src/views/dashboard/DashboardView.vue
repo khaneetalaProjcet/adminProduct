@@ -156,14 +156,13 @@ const DailyTradechartOptions = ref({
   xaxis: {
     categories: [],
   },
-  colors: ["#FFC107", "#FFF59D"],
+  colors: ["#FF3131", "#008000"],
 });
 
 const DailyTradeseries = ref([
   {
     name: "میزان فروش صندوق طلا",
     data: [],
-    color: "#d4af37",
   },
 ]);
 

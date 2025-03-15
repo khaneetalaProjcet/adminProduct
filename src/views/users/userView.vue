@@ -80,6 +80,10 @@
               <p>موجودی کیف پول: </p>
               <p class="mx-2">{{ formatNumber(UserInfo.wallet.balance) }} ریال</p>
             </div>
+            <div class="d-flex align-items-center my-2">
+              <p>شماره کارت: </p>
+              <p class="mx-2">{{ UserInfo.bankAccounts[0].cardNumber }}</p>
+            </div>
           </div>
           <div class="d-flex flex-column w-100 px-4">
             <div class="d-flex align-items-center my-2">
@@ -97,6 +101,10 @@
             <div class="d-flex align-items-center my-2 user-price">
               <p>موجودی طلا: </p>
               <p class="mx-2">{{ UserInfo.wallet.goldWeight }} گرم</p>
+            </div>
+            <div class="d-flex align-items-center my-2">
+              <p>شماره شبا: </p>
+              <p class="mx-2">{{ UserInfo.bankAccounts[0].shebaNumber }}</p>
             </div>
           </div>
         </div>
