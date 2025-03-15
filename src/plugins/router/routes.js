@@ -96,6 +96,12 @@ export const routes = [
         component: () => import('@/views/acconting/AccountingTradeView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/installmentLanding',
+        name: 'installmentLanding',
+        component: () => import('@/views/landing/installmentLandingView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {

@@ -136,4 +136,20 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
       to: '/goldboxTrade'
     }" />
   </VerticalNavGroup>
+
+  <VerticalNavSectionTitle :item="{
+    heading: 'لندینگ',
+  }" />
+
+  <VerticalNavGroup :item="{
+    title: 'لندینگ ها',
+    icon: 'ri-pages-line',
+  }">
+    <VerticalNavLink :item="{
+      title: 'فروش اقساطی',
+      icon: 'ri-funds-line',
+      href: '#',
+      to: '/installmentLanding'
+    }" />
+  </VerticalNavGroup>
 </template>
