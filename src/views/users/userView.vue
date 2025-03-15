@@ -45,7 +45,7 @@
                   <template v-slot:item.action="{ item }">
                     <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
                       @click="userInfo(item)"></v-icon>
-                    <v-icon class="me-2" size="small" icon="ri-user-follow-line" color="#008000"
+                    <v-icon class="me-2" size="small" icon="ri-user-follow-line" color="#FF3131"
                       @click="VerifyUser(item)"></v-icon>
                   </template>
                 </v-data-table>

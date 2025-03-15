@@ -109,6 +109,14 @@ const installmentHeader = ref([
         key: 'nationalCode',
     },
     {
+        title: 'استان',
+        key: 'province'
+    },
+    {
+        title: 'شهر',
+        key: 'city'
+    },
+    {
         title: 'دسته بندی',
         key: 'category'
     },
