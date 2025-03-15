@@ -149,9 +149,14 @@ const DailyTradechartOptions = ref({
       color: "#333",
     },
   },
+  stroke: {
+    curve: "smooth",
+    width: 3,
+  },
   xaxis: {
     categories: [],
   },
+  colors: ["#FFC107", "#FFF59D"],
 });
 
 const DailyTradeseries = ref([
@@ -224,7 +229,11 @@ const GetStatistics = async () => {
     DailyTradeseries.value = [
       {
         name: "فروش ماهانه صندوق طلا",
-        data: response.data.lineChart.data,
+        data: response.data.lineChart[0].data
+      },
+      {
+        name: "خرید ماهانه صندوق طلا",
+        data: response.data.lineChart[1].data
       },
     ];
 
