@@ -81,6 +81,12 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
       href: '#',
       to: '/AccountingTrade'
     }" />
+    <VerticalNavLink :item="{
+      title: 'برداشت صندوق طلا',
+      icon: 'ri-creative-commons-nc-line',
+      href: '#',
+      to: '/AccountingSellTrade'
+    }" />
   </VerticalNavGroup>
 
 
@@ -168,6 +174,24 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
       icon: 'ri-server-line',
       href: '#',
       to: '/serverMonitor'
+    }" />
+  </VerticalNavGroup>
+
+
+  <VerticalNavSectionTitle :item="{
+    heading: 'گزارشات',
+  }" />
+
+
+  <VerticalNavGroup :item="{
+    title: 'گزارشات',
+    icon: 'ri-file-chart-2-line',
+  }">
+    <VerticalNavLink :item="{
+      title: 'گزارش جامع',
+      icon: 'ri-folder-chart-line',
+      href: '#',
+      to: '/TotalReport'
     }" />
   </VerticalNavGroup>
 

@@ -112,7 +112,7 @@
                     <v-form ref="form" v-model="isValid" @submit.prevent="submitWithdraw">
                         
                         <v-text-field v-model="withdrawalDetail.withdrawalId" label="شناسه پرداخت"
-                            :rules="withdrawalIdRule" @input="limitInput" class="my-2"></v-text-field>
+                            :rules="withdrawalIdRule" class="my-2"></v-text-field>
                         <v-btn type="submit" :disabled="!isValid" size="large" class="my-2"
                             :loading="WithdrawSubmitLoading" block>ثبت</v-btn>
                     </v-form>

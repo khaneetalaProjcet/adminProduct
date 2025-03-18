@@ -97,6 +97,12 @@ export const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: '/AccountingSellTrade',
+        name: 'AccountingSellTrade',
+        component: () => import('@/views/acconting/AccountingSellTrade.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: '/installmentLanding',
         name: 'installmentLanding',
         component: () => import('@/views/landing/installmentLandingView.vue'),
@@ -106,6 +112,12 @@ export const routes = [
         path: '/serverMonitor',
         name: 'serverMonitor',
         component: () => import('@/views/server/serverMonitorView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/TotalReport',
+        name: 'TotalReport',
+        component: () => import('@/views/report/TotalReportView.vue'),
         meta: { requiresAuth: true }
       },
     ],

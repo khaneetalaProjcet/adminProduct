@@ -1,3 +1,4 @@
+import DashboardTemplate from "../dashboard/api";
 import AccountingTemplate from "./api";
 
 
@@ -21,12 +22,15 @@ const AccountingService = {
         const response = await AccountingTemplate.put(`/approve/${item.id}`, body);
         return response.data;
     },
-
     async RejectAccountingReview(item) {
         const body = JSON.stringify({
             'description': item.description
         });
         const response = await AccountingTemplate.put(`/reject/${item.id}`, body);
+        return response.data;
+    },
+    async GoldBoxSellList() {
+        const response = await DashboardTemplate.get('/selllist');
         return response.data;
     },
 }
