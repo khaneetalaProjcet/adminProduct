@@ -57,15 +57,13 @@
             <v-row>
                 <v-col cols="12">
                     <div class="d-flex flex-column justify-start">
-                        <a class="download-link my-2" v-for="(item, i) in reportData.link" :key="i" :href="item"
+                        <a class="download-link my-1" v-for="(item, i) in reportData.link" :key="i" :href="item"
                             v-if="reportData.link != ''">دانلود گزارش {{ i + 1 }}</a>
                     </div>
                 </v-col>
                 <v-col cols="12">
                     <div class="d-flex justify-end">
                         <v-btn type="submit" :loading="filterLoading">ایجاد گزارش</v-btn>
-                        <!-- <v-btn :loading="filterLoading" v-if="reportData.link != ''"
-                            @click="downloadReport">دانلود</v-btn> -->
                     </div>
                 </v-col>
             </v-row>
@@ -131,7 +129,6 @@ const submitExport = async () => {
     try {
         filterLoading.value = true;
         const response = await ReportService.ReportSubmit(filterList.value);
-        // reportData.value.link = response[1];
         reportData.value.link.push(response[1])
         return response
     } catch (error) {
@@ -145,17 +142,6 @@ const submitExport = async () => {
     }
 }
 
-// const downloadReport = () => {
-//     reportData.value.link = '';
-//     const link = document.createElement("a");
-//     link.href = reportData.value.link;
-//     const fileName = reportData.value.link.split('/').pop() || "report.xlsx";
-//     link.setAttribute("download", fileName);
-//     document.body.appendChild(link);
-//     link.click();
-//     document.body.removeChild(link);
-// }
-
 </script>
 
 <style scoped>
@@ -167,5 +153,8 @@ const submitExport = async () => {
 
 .download-link {
     color: red;
+    background-color: #e2e2e2;
+    padding: 0.5rem;
+    border-radius: 8px;
 }
 </style>
