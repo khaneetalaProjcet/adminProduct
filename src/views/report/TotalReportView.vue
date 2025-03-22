@@ -46,12 +46,16 @@
                     <v-select v-model="filterList.deal" :items="DealType" label="نوع ثبت" variant="outlined"
                         item-title="label" item-value="value"></v-select>
                 </v-col>
-                <v-col cols="6" md="4" class="my-4">
+                <v-col cols="6" md="4" class="my-4" v-if="filterList.report != 3">
                     <v-select v-model="filterList.status" :items="statusType" label="وضعیت" variant="outlined"
                         item-title="label" item-value="value"></v-select>
                 </v-col>
-                <v-col cols="6" md="4" class="my-4">
+                <v-col cols="6" md="4" class="my-4" v-if="filterList.report != 3">
                     <v-text-field v-model="filterList.nationalCode" label="کد ملی" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="4" class="my-4" v-if="filterList.report == 3">
+                    <v-select v-model="filterList.auth" :items="authType" label="وضعیت کاربران" variant="outlined"
+                        item-title="label" item-value="value"></v-select>
                 </v-col>
             </v-row>
             <v-row>
@@ -76,7 +80,6 @@ import ReportService from '@/services/report/report';
 import { ref } from 'vue';
 
 const filterLoading = ref(false);
-const search = ref(null);
 const errorMsg = ref('');
 const alertError = ref(false);
 const filterList = ref({
@@ -89,6 +92,7 @@ const filterList = ref({
     deal: 'all',
     status: 'all',
     nationalCode: '',
+    auth: '',
 })
 const reportData = ref({
     link: [],
@@ -97,6 +101,7 @@ const reportData = ref({
 const reportType = ref([
     { value: 1, label: 'واریز و برداشت' },
     { value: 2, label: 'معاملات' },
+    { value: 3, label: 'کاربران' },
 ])
 
 const TransactionType = ref([
@@ -109,6 +114,12 @@ const TradeType = ref([
     { value: 'all', label: 'همه' },
     { value: 'sell', label: 'خرید' },
     { value: 'buy', label: 'فروش' },
+]);
+
+const authType = ref([
+    { value: 'all', label: 'همه' },
+    { value: 'approved', label: 'احراز شده' },
+    { value: 'pebding', label: 'در انتظار احراز' },
 ]);
 
 const DealType = ref([
