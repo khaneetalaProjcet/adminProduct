@@ -120,6 +120,18 @@ export const routes = [
         component: () => import('@/views/report/TotalReportView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/remittanceTrade',
+        name: 'remittanceTrade',
+        component: () => import('@/views/remittance/remittanceTradeView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/inPersonSale',
+        name: 'inPersonSale',
+        component: () => import('@/views/inperson/inpersonSaleView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {

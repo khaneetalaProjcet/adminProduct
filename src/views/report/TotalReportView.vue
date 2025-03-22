@@ -8,7 +8,7 @@
                         item-value="value"></v-select>
                 </v-col>
             </v-row>
-            <v-row>
+            <v-row v-if="filterList.report != 4"> 
                 <v-col cols="6" md="4" class="my-4">
                     <div class="d-flex justify-start align-center">
                         <p class="mb-0">زمان شروع: </p>
@@ -102,6 +102,7 @@ const reportType = ref([
     { value: 1, label: 'واریز و برداشت' },
     { value: 2, label: 'معاملات' },
     { value: 3, label: 'کاربران' },
+    { value: 4, label: 'گزارش گیری ساعتی' },
 ])
 
 const TransactionType = ref([

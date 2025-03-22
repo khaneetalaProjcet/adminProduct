@@ -503,10 +503,6 @@ const InvoiceForm = ref({
 })
 const tradeForm = ref({
     phoneNumber: '',
-    email: '',
-    fullName: '',
-    address: '',
-    confirmCode: ''
 });
 const tradeBuyForm = ref({
     userId: '',

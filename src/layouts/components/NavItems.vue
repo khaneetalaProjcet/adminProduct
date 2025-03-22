@@ -143,6 +143,30 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     }" />
   </VerticalNavGroup>
 
+  <VerticalNavGroup :item="{
+    title: 'حواله',
+    icon: 'ri-article-line',
+  }">
+    <VerticalNavLink :item="{
+      title: 'ثبت حواله',
+      icon: 'ri-news-line',
+      href: '#',
+      to: '/remittanceTrade'
+    }" />
+  </VerticalNavGroup>
+
+  <VerticalNavGroup :item="{
+    title: 'فروش حضوری',
+    icon: 'ri-store-2-line',
+  }">
+    <VerticalNavLink :item="{
+      title: 'ثبت سفارش',
+      icon: 'ri-shopping-bag-4-line',
+      href: '#',
+      to: '/inPersonSale'
+    }" />
+  </VerticalNavGroup>
+
   <VerticalNavSectionTitle :item="{
     heading: 'لندینگ',
   }" />
