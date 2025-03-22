@@ -173,8 +173,6 @@
                             </v-tabs>
 
                             <v-tabs-window v-model="tab">
-
-
                                 <!-- buy -->
                                 <v-tabs-window-item value="one">
                                     <v-form :ref="(el) => setFormRef(el, 3)">
@@ -504,6 +502,7 @@ const InvoiceForm = ref({
 const tradeForm = ref({
     phoneNumber: '',
 });
+
 const tradeBuyForm = ref({
     userId: '',
     goldPrice: '',

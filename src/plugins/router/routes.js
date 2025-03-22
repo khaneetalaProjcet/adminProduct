@@ -127,6 +127,18 @@ export const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: '/remiitanceBuy',
+        name: 'remiitanceBuy',
+        component: () => import('@/views/remittance/remiitanceBuyView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/remiitanceSell',
+        name: 'remiitanceSell',
+        component: () => import('@/views/remittance/remiitanceSellView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: '/inPersonSale',
         name: 'inPersonSale',
         component: () => import('@/views/inperson/inpersonSaleView.vue'),

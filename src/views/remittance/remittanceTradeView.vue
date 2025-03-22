@@ -161,7 +161,164 @@
                     </v-stepper-window-item>
                     <v-stepper-window-item :value="3">
                         <v-card class="step-card">
-                            <v-form :ref="(el) => setFormRef(el, 3)"></v-form>
+                            <v-tabs v-model="tab">
+                                <v-tab value="one">خرید</v-tab>
+                                <v-tab value="two">فروش</v-tab>
+                            </v-tabs>
+
+                            <v-tabs-window v-model="tab">
+                                <!-- buy -->
+                                <v-tabs-window-item value="one">
+                                    <v-form :ref="(el) => setFormRef(el, 3)">
+                                        <v-container>
+                                            <v-row>
+                                                <v-col cols="12">
+                                                    <div class="w-100 d-flex justify-space-between align-items-center">
+                                                        <h3 class="trade-step-title">ثبت حواله خرید</h3>
+                                                    </div>
+                                                </v-col>
+                                            </v-row>
+                                            <v-row class="">
+                                                <v-col cols="12" md="3">
+                                                    <persian-date-picker v-model="goldPriceForm.date"
+                                                        placeholder="تاریخ"></persian-date-picker>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <persian-date-picker type="time" v-model="goldPriceForm.time"
+                                                        placeholder="زمان"></persian-date-picker>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <!-- <div class="livePrice-box"> -->
+                                                    <!-- <p>قیمت طلا : </p> -->
+                                                    <!-- <p>{{ formatNumber(goldPriceForm.buyPrice) }}</p> -->
+                                                    <v-text-field v-model="goldPriceForm.buyPrice"
+                                                        label="قیمت طلا(ریال)" variant="outlined"></v-text-field>
+                                                    <!-- </div> -->
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <v-btn @click="getGoldPrice" class="h-100" color="primary"
+                                                        size="large" variant="elevated" block
+                                                        :loading="GoldPriceLoading">
+                                                        استعلام قیمت طلا
+                                                    </v-btn>
+                                                </v-col>
+                                            </v-row>
+                                            <v-row>
+                                                <v-col cols="12" md="3">
+                                                    <v-text-field v-model="remiitanceBuyForm.totalPrice"
+                                                        label="مبلغ (ریال)" variant="outlined"
+                                                        @input="buyGoldpriceConvert"
+                                                        :disabled="goldPriceForm.buyPrice == '' ? true : false"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" md="2">
+                                                    <div class="d-flex justify-center align-center h-100">
+                                                        <v-icon class="me-2" size="small"
+                                                            icon="ri-arrow-left-right-line" color="#0b8707"></v-icon>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <v-text-field v-model="remiitanceBuyForm.goldWeight"
+                                                        label="وزن (گرم)" variant="outlined" :rules="validateWeight"
+                                                        @input="buyGoldweightConvert"
+                                                        :disabled="goldPriceForm.buyPrice == '' ? true : false"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" md="4">
+                                                    <v-text-field v-model="remiitanceBuyForm.invoiceId"
+                                                        label="شناسه پرداخت" variant="outlined"
+                                                        :rules="validateInvoice"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12">
+                                                    <v-textarea label="توضیحات (اختیاری)" variant="outlined"
+                                                        v-model="remiitanceBuyForm.description"></v-textarea>
+                                                </v-col>
+                                            </v-row>
+                                        </v-container>
+                                    </v-form>
+                                    <v-card-actions class="btn-box">
+                                        <v-btn @click="prevStep" size="large">قبلی</v-btn>
+                                        <v-btn @click="nextStep('buy')" color="primary" size="large" variant="elevated"
+                                            :disabled="!isFormValid" :loading="stepThreeLoading">
+                                            خرید
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-tabs-window-item>
+
+                                <!-- sell -->
+                                <v-tabs-window-item value="two">
+                                    <v-form :ref="(el) => setFormRef(el, 3)">
+                                        <v-container>
+                                            <v-row>
+                                                <v-col cols="12">
+                                                    <div class="w-100 d-flex justify-space-between align-items-center">
+                                                        <h3 class="trade-step-title">ثبت فروش</h3>
+                                                    </div>
+                                                </v-col>
+                                            </v-row>
+                                            <v-row class="">
+                                                <v-col cols="12" md="3">
+                                                    <persian-date-picker v-model="goldPriceForm.date"
+                                                        placeholder="تاریخ"></persian-date-picker>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <persian-date-picker type="time" v-model="goldPriceForm.time"
+                                                        placeholder="زمان"></persian-date-picker>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <!-- <div class="livePrice-box">
+                                                        <p>قیمت طلا : </p>
+                                                        <p>{{ formatNumber(goldPriceForm.sellPrice) }}</p>
+                                                    </div> -->
+                                                    <v-text-field v-model="goldPriceForm.sellPrice"
+                                                        label="قیمت طلا(ریال)" variant="outlined"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <v-btn @click="getGoldPrice" class="h-100" color="primary"
+                                                        size="large" variant="elevated" block
+                                                        :loading="GoldPriceLoading">
+                                                        استعلام قیمت طلا
+                                                    </v-btn>
+                                                </v-col>
+                                            </v-row>
+                                            <v-row>
+                                                <v-col cols="12" md="3">
+                                                    <v-text-field v-model="remiitanceSellForm.totalPrice"
+                                                        label="مبلغ (ریال)" variant="outlined"
+                                                        @input="sellGoldpriceConvert"
+                                                        :disabled="goldPriceForm.sellPrice == '' ? true : false"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" md="2">
+                                                    <div class="d-flex justify-center align-center h-100">
+                                                        <v-icon class="me-2" size="small"
+                                                            icon="ri-arrow-left-right-line" color="#0b8707"></v-icon>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <v-text-field v-model="remiitanceSellForm.goldWeight"
+                                                        label="وزن (گرم)" variant="outlined" :rules="validateWeight"
+                                                        @input="sellGoldweightConvert"
+                                                        :disabled="goldPriceForm.sellPrice == '' ? true : false"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" md="4">
+                                                    <v-text-field v-model="remiitanceSellForm.invoiceId"
+                                                        label="شناسه پرداخت" variant="outlined"
+                                                        :rules="validateInvoice"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12">
+                                                    <v-textarea label="توضیحات (اختیاری)" variant="outlined"
+                                                        v-model="remiitanceSellForm.description"></v-textarea>
+                                                </v-col>
+                                            </v-row>
+                                        </v-container>
+                                    </v-form>
+                                    <v-card-actions class="btn-box">
+                                        <v-btn @click="prevStep" size="large">قبلی</v-btn>
+                                        <v-btn @click="nextStep('sell')" color="primary" size="large" variant="elevated"
+                                            :disabled="!isFormValid" :loading="stepThreeLoading">
+                                            فروش
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-tabs-window-item>
+                            </v-tabs-window>
                         </v-card>
                     </v-stepper-window-item>
                     <v-stepper-window-item :value="4">
@@ -179,14 +336,19 @@
 </template>
 
 <script setup>
+import GoldPriceService from '@/services/priceApi/price';
 import RemiitanceService from '@/services/remittance/remiitance';
+import jalaaliJs from 'jalaali-js';
 import { ref } from 'vue';
 
 const steps = ref([1, 2, 3, 4]);
 const step = ref(1);
 const formRefs = ref({});
+const tab = ref(null);
 const stepOneLoading = ref(false);
 const stepTwoLoading = ref(false);
+const stepThreeLoading = ref(false);
+const GoldPriceLoading = ref(false);
 const selectedDate = ref();
 const selectedMonth = ref();
 const selectedYear = ref();
@@ -206,6 +368,54 @@ const userInfo = ref({
     phoneNumber: '',
     nationalCode: '',
     isHaveBank: '',
+});
+
+const goldPriceForm = ref({
+    date: '',
+    time: '',
+    buyPrice: '',
+    sellPrice: '',
+    milliseconds: '',
+})
+
+const remiitanceBuyForm = ref({
+    userId: '',
+    goldPrice: '',
+    goldWeight: '',
+    description: '',
+    totalPrice: '',
+    invoiceId: '',
+});
+
+const remiitanceSellForm = ref({
+    userId: '',
+    goldPrice: '',
+    goldWeight: '',
+    description: '',
+    totalPrice: '',
+    invoiceId: '',
+});
+
+const InvoiceForm = ref({
+    type: '',
+    goldPrice: '',
+    goldWeight: '',
+    totalPrice: '',
+    date: '',
+    time: '',
+    adminId: '',
+    wallet: {
+        goldWeight: '',
+        balance: '',
+        blocked: '',
+    },
+    user: {
+        firstName: '',
+        lastName: '',
+        fatherName: '',
+        phoneNumber: '',
+        nationalCode: '',
+    }
 });
 
 const userVerificationDetail = ref({
@@ -401,14 +611,79 @@ const TradeRequest = async (type) => {
     } else if (step.value === 2) {
         return true;
     } else if (step.value === 3) {
-        // if (type == 'buy') {
-        //     return await TradeBuy();
-        // } else {
-        //     return await TradeSell();
-        // }
-        return true;
+        if (type == 'buy') {
+            return await remiitanceBuy();
+        } else {
+            return await remiitanceSell();
+        }
     } else if (step.value === 4) {
         return true;
+    }
+}
+
+const remiitanceBuy = async () => {
+    try {
+        stepThreeLoading.value = true;
+        remiitanceBuyForm.value.userId = userInfo.value.id;
+        remiitanceBuyForm.value.goldPrice = goldPriceForm.value.buyPrice;
+        const response = await RemiitanceService.CreateRemiitanceBuy(remiitanceBuyForm.value);
+        InvoiceForm.value.type = 'خرید';
+        InvoiceForm.value.adminId = response.data.invoice.adminId;
+        InvoiceForm.value.date = response.data.invoice.date;
+        InvoiceForm.value.time = response.data.invoice.time;
+        InvoiceForm.value.goldPrice = response.data.invoice.goldPrice;
+        InvoiceForm.value.goldWeight = response.data.invoice.goldWeight;
+        InvoiceForm.value.totalPrice = response.data.invoice.totalPrice;
+        InvoiceForm.value.user.firstName = response.data.invoice.buyer.firstName;
+        InvoiceForm.value.user.lastName = response.data.invoice.buyer.lastName;
+        InvoiceForm.value.user.fatherName = response.data.invoice.buyer.fatherName;
+        InvoiceForm.value.user.nationalCode = response.data.invoice.buyer.nationalCode;
+        InvoiceForm.value.user.phoneNumber = response.data.invoice.buyer.phoneNumber;
+        InvoiceForm.value.wallet.balance = response.data.wallet.balance;
+        InvoiceForm.value.wallet.blocked = response.data.wallet.blocked;
+        InvoiceForm.value.wallet.goldWeight = response.data.wallet.goldWeight;
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        stepThreeLoading.value = false;
+    }
+}
+
+const remiitanceSell = async () => {
+    try {
+        stepThreeLoading.value = true;
+        tradeSellForm.value.userId = userInfo.value.id;
+        tradeSellForm.value.goldPrice = goldPriceForm.value.buyPrice;
+        const response = await RemiitanceService.CreateRemiitanceSell(remiitanceSellForm.value);
+        InvoiceForm.value.type = 'فروش';
+        InvoiceForm.value.adminId = response.data.invoice.adminId;
+        InvoiceForm.value.date = response.data.invoice.date;
+        InvoiceForm.value.time = response.data.invoice.time;
+        InvoiceForm.value.goldPrice = response.data.invoice.goldPrice;
+        InvoiceForm.value.goldWeight = response.data.invoice.goldWeight;
+        InvoiceForm.value.totalPrice = response.data.invoice.totalPrice;
+        InvoiceForm.value.user.firstName = response.data.invoice.seller.firstName;
+        InvoiceForm.value.user.lastName = response.data.invoice.seller.lastName;
+        InvoiceForm.value.user.fatherName = response.data.invoice.seller.fatherName;
+        InvoiceForm.value.user.nationalCode = response.data.invoice.seller.nationalCode;
+        InvoiceForm.value.user.phoneNumber = response.data.invoice.seller.phoneNumber;
+        InvoiceForm.value.wallet.balance = response.data.wallet.balance;
+        InvoiceForm.value.wallet.blocked = response.data.wallet.blocked;
+        InvoiceForm.value.wallet.goldWeight = response.data.wallet.goldWeight;
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        stepThreeLoading.value = false;
     }
 }
 
@@ -429,7 +704,6 @@ const AuthNumber = async () => {
         userInfo.value.nationalCode = response.data.user.nationalCode;
         userInfo.value.isHaveBank = response.data.user.isHaveBank;
         userInfo.value.birthDate = response.data.user.birthDate;
-        console.log(userInfo.value)
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -447,7 +721,6 @@ const identity = async () => {
     try {
         stepTwoLoading.value = true;
         userInfo.value.phoneNumber = remittanceForm.value.phoneNumber;
-        console.log(userInfo.value)
         const response = await RemiitanceService.AuthIdentityUser(userInfo.value);
         userInfo.value.fatherName = response.data.fatherName;
         userInfo.value.gender = response.data.gender;
@@ -456,7 +729,6 @@ const identity = async () => {
         userInfo.value.firstName = response.data.firstName;
         userInfo.value.lastName = response.data.lastName;
         userVerificationDetail.value.userVerified = true;
-        console.log(userInfo.value)
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -466,6 +738,42 @@ const identity = async () => {
         }, 10000)
     } finally {
         stepTwoLoading.value = false;
+    }
+}
+
+const convertDate = () => {
+    const [year, month, day] = goldPriceForm.value.date.split('/').map(Number);
+    const [hour, minute] = goldPriceForm.value.time.split(':').map(Number);
+    const gregorianDate = jalaaliJs.toGregorian(year, month, day);
+
+    const date = new Date(
+        gregorianDate.gy,
+        gregorianDate.gm - 1,
+        gregorianDate.gd,
+        hour,
+        minute,
+        0
+    );
+
+    goldPriceForm.value.milliseconds = date.getTime();
+}
+
+const getGoldPrice = async () => {
+    convertDate()
+    try {
+        GoldPriceLoading.value = true;
+        const response = await GoldPriceService.GoldPriceByTime(goldPriceForm.value.milliseconds);
+        goldPriceForm.value.buyPrice = response.buyPrice;
+        goldPriceForm.value.sellPrice = response.sellPrice;
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        GoldPriceLoading.value = false;
     }
 }
 
@@ -495,6 +803,15 @@ const nationalCodeRules = [
         return (sum < 2 && check === sum) || (sum >= 2 && check + sum === 11) || 'کد ملی نامعتبر است';
     }
 ];
+
+const validateWeight = [
+    (v) => !!v || 'مقدار ورودی نمی‌تواند خالی باشد',
+    (v) => /^\d+(\.\d{1,3})?$/.test(v) || 'فقط عدد مجاز است و حداکثر 3 رقم اعشار',
+];
+
+const validateInvoice = [
+    v => !!v || 'شناسه پرداخت الزامی است',
+]
 
 const validateNationalCode = () => {
     userInfo.value.nationalCode = userInfo.value.nationalCode.replace(/\D/g, '').slice(0, 10);
@@ -528,6 +845,52 @@ const updateBirthDate = () => {
         userInfo.value.birthDate = `${selectedYear.value}${month}${day}`;
     }
 };
+
+const formatNumber = (num) => {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+
+const buyGoldpriceConvert = () => {
+    remiitanceBuyForm.value.totalPrice = remiitanceBuyForm.value.totalPrice.replace(/[^0-9]/g, '');
+    remiitanceBuyForm.value.goldWeight = (remiitanceBuyForm.value.totalPrice / goldPriceForm.value.buyPrice).toFixed(3);
+}
+
+const sellGoldpriceConvert = () => {
+    remiitanceSellForm.value.totalPrice = remiitanceSellForm.value.totalPrice.replace(/[^0-9]/g, '');
+    remiitanceSellForm.value.goldWeight = (remiitanceSellForm.value.totalPrice / goldPriceForm.value.sellPrice).toFixed(3);
+}
+
+
+
+const buyGoldweightConvert = () => {
+    remiitanceBuyForm.value.goldWeight = remiitanceBuyForm.value.goldWeight.replace(/[^0-9.]/g, '');
+    const parts = remiitanceBuyForm.value.goldWeight.split('.');
+    if (parts.length > 1) {
+        remiitanceBuyForm.value.goldWeight = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    if (parts.length > 1 && parts[1].length > 2) {
+        remiitanceBuyForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 3);
+    }
+
+    remiitanceBuyForm.value.totalPrice = parseInt(remiitanceBuyForm.value.goldWeight * goldPriceForm.value.buyPrice);
+}
+
+const sellGoldweightConvert = () => {
+    remiitanceSellForm.value.goldWeight = remiitanceSellForm.value.goldWeight.replace(/[^0-9.]/g, '');
+    const parts = remiitanceSellForm.value.goldWeight.split('.');
+    if (parts.length > 1) {
+        remiitanceSellForm.value.goldWeight = parts[0] + '.' + parts.slice(1).join('');
+    }
+
+    if (parts.length > 1 && parts[1].length > 2) {
+        remiitanceSellForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 3);
+    }
+
+    remiitanceSellForm.value.totalPrice = parseInt(remiitanceSellForm.value.goldWeight * goldPriceForm.value.sellPrice);
+}
+
 
 </script>
 

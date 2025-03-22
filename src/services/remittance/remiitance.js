@@ -20,6 +20,28 @@ const RemiitanceService = {
         return response.data
     },
 
+    async CreateRemiitanceBuy(item) {
+        const body = JSON.stringify(item);
+        const response = await RemittanceTemplate.post(`/buy`, body);
+        return response.data
+    },
+
+    async CreateRemiitanceSell(item) {
+        const body = JSON.stringify(item);
+        const response = await RemittanceTemplate.post(`/sell`, body);
+        return response.data
+    },
+
+    async RemiitanceBuy(item) {
+        const response = await RemittanceTemplate.get(`/buy/${item}`);
+        return response.data
+    },
+
+    async RemiitanceSell(item) {
+        const response = await RemittanceTemplate.get(`/sell/${item}`);
+        return response.data
+    },
+
 }
 
 

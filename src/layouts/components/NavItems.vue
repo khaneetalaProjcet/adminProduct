@@ -89,6 +89,24 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     }" />
   </VerticalNavGroup>
 
+  <VerticalNavGroup :item="{
+    title: 'حواله',
+    icon: 'ri-file-chart-line',
+  }">
+    <VerticalNavLink :item="{
+      title: 'فروش حواله ای',
+      icon: 'ri-file-upload-line',
+      href: '#',
+      to: '/remiitanceSell'
+    }" />
+    <VerticalNavLink :item="{
+      title: 'خرید حواله ای',
+      icon: 'ri-file-download-line',
+      href: '#',
+      to: '/remiitanceBuy'
+    }" />
+  </VerticalNavGroup>
+
 
   <VerticalNavGroup :item="{
     title: 'کیف پول',
