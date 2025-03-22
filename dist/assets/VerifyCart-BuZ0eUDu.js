@@ -1,0 +1,1 @@
+import{r as e,c as a,a as l,o as t}from"./index-CVug660j.js";const u={__name:"VerifyCart",setup(n){return e(null),e(!1),e(null),(s,r)=>(t(),a("div",null,r[0]||(r[0]=[l("p",null,"در حال تکمیل ...",-1)])))}};export{u as default};
