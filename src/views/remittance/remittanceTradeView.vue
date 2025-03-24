@@ -223,6 +223,20 @@
                                                         label="شناسه پرداخت" variant="outlined"
                                                         :rules="validateInvoice"></v-text-field>
                                                 </v-col>
+                                                <v-divider class="my-9"></v-divider>
+                                                <v-col cols="12" md="6">
+                                                    <div class="d-flex justify-start align-items-center">
+                                                        <p class="pa-0">زمان ثبت معامله : </p>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <persian-date-picker v-model="remiitanceBuyForm.date"
+                                                        placeholder="تاریخ"></persian-date-picker>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <persian-date-picker type="time" v-model="remiitanceBuyForm.time"
+                                                        placeholder="زمان" :rules="validateTime"></persian-date-picker>
+                                                </v-col>
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
                                                         v-model="remiitanceBuyForm.description"></v-textarea>
@@ -381,6 +395,11 @@ const remiitanceBuyForm = ref({
     description: '',
     totalPrice: '',
     invoiceId: '',
+    phoneNumber: '',
+    originCardPan: '',
+    destCardPan: '',
+    date: '',
+    time: '',
 });
 
 const remiitanceSellForm = ref({
@@ -622,6 +641,10 @@ const remiitanceBuy = async () => {
         stepThreeLoading.value = true;
         remiitanceBuyForm.value.userId = userInfo.value.id;
         remiitanceBuyForm.value.goldPrice = goldPriceForm.value.buyPrice;
+        remiitanceBuyForm.value.phoneNumber = userInfo.value.phoneNumber;
+        remiitanceBuyForm.value.date = goldPriceForm.value.date;
+        remiitanceBuyForm.value.time = goldPriceForm.value.time;
+        console.log(remiitanceBuyForm.value);
         const response = await RemiitanceService.CreateRemiitanceBuy(remiitanceBuyForm.value);
         InvoiceForm.value.type = 'خرید';
         InvoiceForm.value.adminId = response.data.invoice.adminId;

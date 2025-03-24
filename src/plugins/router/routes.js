@@ -85,9 +85,15 @@ export const routes = [
         meta: { requiresAuth: true }
       },
       {
-        path: '/managmentView',
-        name: 'managmentView',
-        component: () => import('@/views/managment/managmentView.vue'),
+        path: '/managmentAdmin',
+        name: 'managmentAdmin',
+        component: () => import('@/views/managment/managmentAdminView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/managmentActivity',
+        name: 'managmentActivity',
+        component: () => import('@/views/managment/managmentActivityView.vue'),
         meta: { requiresAuth: true }
       },
       {

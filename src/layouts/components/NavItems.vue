@@ -204,6 +204,28 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
   </VerticalNavGroup>
 
   <VerticalNavSectionTitle :item="{
+    heading: 'مدیریت',
+  }" />
+
+  <VerticalNavGroup :item="{
+    title: 'مدیریت',
+    icon: 'ri-admin-line',
+  }">
+    <VerticalNavLink :item="{
+      title: 'ادمین',
+      icon: 'ri-admin-line',
+      href: '#',
+      to: '/managmentAdmin'
+    }" />
+    <VerticalNavLink :item="{
+      title: 'فعالیت ها',
+      icon: 'ri-user-settings-line',
+      href: '#',
+      to: '/managmentActivity'
+    }" />
+  </VerticalNavGroup>
+
+  <VerticalNavSectionTitle :item="{
     heading: 'لندینگ',
   }" />
 
