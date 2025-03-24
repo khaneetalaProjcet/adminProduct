@@ -4,8 +4,8 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 
-const DashboardTemplate = axios.create({
-    baseURL: "https://khaneetala.ir/api",
+const InPersonTemplate = axios.create({
+    baseURL: "https://khaneetala.ir/api/inperson",
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",
@@ -15,7 +15,7 @@ const DashboardTemplate = axios.create({
 
 
 // before request
-DashboardTemplate.interceptors.request.use(
+InPersonTemplate.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -31,8 +31,8 @@ DashboardTemplate.interceptors.request.use(
 );
 
 
-// before response
-DashboardTemplate.interceptors.response.use(
+// after response
+InPersonTemplate.interceptors.response.use(
     (response) => {
         return response;
     },
@@ -46,4 +46,4 @@ DashboardTemplate.interceptors.response.use(
     }
 );
 
-export default DashboardTemplate;
+export default InPersonTemplate;
