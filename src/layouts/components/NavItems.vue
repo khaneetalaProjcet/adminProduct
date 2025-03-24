@@ -107,6 +107,24 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     }" />
   </VerticalNavGroup>
 
+  <VerticalNavGroup :item="{
+    title: 'معاملات حضوری',
+    icon: 'ri-user-5-line',
+  }">
+    <VerticalNavLink :item="{
+      title: 'خرید حضوری',
+      icon: 'ri-group-line',
+      href: '#',
+      to: '/inpersonBuy'
+    }" />
+    <VerticalNavLink :item="{
+      title: 'فروش حضوری',
+      icon: 'ri-group-3-line',
+      href: '#',
+      to: '/inpersonSell'
+    }" />
+  </VerticalNavGroup>
+
 
   <VerticalNavGroup :item="{
     title: 'کیف پول',
@@ -181,7 +199,7 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
       title: 'ثبت سفارش',
       icon: 'ri-shopping-bag-4-line',
       href: '#',
-      to: '/inPersonSale'
+      to: '/inPersonTrade'
     }" />
   </VerticalNavGroup>
 

@@ -139,9 +139,21 @@ export const routes = [
         meta: { requiresAuth: true }
       },
       {
-        path: '/inPersonSale',
-        name: 'inPersonSale',
-        component: () => import('@/views/inperson/inpersonSaleView.vue'),
+        path: '/inPersonTrade',
+        name: 'inPersonTrade',
+        component: () => import('@/views/inperson/inpersonTradeView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/inpersonBuy',
+        name: 'inpersonBuy',
+        component: () => import('@/views/inperson/inpersonBuyView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/inpersonSell',
+        name: 'inpersonSell',
+        component: () => import('@/views/inperson/inpersonSellView.vue'),
         meta: { requiresAuth: true }
       },
     ],

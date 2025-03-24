@@ -40,6 +40,25 @@ const InPersonService = {
         return response.data
     },
 
+    async InPersonBuy(item) {
+        const response = await InPersonTemplate.get(`/buy/all/${item}`);
+        return response.data
+    },
+
+    async InPersonSell(item) {
+        const response = await InPersonTemplate.get(`/sell/all/${item}`);
+        return response.data
+    },
+
+    async SubmitInPersonBuy(item) {
+        const body = JSON.stringify({
+            status: item.status,
+            id: item.id,
+            description: item.description
+        });
+        const response = await InPersonTemplate.post(`/transaction/changestatus`, body);
+        return response.data
+    },
 
 }
 

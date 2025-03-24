@@ -20,17 +20,29 @@
                                         </v-col>
                                         <v-col cols="12" md="4" class="d-none d-md-flex"></v-col>
                                         <v-col cols="12" md="4">
-                                            <v-text-field v-model="remittanceForm.phoneNumber" label="شماره همراه"
-                                                variant="outlined" :rules="phoneRules"
-                                                @input="limitNumber"></v-text-field>
+                                            <v-text-field v-model="inPersonForm.phoneNumber" label="شماره همراه"
+                                                variant="outlined" :rules="phoneRules" @input="limitNumber"
+                                                :disabled="otpVerification != false"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="4" class="d-none d-md-flex"></v-col>
+                                    </v-row>
+                                    <v-row v-if="otpVerification != false">
+                                        <v-col cols="12" md="4" class="d-none d-md-flex"></v-col>
+                                        <v-col cols="12" md="4">
+                                            <v-otp-input :length="4" v-model="inPersonForm.otp" type="number"
+                                                :rules="otpRules" variant="outlined" class="otp-input"></v-otp-input>
                                         </v-col>
                                         <v-col cols="12" md="4" class="d-none d-md-flex"></v-col>
                                     </v-row>
                                 </v-container>
                             </v-form>
                             <v-card-actions class="btn-box first-step">
+                                <v-btn @click="sendOtp" color="primary" size="large" variant="elevated"
+                                    :disabled="!isFormValid" v-if="otpVerification == false" :loading="otpLoading">
+                                    ارسال کد تایید
+                                </v-btn>
                                 <v-btn @click="nextStep" color="primary" size="large" variant="elevated"
-                                    :loading="stepOneLoading" :disabled="!isFormValid">
+                                    :loading="stepOneLoading" :disabled="!isFormValid" v-else>
                                     بعدی
                                 </v-btn>
                             </v-card-actions>
@@ -44,7 +56,7 @@
                                         <v-col cols="12">
                                             <div class="w-100 d-flex justify-space-between align-items-center">
                                                 <h3 class="trade-step-title">اطلاعات کاربر</h3>
-                                                <div class="d-flex" v-if="userVerificationDetail.userVerified">
+                                                <div class="d-flex" v-if="userInfo.isVerified == 1">
                                                     <p class="mb-0">کاربر احراز هویت شده است</p>
                                                     <v-icon class="me-2" size="small" icon="ri-check-line"
                                                         color="#0b8707"></v-icon>
@@ -58,39 +70,34 @@
                                         </v-col>
                                         <v-col cols="12" md="3" class="my-3">
                                             <v-text-field v-model="userInfo.nationalCode" label="کد ملی"
-                                                variant="outlined" v-if="userVerificationDetail.userVerified == false"
+                                                variant="outlined" v-if="userInfo.isVerified != 1"
                                                 :rules="nationalCodeRules" @input="validateNationalCode"></v-text-field>
                                             <div class="d-flex" v-else>
                                                 <p class="mb-0">کد ملی : </p>
                                                 <p class="mb-0">{{ userInfo.nationalCode }}</p>
                                             </div>
                                         </v-col>
-                                        <v-col cols="4" md="3" class="my-3"
-                                            v-if="userVerificationDetail.userVerified == false">
+                                        <v-col cols="4" md="3" class="my-3" v-if="userInfo.isVerified != 1">
                                         </v-col>
-                                        <v-col cols="4" md="2" class="my-3"
-                                            v-if="userVerificationDetail.userVerified == false">
+                                        <v-col cols="4" md="2" class="my-3" v-if="userInfo.isVerified != 1">
                                             <v-select v-model="selectedDate" label="روز تولد" :items="persianDates"
                                                 variant="outlined" item-title="name" item-value="value"
                                                 @update:model-value="onDateSelected" class="first-select"
                                                 :rules="[v => !!v || 'روز الزامی است']"></v-select>
                                         </v-col>
-                                        <v-col cols="4" md="2" class="my-3"
-                                            v-if="userVerificationDetail.userVerified == false">
+                                        <v-col cols="4" md="2" class="my-3" v-if="userInfo.isVerified != 1">
                                             <v-select v-model="selectedMonth" label="ماه تولد" :items="persianMonths"
                                                 variant="outlined" class="second-select" item-title="name"
                                                 item-value="value" @update:model-value="onMonthSelected"
                                                 :rules="[v => !!v || 'ماه الزامی است']"></v-select>
                                         </v-col>
-                                        <v-col cols="4" md="2" class="my-3"
-                                            v-if="userVerificationDetail.userVerified == false">
+                                        <v-col cols="4" md="2" class="my-3" v-if="userInfo.isVerified != 1">
                                             <v-select v-model="selectedYear" label="سال تولد" :items="persianYears"
                                                 variant="outlined" class="third-select" item-title="name"
                                                 item-value="value" @update:model-value="onYearSelected"
                                                 :rules="[v => !!v || 'سال الزامی است']"></v-select>
                                         </v-col>
-                                        <v-col cols="12" md="3" class="my-3"
-                                            v-if="userVerificationDetail.userVerified == true">
+                                        <v-col cols="12" md="3" class="my-3" v-if="userInfo.isVerified == 1">
                                             <div class="d-flex">
                                                 <p class="mb-0">تاریخ تولد : </p>
                                                 <p class="mb-0">{{ userInfo.birthDate }}</p>
@@ -99,7 +106,7 @@
                                         <v-col cols="12" md="3" class="my-3">
                                             <div class="d-flex">
                                                 <p class="mb-0">شماره همراه : </p>
-                                                <p class="mb-0">{{ remittanceForm.phoneNumber }}</p>
+                                                <p class="mb-0">{{ userInfo.phoneNumber }}</p>
                                             </div>
                                         </v-col>
                                         <v-col cols="12" md="3" class="my-3">
@@ -142,14 +149,19 @@
                                                     v-else-if="userInfo.isHaveBank == false"></v-icon>
                                             </div>
                                         </v-col>
+                                        <v-col cols="12" md="3" class="my-3">
+                                            <div class="d-flex">
+                                                <p class="mb-0">موجودی صندوق طلا : </p>
+                                                <p class="mb-0">{{ userInfo.wallet.goldWeight }}</p>
+                                            </div>
+                                        </v-col>
                                     </v-row>
                                 </v-container>
                             </v-form>
                             <v-card-actions class="btn-box">
                                 <v-btn @click="prevStep" size="large">قبلی</v-btn>
-                                <v-btn @click="identity" color="primary" size="large" variant="elevated"
-                                    :disabled="!isFormValid" v-if="userVerificationDetail.userVerified == false"
-                                    :loading="stepTwoLoading">
+                                <v-btn @click="IdentityUser" color="primary" size="large" variant="elevated"
+                                    :disabled="!isFormValid" v-if="userInfo.isVerified != 1" :loading="stepTwoLoading">
                                     استعلام هویت
                                 </v-btn>
                                 <v-btn @click="nextStep" color="primary" size="large" variant="elevated"
@@ -174,7 +186,7 @@
                                             <v-row>
                                                 <v-col cols="12">
                                                     <div class="w-100 d-flex justify-space-between align-items-center">
-                                                        <h3 class="trade-step-title">ثبت حواله خرید</h3>
+                                                        <h3 class="trade-step-title">ثبت خرید</h3>
                                                     </div>
                                                 </v-col>
                                             </v-row>
@@ -188,11 +200,13 @@
                                                         placeholder="زمان"></persian-date-picker>
                                                 </v-col>
                                                 <v-col cols="12" md="3">
-                                                    <v-text-field v-model="goldPriceForm.buyPrice"
-                                                        label="قیمت طلا(ریال)" variant="outlined"></v-text-field>
+                                                    <div class="livePrice-box py-2">
+                                                        <p>قیمت طلا : </p>
+                                                        <p>{{ formatNumber(goldPriceForm.buyPrice) }}</p>
+                                                    </div>
                                                 </v-col>
                                                 <v-col cols="12" md="3">
-                                                    <v-btn @click="getGoldPrice" class="h-100" color="primary"
+                                                    <v-btn @click="getGoldPrice" class="h-100 py-2" color="primary"
                                                         size="large" variant="elevated" block
                                                         :loading="GoldPriceLoading">
                                                         استعلام قیمت طلا
@@ -201,9 +215,8 @@
                                             </v-row>
                                             <v-row>
                                                 <v-col cols="12" md="3">
-                                                    <v-text-field v-model="remiitanceBuyForm.totalPrice"
-                                                        label="مبلغ (ریال)" variant="outlined"
-                                                        @input="buyGoldpriceConvert"
+                                                    <v-text-field v-model="tradeBuyForm.totalPrice" label="مبلغ (ریال)"
+                                                        variant="outlined" @input="buyGoldpriceConvert"
                                                         :disabled="goldPriceForm.buyPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
                                                 <v-col cols="12" md="2">
@@ -213,19 +226,18 @@
                                                     </div>
                                                 </v-col>
                                                 <v-col cols="12" md="3">
-                                                    <v-text-field v-model="remiitanceBuyForm.goldWeight"
-                                                        label="وزن (گرم)" variant="outlined" :rules="validateWeight"
+                                                    <v-text-field v-model="tradeBuyForm.goldWeight" label="وزن (گرم)"
+                                                        variant="outlined" :rules="validateWeight"
                                                         @input="buyGoldweightConvert"
                                                         :disabled="goldPriceForm.buyPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
                                                 <v-col cols="12" md="4">
-                                                    <v-text-field v-model="remiitanceBuyForm.invoiceId"
-                                                        label="شناسه پرداخت" variant="outlined"
-                                                        :rules="validateInvoice"></v-text-field>
+                                                    <v-text-field v-model="tradeBuyForm.invoiceId" label="شناسه پرداخت"
+                                                        variant="outlined" :rules="validateInvoice"></v-text-field>
                                                 </v-col>
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
-                                                        v-model="remiitanceBuyForm.description"></v-textarea>
+                                                        v-model="tradeBuyForm.description"></v-textarea>
                                                 </v-col>
                                             </v-row>
                                         </v-container>
@@ -234,7 +246,7 @@
                                         <v-btn @click="prevStep" size="large">قبلی</v-btn>
                                         <v-btn @click="nextStep('buy')" color="primary" size="large" variant="elevated"
                                             :disabled="!isFormValid" :loading="stepThreeLoading">
-                                            خرید
+                                            خرید نهایی
                                         </v-btn>
                                     </v-card-actions>
                                 </v-tabs-window-item>
@@ -260,12 +272,10 @@
                                                         placeholder="زمان"></persian-date-picker>
                                                 </v-col>
                                                 <v-col cols="12" md="3">
-                                                    <!-- <div class="livePrice-box">
+                                                    <div class="livePrice-box">
                                                         <p>قیمت طلا : </p>
                                                         <p>{{ formatNumber(goldPriceForm.sellPrice) }}</p>
-                                                    </div> -->
-                                                    <v-text-field v-model="goldPriceForm.sellPrice"
-                                                        label="قیمت طلا(ریال)" variant="outlined"></v-text-field>
+                                                    </div>
                                                 </v-col>
                                                 <v-col cols="12" md="3">
                                                     <v-btn @click="getGoldPrice" class="h-100" color="primary"
@@ -277,9 +287,8 @@
                                             </v-row>
                                             <v-row>
                                                 <v-col cols="12" md="3">
-                                                    <v-text-field v-model="remiitanceSellForm.totalPrice"
-                                                        label="مبلغ (ریال)" variant="outlined"
-                                                        @input="sellGoldpriceConvert"
+                                                    <v-text-field v-model="tradeSellForm.totalPrice" label="مبلغ (ریال)"
+                                                        variant="outlined" @input="sellGoldpriceConvert"
                                                         :disabled="goldPriceForm.sellPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
                                                 <v-col cols="12" md="2">
@@ -289,19 +298,18 @@
                                                     </div>
                                                 </v-col>
                                                 <v-col cols="12" md="3">
-                                                    <v-text-field v-model="remiitanceSellForm.goldWeight"
-                                                        label="وزن (گرم)" variant="outlined" :rules="validateWeight"
+                                                    <v-text-field v-model="tradeSellForm.goldWeight" label="وزن (گرم)"
+                                                        variant="outlined" :rules="validateWeight"
                                                         @input="sellGoldweightConvert"
                                                         :disabled="goldPriceForm.sellPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
                                                 <v-col cols="12" md="4">
-                                                    <v-text-field v-model="remiitanceSellForm.invoiceId"
-                                                        label="شناسه پرداخت" variant="outlined"
-                                                        :rules="validateInvoice"></v-text-field>
+                                                    <v-text-field v-model="tradeSellForm.invoiceId" label="شناسه پرداخت"
+                                                        variant="outlined" :rules="validateInvoice"></v-text-field>
                                                 </v-col>
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
-                                                        v-model="remiitanceSellForm.description"></v-textarea>
+                                                        v-model="tradeSellForm.description"></v-textarea>
                                                 </v-col>
                                             </v-row>
                                         </v-container>
@@ -310,7 +318,7 @@
                                         <v-btn @click="prevStep" size="large">قبلی</v-btn>
                                         <v-btn @click="nextStep('sell')" color="primary" size="large" variant="elevated"
                                             :disabled="!isFormValid" :loading="stepThreeLoading">
-                                            فروش
+                                            فروش نهایی
                                         </v-btn>
                                     </v-card-actions>
                                 </v-tabs-window-item>
@@ -319,7 +327,114 @@
                     </v-stepper-window-item>
                     <v-stepper-window-item :value="4">
                         <v-card class="step-card">
-                            <v-form :ref="(el) => setFormRef(el, 4)"></v-form>
+                            <v-form :ref="(el) => setFormRef(el, 4)">
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <div class="w-100 d-flex justify-space-between align-items-center">
+                                                <h3 class="trade-step-title">فاکتور {{ InvoiceForm.type }}</h3>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <div class="d-flex">
+                                                <h4>اطلاعات کاربر</h4>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>نام : </p>
+                                                <p>{{ InvoiceForm.user.firstName }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>نام خانوادگی : </p>
+                                                <p>{{ InvoiceForm.user.lastName }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>نام پدر : </p>
+                                                <p>{{ InvoiceForm.user.fatherName }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>کد ملی : </p>
+                                                <p>{{ InvoiceForm.user.nationalCode }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p> شماره همراه : </p>
+                                                <p>{{ InvoiceForm.user.phoneNumber }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>کارشناس : </p>
+                                                <p>{{ InvoiceForm.adminId }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-divider></v-divider>
+                                        <v-col cols="12">
+                                            <div class="d-flex">
+                                                <h4>اطلاعات معامله</h4>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>وزن طلا : </p>
+                                                <p>{{ InvoiceForm.goldWeight }} گرم</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>قیمت طلا : </p>
+                                                <p>{{ formatNumber(InvoiceForm.goldPrice) }} ریال</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>قیمت کل : </p>
+                                                <p>{{ formatNumber(InvoiceForm.totalPrice) }} ریال</p>
+                                            </div>
+                                        </v-col>
+                                        <v-divider></v-divider>
+                                        <v-col cols="12">
+                                            <div class="d-flex">
+                                                <h4>اطلاعات کیف پول</h4>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p> موجودی کیف پول : </p>
+                                                <p>{{ formatNumber(InvoiceForm.wallet.balance) }} ریال</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>دارایی طلا: </p>
+                                                <p>{{ InvoiceForm.wallet.goldWeight }} گرم</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>مبلغ در انتظار برداشت : </p>
+                                                <p>{{ formatNumber(InvoiceForm.wallet.blocked) }} ریال</p>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-form>
+                            <v-card-actions class="btn-box">
+                                <v-btn @click="prevStep" size="large">قبلی</v-btn>
+                                <v-btn @click="submitForm" color="primary" size="large" variant="elevated">
+                                    اتمام نمایش
+                                </v-btn>
+                            </v-card-actions>
                         </v-card>
                     </v-stepper-window-item>
                 </v-stepper-window>
@@ -329,31 +444,46 @@
     <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
         {{ errorMsg }}
     </v-alert>
+
+    <v-dialog v-model="successModal" max-width="500" persistent>
+        <v-card title="تایید فاکتور" class="modal-card">
+            <v-icon class="mt-3 mb-6" icon="ri-checkbox-circle-fill" color="#0b8707"></v-icon>
+            <h4>
+                فاکتور {{ InvoiceForm.user.firstName }} {{ InvoiceForm.user.lastName }} با موفقیت ثبت شد
+            </h4>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
+import InPersonService from '@/services/inperson/inperson';
 import GoldPriceService from '@/services/priceApi/price';
-import RemiitanceService from '@/services/remittance/remiitance';
 import jalaaliJs from 'jalaali-js';
 import { ref } from 'vue';
 
 const steps = ref([1, 2, 3, 4]);
 const step = ref(1);
-const formRefs = ref({});
 const tab = ref(null);
+const formRefs = ref({});
 const stepOneLoading = ref(false);
 const stepTwoLoading = ref(false);
 const stepThreeLoading = ref(false);
 const GoldPriceLoading = ref(false);
+const successModal = ref(false);
+const otpLoading = ref(false);
+const otpVerification = ref(false);
 const selectedDate = ref();
 const selectedMonth = ref();
 const selectedYear = ref();
 const alertError = ref(false);
 const errorMsg = ref('');
-const remittanceForm = ref({
+const inPersonForm = ref({
     phoneNumber: '',
+    otp: '',
 });
+
 const userInfo = ref({
+    isVerified: '',
     id: '',
     firstName: '',
     birthDate: '',
@@ -364,6 +494,29 @@ const userInfo = ref({
     phoneNumber: '',
     nationalCode: '',
     isHaveBank: '',
+    wallet: {
+        id: '',
+        goldWeight: '',
+        balance: '',
+    }
+});
+
+const tradeBuyForm = ref({
+    nationalCode: '',
+    goldPrice: '',
+    goldWeight: '',
+    description: '',
+    totalPrice: '',
+    invoiceId: '',
+});
+
+const tradeSellForm = ref({
+    nationalCode: '',
+    goldPrice: '',
+    goldWeight: '',
+    description: '',
+    totalPrice: '',
+    invoiceId: '',
 });
 
 const goldPriceForm = ref({
@@ -372,24 +525,6 @@ const goldPriceForm = ref({
     buyPrice: '',
     sellPrice: '',
     milliseconds: '',
-})
-
-const remiitanceBuyForm = ref({
-    userId: '',
-    goldPrice: '',
-    goldWeight: '',
-    description: '',
-    totalPrice: '',
-    invoiceId: '',
-});
-
-const remiitanceSellForm = ref({
-    userId: '',
-    goldPrice: '',
-    goldWeight: '',
-    description: '',
-    totalPrice: '',
-    invoiceId: '',
 });
 
 const InvoiceForm = ref({
@@ -412,12 +547,7 @@ const InvoiceForm = ref({
         phoneNumber: '',
         nationalCode: '',
     }
-});
-
-const userVerificationDetail = ref({
-    userExist: '',
-    userVerified: '',
-});
+})
 
 const persianDates = ref([
     { name: "1", value: 1 },
@@ -577,16 +707,42 @@ const persianYears = ref([
 
 const isCompleted = s => s < step.value;
 
-const isFormValid = computed(() => {
-    if (!formRefs.value[step.value]) return false;
-    return formRefs.value[step.value].isValid;
-});
-
 const setFormRef = (el, index) => {
     if (el) {
         formRefs.value[index] = el;
     }
 };
+
+const submitForm = async () => {
+    successModal.value = true;
+    setInterval(() => {
+        successModal.value = false;
+        otpVerification.value = false;
+        inPersonForm.value.phoneNumber = '';
+        inPersonForm.value.otp = '';
+        step.value = 1;
+    }, 3000)
+};
+
+const prevStep = () => {
+    if (step.value > 1) step.value--;
+    otpVerification.value = false;
+    selectedDate.value = '';
+    selectedMonth.value = '';
+    selectedYear.value = '';
+    userInfo.value.nationalCode = '';
+    inPersonForm.value.otp = '';
+    inPersonForm.value.phoneNumber = '';
+};
+
+
+const isFormValid = computed(() => {
+    if (!formRefs.value[step.value]) return false;
+    if (otpVerification.value && inPersonForm.value.otp?.length !== 4) {
+        return false;
+    }
+    return formRefs.value[step.value].isValid;
+});
 
 const nextStep = async (type) => {
     const form = formRefs.value[step.value];
@@ -603,41 +759,25 @@ const nextStep = async (type) => {
 
 const TradeRequest = async (type) => {
     if (step.value === 1) {
-        return await AuthNumber();
+        return await AuthUser();
     } else if (step.value === 2) {
         return true;
     } else if (step.value === 3) {
         if (type == 'buy') {
-            return await remiitanceBuy();
+            return await TradeBuy();
         } else {
-            return await remiitanceSell();
+            return await TradeSell();
         }
     } else if (step.value === 4) {
         return true;
     }
 }
 
-const remiitanceBuy = async () => {
+const sendOtp = async () => {
     try {
-        stepThreeLoading.value = true;
-        remiitanceBuyForm.value.userId = userInfo.value.id;
-        remiitanceBuyForm.value.goldPrice = goldPriceForm.value.buyPrice;
-        const response = await RemiitanceService.CreateRemiitanceBuy(remiitanceBuyForm.value);
-        InvoiceForm.value.type = 'خرید';
-        InvoiceForm.value.adminId = response.data.invoice.adminId;
-        InvoiceForm.value.date = response.data.invoice.date;
-        InvoiceForm.value.time = response.data.invoice.time;
-        InvoiceForm.value.goldPrice = response.data.invoice.goldPrice;
-        InvoiceForm.value.goldWeight = response.data.invoice.goldWeight;
-        InvoiceForm.value.totalPrice = response.data.invoice.totalPrice;
-        InvoiceForm.value.user.firstName = response.data.invoice.buyer.firstName;
-        InvoiceForm.value.user.lastName = response.data.invoice.buyer.lastName;
-        InvoiceForm.value.user.fatherName = response.data.invoice.buyer.fatherName;
-        InvoiceForm.value.user.nationalCode = response.data.invoice.buyer.nationalCode;
-        InvoiceForm.value.user.phoneNumber = response.data.invoice.buyer.phoneNumber;
-        InvoiceForm.value.wallet.balance = response.data.wallet.balance;
-        InvoiceForm.value.wallet.blocked = response.data.wallet.blocked;
-        InvoiceForm.value.wallet.goldWeight = response.data.wallet.goldWeight;
+        otpLoading.value = true;
+        const response = await InPersonService.sendOtp(inPersonForm.value.phoneNumber);
+        otpVerification.value = true;
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -646,60 +786,32 @@ const remiitanceBuy = async () => {
             alertError.value = false;
         }, 10000)
     } finally {
-        stepThreeLoading.value = false;
+        otpLoading.value = false;
     }
 }
 
-const remiitanceSell = async () => {
-    try {
-        stepThreeLoading.value = true;
-        tradeSellForm.value.userId = userInfo.value.id;
-        tradeSellForm.value.goldPrice = goldPriceForm.value.buyPrice;
-        const response = await RemiitanceService.CreateRemiitanceSell(remiitanceSellForm.value);
-        InvoiceForm.value.type = 'فروش';
-        InvoiceForm.value.adminId = response.data.invoice.adminId;
-        InvoiceForm.value.date = response.data.invoice.date;
-        InvoiceForm.value.time = response.data.invoice.time;
-        InvoiceForm.value.goldPrice = response.data.invoice.goldPrice;
-        InvoiceForm.value.goldWeight = response.data.invoice.goldWeight;
-        InvoiceForm.value.totalPrice = response.data.invoice.totalPrice;
-        InvoiceForm.value.user.firstName = response.data.invoice.seller.firstName;
-        InvoiceForm.value.user.lastName = response.data.invoice.seller.lastName;
-        InvoiceForm.value.user.fatherName = response.data.invoice.seller.fatherName;
-        InvoiceForm.value.user.nationalCode = response.data.invoice.seller.nationalCode;
-        InvoiceForm.value.user.phoneNumber = response.data.invoice.seller.phoneNumber;
-        InvoiceForm.value.wallet.balance = response.data.wallet.balance;
-        InvoiceForm.value.wallet.blocked = response.data.wallet.blocked;
-        InvoiceForm.value.wallet.goldWeight = response.data.wallet.goldWeight;
-        return response
-    } catch (error) {
-        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-        alertError.value = true;
-        setTimeout(() => {
-            alertError.value = false;
-        }, 10000)
-    } finally {
-        stepThreeLoading.value = false;
-    }
-}
-
-
-const AuthNumber = async () => {
+const AuthUser = async () => {
     try {
         stepOneLoading.value = true;
-        const response = await RemiitanceService.AuthNumberRemiitance(remittanceForm.value.phoneNumber);
-        userVerificationDetail.value.userExist = response.data.userExist;
-        userVerificationDetail.value.userVerified = response.data.userVerified;
-        userInfo.value.id = response.data.user.id;
-        userInfo.value.firstName = response.data.user.firstName;
-        userInfo.value.lastName = response.data.user.lastName;
-        userInfo.value.fatherName = response.data.user.fatherName;
-        userInfo.value.gender = response.data.user.gender;
-        userInfo.value.officeName = response.data.user.officeName;
-        userInfo.value.phoneNumber = response.data.user.phoneNumber;
-        userInfo.value.nationalCode = response.data.user.nationalCode;
-        userInfo.value.isHaveBank = response.data.user.isHaveBank;
-        userInfo.value.birthDate = response.data.user.birthDate;
+        const response = await InPersonService.submitOtp(inPersonForm.value);
+        if (response.data.isVerified == 0) {
+            userInfo.value.isVerified = response.data.isVerified;
+        } else {
+            userInfo.value.id = response?.data?.id;
+            userInfo.value.isVerified = response?.data?.isVerified;
+            userInfo.value.firstName = response?.data?.firstName;
+            userInfo.value.lastName = response?.data?.lastName;
+            userInfo.value.fatherName = response?.data?.fatherName;
+            userInfo.value.gender = response?.data?.gender;
+            userInfo.value.isHaveBank = response?.data?.isHaveBank;
+            userInfo.value.nationalCode = response?.data?.nationalCode;
+            userInfo.value.birthDate = response?.data?.birthDate;
+            userInfo.value.officeName = response?.data?.officeName;
+            userInfo.value.phoneNumber = response?.data?.phoneNumber;
+            userInfo.value.wallet.balance = response?.data?.wallet?.balance;
+            userInfo.value.wallet.goldWeight = response?.data?.wallet?.goldWeight;
+            userInfo.value.wallet.id = response?.data?.wallet?.id;
+        }
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -710,21 +822,13 @@ const AuthNumber = async () => {
     } finally {
         stepOneLoading.value = false;
     }
-};
+}
 
-
-const identity = async () => {
+const IdentityUser = async () => {
     try {
         stepTwoLoading.value = true;
-        userInfo.value.phoneNumber = remittanceForm.value.phoneNumber;
-        const response = await RemiitanceService.AuthIdentityUser(userInfo.value);
-        userInfo.value.fatherName = response.data.fatherName;
-        userInfo.value.gender = response.data.gender;
-        userInfo.value.isHaveBank = response.data.isHaveBank;
-        userInfo.value.officeName = response.data.officeName;
-        userInfo.value.firstName = response.data.firstName;
-        userInfo.value.lastName = response.data.lastName;
-        userVerificationDetail.value.userVerified = true;
+        const response = await InPersonService.identityUser(userInfo.value);
+        userInfo.value.isVerified = response.data.isVerified;
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -737,22 +841,6 @@ const identity = async () => {
     }
 }
 
-const convertDate = () => {
-    const [year, month, day] = goldPriceForm.value.date.split('/').map(Number);
-    const [hour, minute] = goldPriceForm.value.time.split(':').map(Number);
-    const gregorianDate = jalaaliJs.toGregorian(year, month, day);
-
-    const date = new Date(
-        gregorianDate.gy,
-        gregorianDate.gm - 1,
-        gregorianDate.gd,
-        hour,
-        minute,
-        0
-    );
-
-    goldPriceForm.value.milliseconds = date.getTime();
-}
 
 const getGoldPrice = async () => {
     convertDate()
@@ -774,19 +862,109 @@ const getGoldPrice = async () => {
 }
 
 
-const prevStep = () => {
-    if (step.value > 1) step.value--;
-    selectedDate.value = '';
-    selectedMonth.value = '';
-    selectedYear.value = '';
-    userInfo.value.nationalCode = '';
-};
+const TradeBuy = async () => {
+    try {
+        stepThreeLoading.value = true;
+        tradeBuyForm.value.nationalCode = userInfo.value.nationalCode;
+        tradeBuyForm.value.goldPrice = goldPriceForm.value.buyPrice;
+        console.log(tradeBuyForm.value)
+        const response = await InPersonService.CreateBuy(tradeBuyForm.value);
+        InvoiceForm.value.type = 'خرید';
+        InvoiceForm.value.adminId = response?.data?.adminId;
+        InvoiceForm.value.date = response?.data?.date;
+        InvoiceForm.value.time = response?.data?.time;
+        InvoiceForm.value.goldPrice = response?.data?.goldPrice;
+        InvoiceForm.value.goldWeight = response?.data?.goldWeight;
+        InvoiceForm.value.totalPrice = response?.data?.totalPrice;
+        InvoiceForm.value.user.firstName = response?.data?.buyer?.firstName;
+        InvoiceForm.value.user.lastName = response?.data?.buyer?.lastName;
+        InvoiceForm.value.user.fatherName = response?.data?.buyer?.fatherName;
+        InvoiceForm.value.user.nationalCode = response?.data?.buyer?.nationalCode;
+        InvoiceForm.value.user.phoneNumber = response?.data?.buyer?.phoneNumber;
+        InvoiceForm.value.wallet.balance = response?.data?.wallet?.balance;
+        InvoiceForm.value.wallet.blocked = response?.data?.wallet?.blocked;
+        InvoiceForm.value.wallet.goldWeight = response?.data?.wallet?.goldWeight;
+        console.log(InvoiceForm.value)
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        stepThreeLoading.value = false;
+    }
+}
 
+
+const TradeSell = async () => {
+    try {
+        stepThreeLoading.value = true;
+        tradeSellForm.value.nationalCode = userInfo.value.nationalCode;
+        tradeSellForm.value.goldPrice = goldPriceForm.value.buyPrice;
+        const response = await InPersonService.CreateSell(tradeSellForm.value);
+        InvoiceForm.value.type = 'فروش';
+        InvoiceForm.value.adminId = response?.data?.adminId;
+        InvoiceForm.value.date = response?.data?.date;
+        InvoiceForm.value.time = response?.data?.time;
+        InvoiceForm.value.goldPrice = response?.data?.goldPrice;
+        InvoiceForm.value.goldWeight = response?.data?.goldWeight;
+        InvoiceForm.value.totalPrice = response?.data?.totalPrice;
+        InvoiceForm.value.user.firstName = response?.data?.seller?.firstName;
+        InvoiceForm.value.user.lastName = response?.data?.seller?.lastName;
+        InvoiceForm.value.user.fatherName = response?.data?.seller?.fatherName;
+        InvoiceForm.value.user.nationalCode = response?.data?.seller?.nationalCode;
+        InvoiceForm.value.user.phoneNumber = response?.data?.seller?.phoneNumber;
+        InvoiceForm.value.wallet.balance = response?.data?.wallet?.balance;
+        InvoiceForm.value.wallet.blocked = response?.data?.wallet?.blocked;
+        InvoiceForm.value.wallet.goldWeight = response?.data?.wallet?.goldWeight;
+        console.log(InvoiceForm.value)
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        stepThreeLoading.value = false;
+    }
+}
+
+
+const convertDate = () => {
+    const [year, month, day] = goldPriceForm.value.date.split('/').map(Number);
+    const [hour, minute] = goldPriceForm.value.time.split(':').map(Number);
+    const gregorianDate = jalaaliJs.toGregorian(year, month, day);
+
+    const date = new Date(
+        gregorianDate.gy,
+        gregorianDate.gm - 1,
+        gregorianDate.gd,
+        hour,
+        minute,
+        0
+    );
+
+    goldPriceForm.value.milliseconds = date.getTime();
+}
+
+
+
+const limitNumber = () => {
+    inPersonForm.value.phoneNumber = inPersonForm.value.phoneNumber.replace(/\D/g, '').slice(0, 11);
+}
 
 const phoneRules = [
     v => !!v || 'شماره همراه الزامی است',
     v => /^09\d{9}$/.test(v) || 'شماره معتبر نیست'
 ];
+
+const otpRules = [
+    (v) => !!v || "کد تایید را وارد کنید",
+    (v) => v?.length === 4 || "کد تایید باید ۴ رقمی باشد"
+]
 
 const nationalCodeRules = [
     (v) => !!v || 'کد ملی الزامی است',
@@ -809,15 +987,6 @@ const validateInvoice = [
     v => !!v || 'شناسه پرداخت الزامی است',
 ]
 
-const validateNationalCode = () => {
-    userInfo.value.nationalCode = userInfo.value.nationalCode.replace(/\D/g, '').slice(0, 10);
-    nationalCodeRules.every(rule => rule(userInfo.value.nationalCode) === true);
-};
-
-
-const limitNumber = () => {
-    remittanceForm.value.phoneNumber = remittanceForm.value.phoneNumber.replace(/\D/g, '').slice(0, 11);
-}
 
 const onDateSelected = (value) => {
     selectedDate.value = value;
@@ -842,55 +1011,65 @@ const updateBirthDate = () => {
     }
 };
 
+const validateNationalCode = () => {
+    userInfo.value.nationalCode = userInfo.value.nationalCode.replace(/\D/g, '').slice(0, 10);
+    nationalCodeRules.every(rule => rule(userInfo.value.nationalCode) === true);
+};
+
+
 const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
 
+
 const buyGoldpriceConvert = () => {
-    remiitanceBuyForm.value.totalPrice = remiitanceBuyForm.value.totalPrice.replace(/[^0-9]/g, '');
-    remiitanceBuyForm.value.goldWeight = (remiitanceBuyForm.value.totalPrice / goldPriceForm.value.buyPrice).toFixed(3);
+    tradeBuyForm.value.totalPrice = tradeBuyForm.value.totalPrice.replace(/[^0-9]/g, '');
+    tradeBuyForm.value.goldWeight = (tradeBuyForm.value.totalPrice / goldPriceForm.value.buyPrice).toFixed(3);
 }
 
 const sellGoldpriceConvert = () => {
-    remiitanceSellForm.value.totalPrice = remiitanceSellForm.value.totalPrice.replace(/[^0-9]/g, '');
-    remiitanceSellForm.value.goldWeight = (remiitanceSellForm.value.totalPrice / goldPriceForm.value.sellPrice).toFixed(3);
+    tradeSellForm.value.totalPrice = tradeSellForm.value.totalPrice.replace(/[^0-9]/g, '');
+    tradeSellForm.value.goldWeight = (tradeSellForm.value.totalPrice / goldPriceForm.value.sellPrice).toFixed(3);
 }
 
 
 
 const buyGoldweightConvert = () => {
-    remiitanceBuyForm.value.goldWeight = remiitanceBuyForm.value.goldWeight.replace(/[^0-9.]/g, '');
-    const parts = remiitanceBuyForm.value.goldWeight.split('.');
+    tradeBuyForm.value.goldWeight = tradeBuyForm.value.goldWeight.replace(/[^0-9.]/g, '');
+    const parts = tradeBuyForm.value.goldWeight.split('.');
     if (parts.length > 1) {
-        remiitanceBuyForm.value.goldWeight = parts[0] + '.' + parts.slice(1).join('');
+        tradeBuyForm.value.goldWeight = parts[0] + '.' + parts.slice(1).join('');
     }
 
     if (parts.length > 1 && parts[1].length > 2) {
-        remiitanceBuyForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 3);
+        tradeBuyForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 3);
     }
 
-    remiitanceBuyForm.value.totalPrice = parseInt(remiitanceBuyForm.value.goldWeight * goldPriceForm.value.buyPrice);
+    tradeBuyForm.value.totalPrice = parseInt(tradeBuyForm.value.goldWeight * goldPriceForm.value.buyPrice);
 }
 
 const sellGoldweightConvert = () => {
-    remiitanceSellForm.value.goldWeight = remiitanceSellForm.value.goldWeight.replace(/[^0-9.]/g, '');
-    const parts = remiitanceSellForm.value.goldWeight.split('.');
+    tradeSellForm.value.goldWeight = tradeSellForm.value.goldWeight.replace(/[^0-9.]/g, '');
+    const parts = tradeSellForm.value.goldWeight.split('.');
     if (parts.length > 1) {
-        remiitanceSellForm.value.goldWeight = parts[0] + '.' + parts.slice(1).join('');
+        tradeSellForm.value.goldWeight = parts[0] + '.' + parts.slice(1).join('');
     }
 
     if (parts.length > 1 && parts[1].length > 2) {
-        remiitanceSellForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 3);
+        tradeSellForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 3);
     }
 
-    remiitanceSellForm.value.totalPrice = parseInt(remiitanceSellForm.value.goldWeight * goldPriceForm.value.sellPrice);
+    tradeSellForm.value.totalPrice = parseInt(tradeSellForm.value.goldWeight * goldPriceForm.value.sellPrice);
 }
-
 
 </script>
 
 <style scoped>
+.otp-input {
+    direction: ltr;
+}
+
 .trade-step-title {
     padding-bottom: 0.5rem;
     border-bottom: 2px solid #d4af37;
@@ -923,5 +1102,34 @@ const sellGoldweightConvert = () => {
     font-size: 12px;
     padding: 10px !important;
     z-index: 100000;
+}
+
+.livePrice-box {
+    border: 1px solid #d4af37;
+    border-radius: 5px;
+    padding: 0.2rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    position: relative;
+}
+
+.livePrice-box p {
+    margin-bottom: 0 !important;
+}
+
+.modal-card {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.modal-card i {
+    width: 80px;
+    height: 80px;
 }
 </style>
