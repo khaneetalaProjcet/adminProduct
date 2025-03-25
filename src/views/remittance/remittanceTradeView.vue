@@ -189,7 +189,7 @@
                                                 </v-col>
                                                 <v-col cols="12" md="3">
                                                     <v-text-field v-model="goldPriceForm.buyPrice"
-                                                        label="قیمت طلا(ریال)" variant="outlined"></v-text-field>
+                                                        label="قیمت طلا(تومان)" variant="outlined"></v-text-field>
                                                 </v-col>
                                                 <v-col cols="12" md="3">
                                                     <v-btn @click="getGoldPrice" class="h-100" color="primary"
@@ -202,7 +202,7 @@
                                             <v-row>
                                                 <v-col cols="12" md="3">
                                                     <v-text-field v-model="remiitanceBuyForm.totalPrice"
-                                                        label="مبلغ (ریال)" variant="outlined"
+                                                        label="مبلغ (تومان)" variant="outlined"
                                                         @input="buyGoldpriceConvert"
                                                         :disabled="goldPriceForm.buyPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
@@ -235,7 +235,7 @@
                                                 </v-col>
                                                 <v-col cols="12" md="3">
                                                     <persian-date-picker type="time" v-model="remiitanceBuyForm.time"
-                                                        placeholder="زمان" :rules="validateTime"></persian-date-picker>
+                                                        placeholder="زمان"></persian-date-picker>
                                                 </v-col>
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
@@ -260,7 +260,7 @@
                                             <v-row>
                                                 <v-col cols="12">
                                                     <div class="w-100 d-flex justify-space-between align-items-center">
-                                                        <h3 class="trade-step-title">ثبت فروش</h3>
+                                                        <h3 class="trade-step-title">ثبت حواله فروش</h3>
                                                     </div>
                                                 </v-col>
                                             </v-row>
@@ -279,7 +279,7 @@
                                                         <p>{{ formatNumber(goldPriceForm.sellPrice) }}</p>
                                                     </div> -->
                                                     <v-text-field v-model="goldPriceForm.sellPrice"
-                                                        label="قیمت طلا(ریال)" variant="outlined"></v-text-field>
+                                                        label="قیمت طلا(تومان)" variant="outlined"></v-text-field>
                                                 </v-col>
                                                 <v-col cols="12" md="3">
                                                     <v-btn @click="getGoldPrice" class="h-100" color="primary"
@@ -292,7 +292,7 @@
                                             <v-row>
                                                 <v-col cols="12" md="3">
                                                     <v-text-field v-model="remiitanceSellForm.totalPrice"
-                                                        label="مبلغ (ریال)" variant="outlined"
+                                                        label="مبلغ (تومان)" variant="outlined"
                                                         @input="sellGoldpriceConvert"
                                                         :disabled="goldPriceForm.sellPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
@@ -333,7 +333,108 @@
                     </v-stepper-window-item>
                     <v-stepper-window-item :value="4">
                         <v-card class="step-card">
-                            <v-form :ref="(el) => setFormRef(el, 4)"></v-form>
+                            <v-form :ref="(el) => setFormRef(el, 4)">
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <div class="w-100 d-flex justify-space-between align-items-center">
+                                                <h3 class="trade-step-title">حواله {{ InvoiceForm.type }}</h3>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <div class="d-flex">
+                                                <h4>اطلاعات کاربر</h4>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>نام : </p>
+                                                <p>{{ InvoiceForm.user.firstName }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>نام خانوادگی : </p>
+                                                <p>{{ InvoiceForm.user.lastName }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>نام پدر : </p>
+                                                <p>{{ InvoiceForm.user.fatherName }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>کد ملی : </p>
+                                                <p>{{ InvoiceForm.user.nationalCode }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p> شماره همراه : </p>
+                                                <p>{{ InvoiceForm.user.phoneNumber }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>کارشناس : </p>
+                                                <p>{{ InvoiceForm.adminId }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-divider></v-divider>
+                                        <v-col cols="12">
+                                            <div class="d-flex">
+                                                <h4>اطلاعات معامله</h4>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>وزن طلا : </p>
+                                                <p>{{ InvoiceForm.goldWeight }} گرم</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>قیمت طلا : </p>
+                                                <p>{{ formatNumber(InvoiceForm.goldPrice) }} تومان</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>قیمت کل : </p>
+                                                <p>{{ formatNumber(InvoiceForm.totalPrice) }} تومان</p>
+                                            </div>
+                                        </v-col>
+                                        <v-divider></v-divider>
+                                        <v-col cols="12">
+                                            <div class="d-flex">
+                                                <h4>اطلاعات کیف پول</h4>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p> موجودی کیف پول : </p>
+                                                <p>{{ formatNumber(InvoiceForm.wallet.balance) }} ریال</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>دارایی طلا: </p>
+                                                <p>{{ InvoiceForm.wallet.goldWeight }} گرم</p>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-form>
+                            <v-card-actions class="btn-box">
+                                <!-- <v-btn @click="prevStep" size="large">قبلی</v-btn> -->
+                                <v-btn @click="submitForm" color="primary" size="large" variant="elevated">
+                                    اتمام نمایش
+                                </v-btn>
+                            </v-card-actions>
                         </v-card>
                     </v-stepper-window-item>
                 </v-stepper-window>
@@ -343,6 +444,15 @@
     <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
         {{ errorMsg }}
     </v-alert>
+
+    <v-dialog v-model="successModal" max-width="500" persistent>
+        <v-card title="تایید فاکتور" class="modal-card">
+            <v-icon class="mt-3 mb-6" icon="ri-checkbox-circle-fill" color="#0b8707"></v-icon>
+            <h4>
+                فاکتور {{ InvoiceForm.user.firstName }} {{ InvoiceForm.user.lastName }} با موفقیت ثبت شد
+            </h4>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
@@ -359,6 +469,7 @@ const stepOneLoading = ref(false);
 const stepTwoLoading = ref(false);
 const stepThreeLoading = ref(false);
 const GoldPriceLoading = ref(false);
+const successModal = ref(false);
 const selectedDate = ref();
 const selectedMonth = ref();
 const selectedYear = ref();
@@ -422,7 +533,6 @@ const InvoiceForm = ref({
     wallet: {
         goldWeight: '',
         balance: '',
-        blocked: '',
     },
     user: {
         firstName: '',
@@ -594,6 +704,15 @@ const persianYears = ref([
     { name: "1403", value: 1403 }
 ]);
 
+const submitForm = async () => {
+    successModal.value = true;
+    setInterval(() => {
+        successModal.value = false;
+        remittanceForm.value.phoneNumber = '';
+        step.value = 1;
+    }, 3000)
+};
+
 const isCompleted = s => s < step.value;
 
 const isFormValid = computed(() => {
@@ -644,23 +763,21 @@ const remiitanceBuy = async () => {
         remiitanceBuyForm.value.phoneNumber = userInfo.value.phoneNumber;
         remiitanceBuyForm.value.date = goldPriceForm.value.date;
         remiitanceBuyForm.value.time = goldPriceForm.value.time;
-        console.log(remiitanceBuyForm.value);
         const response = await RemiitanceService.CreateRemiitanceBuy(remiitanceBuyForm.value);
         InvoiceForm.value.type = 'خرید';
-        InvoiceForm.value.adminId = response.data.invoice.adminId;
-        InvoiceForm.value.date = response.data.invoice.date;
-        InvoiceForm.value.time = response.data.invoice.time;
-        InvoiceForm.value.goldPrice = response.data.invoice.goldPrice;
-        InvoiceForm.value.goldWeight = response.data.invoice.goldWeight;
-        InvoiceForm.value.totalPrice = response.data.invoice.totalPrice;
-        InvoiceForm.value.user.firstName = response.data.invoice.buyer.firstName;
-        InvoiceForm.value.user.lastName = response.data.invoice.buyer.lastName;
-        InvoiceForm.value.user.fatherName = response.data.invoice.buyer.fatherName;
-        InvoiceForm.value.user.nationalCode = response.data.invoice.buyer.nationalCode;
-        InvoiceForm.value.user.phoneNumber = response.data.invoice.buyer.phoneNumber;
-        InvoiceForm.value.wallet.balance = response.data.wallet.balance;
-        InvoiceForm.value.wallet.blocked = response.data.wallet.blocked;
-        InvoiceForm.value.wallet.goldWeight = response.data.wallet.goldWeight;
+        InvoiceForm.value.adminId = response?.data?.adminId;
+        InvoiceForm.value.date = response?.data?.date;
+        InvoiceForm.value.time = response?.data?.time;
+        InvoiceForm.value.goldPrice = response?.data?.goldPrice;
+        InvoiceForm.value.goldWeight = response?.data?.goldWeight;
+        InvoiceForm.value.totalPrice = response?.data?.totalPrice;
+        InvoiceForm.value.user.firstName = response?.data?.buyer?.firstName;
+        InvoiceForm.value.user.lastName = response?.data?.buyer?.lastName;
+        InvoiceForm.value.user.fatherName = response?.data?.buyer?.fatherName;
+        InvoiceForm.value.user.nationalCode = response?.data?.buyer?.nationalCode;
+        InvoiceForm.value.user.phoneNumber = response?.data?.buyer?.phoneNumber;
+        InvoiceForm.value.wallet.balance = response?.data?.buyer?.wallet?.balance;
+        InvoiceForm.value.wallet.goldWeight = response?.data?.buyer?.wallet?.goldWeight;
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -676,24 +793,26 @@ const remiitanceBuy = async () => {
 const remiitanceSell = async () => {
     try {
         stepThreeLoading.value = true;
-        tradeSellForm.value.userId = userInfo.value.id;
-        tradeSellForm.value.goldPrice = goldPriceForm.value.buyPrice;
+        remiitanceSellForm.value.userId = userInfo.value.id;
+        remiitanceSellForm.value.goldPrice = goldPriceForm.value.buyPrice;
+        remiitanceSellForm.value.phoneNumber = userInfo.value.phoneNumber;
+        remiitanceSellForm.value.date = goldPriceForm.value.date;
+        remiitanceSellForm.value.time = goldPriceForm.value.time;
         const response = await RemiitanceService.CreateRemiitanceSell(remiitanceSellForm.value);
         InvoiceForm.value.type = 'فروش';
-        InvoiceForm.value.adminId = response.data.invoice.adminId;
-        InvoiceForm.value.date = response.data.invoice.date;
-        InvoiceForm.value.time = response.data.invoice.time;
-        InvoiceForm.value.goldPrice = response.data.invoice.goldPrice;
-        InvoiceForm.value.goldWeight = response.data.invoice.goldWeight;
-        InvoiceForm.value.totalPrice = response.data.invoice.totalPrice;
-        InvoiceForm.value.user.firstName = response.data.invoice.seller.firstName;
-        InvoiceForm.value.user.lastName = response.data.invoice.seller.lastName;
-        InvoiceForm.value.user.fatherName = response.data.invoice.seller.fatherName;
-        InvoiceForm.value.user.nationalCode = response.data.invoice.seller.nationalCode;
-        InvoiceForm.value.user.phoneNumber = response.data.invoice.seller.phoneNumber;
-        InvoiceForm.value.wallet.balance = response.data.wallet.balance;
-        InvoiceForm.value.wallet.blocked = response.data.wallet.blocked;
-        InvoiceForm.value.wallet.goldWeight = response.data.wallet.goldWeight;
+        InvoiceForm.value.adminId = response?.data?.adminId;
+        InvoiceForm.value.date = response?.data?.date;
+        InvoiceForm.value.time = response?.data?.time;
+        InvoiceForm.value.goldPrice = response?.data?.goldPrice;
+        InvoiceForm.value.goldWeight = response?.data?.goldWeight;
+        InvoiceForm.value.totalPrice = response?.data?.totalPrice;
+        InvoiceForm.value.user.firstName = response?.data?.seller?.firstName;
+        InvoiceForm.value.user.lastName = response?.data?.seller?.lastName;
+        InvoiceForm.value.user.fatherName = response?.data?.seller?.fatherName;
+        InvoiceForm.value.user.nationalCode = response?.data?.seller?.nationalCode;
+        InvoiceForm.value.user.phoneNumber = response?.data?.seller?.phoneNumber;
+        InvoiceForm.value.wallet.balance = response?.data?.seller?.wallet?.balance;
+        InvoiceForm.value.wallet.goldWeight = response?.data?.seller?.wallet?.goldWeight;
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -946,5 +1065,26 @@ const sellGoldweightConvert = () => {
     font-size: 12px;
     padding: 10px !important;
     z-index: 100000;
+}
+
+.modal-card {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+
+.modal-card i {
+    width: 80px;
+    height: 80px;
+}
+
+.invoice-box {
+    padding: 0.2rem 1rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 }
 </style>

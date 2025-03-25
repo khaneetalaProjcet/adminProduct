@@ -1132,4 +1132,11 @@ const sellGoldweightConvert = () => {
     width: 80px;
     height: 80px;
 }
+
+.invoice-box {
+    padding: 0.2rem 1rem;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
 </style>
