@@ -1,1 +1,0 @@
-import{_ as o,c as t,b as a,p as c,o as n}from"./index-D-0bIVie.js";const s={},r={class:"layout-wrapper layout-blank","data-allow-mismatch":""};function _(l,p){const e=c("RouterView");return n(),t("div",r,[a(e)])}const m=o(s,[["render",_]]);export{m as default};
