@@ -42,6 +42,23 @@ const RemiitanceService = {
         return response.data
     },
 
+
+    async AcceptBuyRemmitance(item) {
+        const body = JSON.stringify({
+            'description': item.description,
+        });
+        const response = await RemittanceTemplate.post(`/approve/${item.id}`, body);
+        return response.data
+    },
+
+    async RejectBuyRemmitance(item) {
+        const body = JSON.stringify({
+            'description': item.description,
+        });
+        const response = await RemittanceTemplate.post(`/reject/${item.id}`, body);
+        return response.data
+    },
+
 }
 
 

@@ -205,6 +205,10 @@ const PendingRemiitanceSellHeader = ref([
         key: 'time',
     },
     {
+        title: 'شماره حساب واریز',
+        key: 'originaCardPan'
+    },
+    {
         title: 'شناسه پرداخت',
         key: 'invoiceId'
     },
@@ -250,6 +254,10 @@ const CompleteRemiitanceSellHeader = ref([
         key: 'time',
     },
     {
+        title: 'شماره حساب واریز',
+        key: 'originaCardPan'
+    },
+    {
         title: 'شناسه پرداخت',
         key: 'invoiceId'
     },
@@ -286,6 +294,10 @@ const FailedRemiitanceSellHeader = ref([
     {
         title: 'زمان',
         key: 'time',
+    },
+    {
+        title: 'شماره حساب واریز',
+        key: 'originaCardPan'
     },
     {
         title: 'شناسه پرداخت',

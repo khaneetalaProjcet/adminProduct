@@ -132,17 +132,26 @@
                     </div>
                 </div>
                 <div class="form-box">
+                    <v-form ref="form">
+                        <v-textarea v-model="RemmmitanceBuySubmitDetail.description" label="توضیحات" variant="outlined"
+                            rows="2"></v-textarea>
+                        <div class="d-flex justify-space-between mt-5">
+                            <v-btn type="submit" size="large" class="my-2" color="#388E3C"
+                                :loading="acceptRemmitanceBuyLoading" @click="acceptRemmitanceBuy">تایید
+                                پرداخت</v-btn>
+                            <v-btn type="submit" size="large" class="my-2" color="error"
+                                :loading="rejectRemmitanceBuyLoading" @click="rejectRemmitanceBuy">رد
+                                پرداخت</v-btn>
+                        </div>
+                    </v-form>
+                </div>
+                <!-- <div class="form-box">
                     <v-form ref="form" @submit.prevent="submitRemmitanceBuy">
                         <v-btn type="submit" size="large" class="my-2" :loading="RemmitanceBuySubmitLoading" block>بررسی
                             مجدد
                             پرداخت</v-btn>
                     </v-form>
-                </div>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-
-                    <v-btn text="بستن" @click="RemmitanceBuyDialog = false" size="large" class="m-3"></v-btn>
-                </v-card-actions>
+                </div> -->
             </v-card>
         </v-dialog>
 
@@ -163,7 +172,6 @@
 </template>
 
 <script setup>
-import GoldBoxService from '@/services/goldBox/goldbox';
 import RemiitanceService from '@/services/remittance/remiitance';
 import { onMounted, ref } from 'vue';
 
@@ -174,6 +182,16 @@ const alertError = ref(false);
 const alertSuccess = ref(false);
 const PendingRemiitanceBuyLoading = ref(false);
 const RemmitanceBuySubmitLoading = ref(false);
+
+
+const rejectRemmitanceBuyLoading = ref(false);
+const acceptRemmitanceBuyLoading = ref(false);
+const RemmmitanceBuySubmitDetail = ref({
+    description: '',
+    id: ''
+});
+
+
 const tab = ref(null);
 const PendingRemiitanceBuyHeader = ref([
     {
@@ -203,6 +221,10 @@ const PendingRemiitanceBuyHeader = ref([
     {
         title: 'زمان',
         key: 'time',
+    },
+    {
+        title: 'شماره حساب مقصد',
+        key: 'destCardPan'
     },
     {
         title: 'شناسه پرداخت',
@@ -250,6 +272,10 @@ const CompleteRemiitanceBuyHeader = ref([
         key: 'time',
     },
     {
+        title: 'شماره حساب مقصد',
+        key: 'destCardPan'
+    },
+    {
         title: 'شناسه پرداخت',
         key: 'invoiceId'
     },
@@ -286,6 +312,10 @@ const FailedRemiitanceBuyHeader = ref([
     {
         title: 'زمان',
         key: 'time',
+    },
+    {
+        title: 'شماره حساب مقصد',
+        key: 'destCardPan'
     },
     {
         title: 'شناسه پرداخت',
@@ -371,10 +401,36 @@ const PendingRemiitanceBuyInfo = (item) => {
     RemmitanceBuySubmitDetail.value.authority = item.authority;
 }
 
-const submitRemmitanceBuy = async () => {
+// const submitRemmitanceBuy = async () => {
+//     try {
+//         RemmitanceBuySubmitLoading.value = true;
+//         const response = await GoldBoxService.SubmitRemmitanceBuy(RemmitanceBuySubmitDetail.value);
+//         successMsg.value = response.msg;
+//         alertSuccess.value = true;
+//         setTimeout(() => {
+//             alertSuccess.value = false;
+//         }, 5000)
+//         GetPendingRemiitanceBuyList();
+//         GetCompleteRemiitanceBuyList();
+//         GetFailedRemiitanceBuyList();
+//         RemmitanceBuyDialog.value = false;
+//         return response
+//     } catch (error) {
+//         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+//         alertError.value = true;
+//         setTimeout(() => {
+//             alertError.value = false;
+//         }, 10000)
+//     } finally {
+//         RemmitanceBuySubmitLoading.value = false;
+//     }
+// }
+
+
+const acceptRemmitanceBuy = async () => {
     try {
-        RemmitanceBuySubmitLoading.value = true;
-        const response = await GoldBoxService.SubmitRemmitanceBuy(RemmitanceBuySubmitDetail.value);
+        acceptRemmitanceBuyLoading.value = true;
+        const response = await RemiitanceService.AcceptBuyRemmitance(RemmitanceBuySubmitDetail.value);
         successMsg.value = response.msg;
         alertSuccess.value = true;
         setTimeout(() => {
@@ -392,9 +448,38 @@ const submitRemmitanceBuy = async () => {
             alertError.value = false;
         }, 10000)
     } finally {
-        RemmitanceBuySubmitLoading.value = false;
+        acceptRemmitanceBuyLoading.value = false;
     }
 }
+
+
+
+const rejectRemmitanceBuy = async () => {
+    try {
+        acceptRemmitanceBuyLoading.value = true;
+        const response = await RemiitanceService.RejectBuyRemmitance(RemmitanceBuySubmitDetail.value);
+        successMsg.value = response.msg;
+        alertSuccess.value = true;
+        setTimeout(() => {
+            alertSuccess.value = false;
+        }, 5000)
+        GetPendingRemiitanceBuyList();
+        GetCompleteRemiitanceBuyList();
+        GetFailedRemiitanceBuyList();
+        RemmitanceBuyDialog.value = false;
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        acceptRemmitanceBuyLoading.value = false;
+    }
+}
+
+
 
 onMounted(() => {
     GetPendingRemiitanceBuyList();

@@ -264,7 +264,6 @@
 </template>
 
 <script setup>
-import GoldBoxService from '@/services/goldBox/goldbox';
 import InPersonService from '@/services/inperson/inperson';
 import { onMounted, ref } from 'vue';
 
