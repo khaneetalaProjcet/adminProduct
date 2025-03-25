@@ -42,8 +42,9 @@
                                     <v-text-field v-model="CompleteRemiitanceSellSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
-                                <v-data-table :headers="CompleteRemiitanceSellHeader" :items="CompleteRemiitanceSellData"
-                                    :search="CompleteRemiitanceSellSearch" :loading="CompleteRemiitanceSellLoading">
+                                <v-data-table :headers="CompleteRemiitanceSellHeader"
+                                    :items="CompleteRemiitanceSellData" :search="CompleteRemiitanceSellSearch"
+                                    :loading="CompleteRemiitanceSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
                                         <p>{{ formatNumber(item.totalPrice) }}</p>
                                     </template>
@@ -94,21 +95,21 @@
         </v-row>
 
 
-        <!-- RemmitanceSell Dialog -->
+        <!-- RemmitanceBuy Dialog -->
         <v-dialog v-model="RemmitanceSellDialog" max-width="600" class="dialog">
             <v-card class="dialog-card">
                 <div class="k-dialog-title">
-                    <p>اطلاعات خرید</p>
+                    <p>اطلاعات فروش</p>
                 </div>
                 <div class="d-flex flex-column flex-md-row justify-space-between w-100 px-4 py-8 user-dialog-info">
                     <div class="d-flex flex-column w-100 px-4">
                         <div class="d-flex align-items-center my-2">
                             <p>نام: </p>
-                            <p class="mx-2">{{ RemmitanceSellDetail.Seller.firstName }}</p>
+                            <p class="mx-2">{{ RemmitanceSellDetail.seller.firstName }}</p>
                         </div>
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>کد ملی: </p>
-                            <p class="mx-2">{{ RemmitanceSellDetail.Seller.nationalCode }}</p>
+                            <p class="mx-2">{{ RemmitanceSellDetail.seller.nationalCode }}</p>
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>مبلغ کل: </p>
@@ -118,7 +119,7 @@
                     <div class="d-flex flex-column w-100 px-4">
                         <div class="d-flex align-items-center my-2">
                             <p>نام خانوادگی: </p>
-                            <p class="mx-2">{{ RemmitanceSellDetail.Seller.lastName }}</p>
+                            <p class="mx-2">{{ RemmitanceSellDetail.seller.lastName }}</p>
                         </div>
 
                         <div class="d-flex align-items-center my-2 user-price">
@@ -127,22 +128,22 @@
                         </div>
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>وزن طلای خریداری شده: </p>
-                            <p class="mx-2">{{ formatNumber(RemmitanceSellDetail.goldWeight) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(RemmitanceSellDetail.goldWeight) }} گرم</p>
                         </div>
                     </div>
                 </div>
                 <div class="form-box">
-                    <v-form ref="form" @submit.prevent="submitRemmitanceSell">
-                        <v-btn type="submit" size="large" class="my-2" :loading="RemmitanceSellSubmitLoading" block>بررسی
-                            مجدد
+                    <v-textarea v-model="RemmitanceSellSubmitDetail.description" label="توضیحات" variant="outlined"
+                        rows="2"></v-textarea>
+                    <div class="d-flex justify-space-between mt-5">
+                        <v-btn type="submit" size="large" class="my-2" color="#388E3C"
+                            :loading="acceptRemmitanceSellLoading" @click="acceptRemmitanceSell">تایید
                             پرداخت</v-btn>
-                    </v-form>
+                        <v-btn type="submit" size="large" class="my-2" color="error"
+                            :loading="rejectRemmitanceSellLoading" @click="rejectRemmitanceSell">رد
+                            پرداخت</v-btn>
+                    </div>
                 </div>
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-
-                    <v-btn text="بستن" @click="RemmitanceSellDialog = false" size="large" class="m-3"></v-btn>
-                </v-card-actions>
             </v-card>
         </v-dialog>
 
@@ -174,6 +175,8 @@ const alertError = ref(false);
 const alertSuccess = ref(false);
 const PendingRemiitanceSellLoading = ref(false);
 const RemmitanceSellSubmitLoading = ref(false);
+const acceptRemmitanceSellLoading = ref(false);
+const rejectRemmitanceSellLoading = ref(false);
 const tab = ref(null);
 const PendingRemiitanceSellHeader = ref([
     {
@@ -316,7 +319,7 @@ const FailedRemiitanceSellSearch = ref();
 const RemmitanceSellDetail = ref();
 const RemmitanceSellDialog = ref(false);
 const RemmitanceSellSubmitDetail = ref({
-    authority: '',
+    description: '',
     id: '',
 })
 
@@ -380,13 +383,38 @@ const PendingRemiitanceSellInfo = (item) => {
     RemmitanceSellDialog.value = true;
     RemmitanceSellDetail.value = item;
     RemmitanceSellSubmitDetail.value.id = item.id;
-    RemmitanceSellSubmitDetail.value.authority = item.authority;
 }
 
-const submitRemmitanceSell = async () => {
+// const submitRemmitanceSell = async () => {
+//     try {
+//         RemmitanceSellSubmitLoading.value = true;
+//         const response = await GoldBoxService.SubmitRemmitanceSell(RemmitanceSellSubmitDetail.value);
+//         successMsg.value = response.msg;
+//         alertSuccess.value = true;
+//         setTimeout(() => {
+//             alertSuccess.value = false;
+//         }, 5000)
+//         GetPendingRemiitanceSellList();
+//         GetCompleteRemiitanceSellList();
+//         GetFailedRemiitanceSellList();
+//         RemmitanceSellDialog.value = false;
+//         return response
+//     } catch (error) {
+//         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+//         alertError.value = true;
+//         setTimeout(() => {
+//             alertError.value = false;
+//         }, 10000)
+//     } finally {
+//         RemmitanceSellSubmitLoading.value = false;
+//     }
+// }
+
+
+const acceptRemmitanceSell = async () => {
     try {
-        RemmitanceSellSubmitLoading.value = true;
-        const response = await GoldBoxService.SubmitRemmitanceSell(RemmitanceSellSubmitDetail.value);
+        acceptRemmitanceSellLoading.value = true;
+        const response = await RemiitanceService.AcceptSellRemmitance(RemmitanceSellSubmitDetail.value);
         successMsg.value = response.msg;
         alertSuccess.value = true;
         setTimeout(() => {
@@ -396,6 +424,7 @@ const submitRemmitanceSell = async () => {
         GetCompleteRemiitanceSellList();
         GetFailedRemiitanceSellList();
         RemmitanceSellDialog.value = false;
+        RemmitanceSellSubmitDetail.value.description = '';
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -404,9 +433,40 @@ const submitRemmitanceSell = async () => {
             alertError.value = false;
         }, 10000)
     } finally {
-        RemmitanceSellSubmitLoading.value = false;
+        acceptRemmitanceSellLoading.value = false;
     }
 }
+
+
+
+const rejectRemmitanceSell = async () => {
+    try {
+        acceptRemmitanceSellLoading.value = true;
+        const response = await RemiitanceService.RejectSellRemmitance(RemmitanceSellSubmitDetail.value);
+        successMsg.value = response.msg;
+        alertSuccess.value = true;
+        setTimeout(() => {
+            alertSuccess.value = false;
+        }, 5000)
+        GetPendingRemiitanceSellList();
+        GetCompleteRemiitanceSellList();
+        GetFailedRemiitanceSellList();
+        RemmitanceSellDialog.value = false;
+        RemmitanceSellSubmitDetail.value.description = '';
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        acceptRemmitanceSellLoading.value = false;
+    }
+}
+
+
+
 
 onMounted(() => {
     GetPendingRemiitanceSellList();

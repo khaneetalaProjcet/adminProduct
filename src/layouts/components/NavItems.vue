@@ -67,25 +67,43 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
 
 
   <VerticalNavSectionTitle :item="{
-    heading: 'مالی',
+    heading: 'حسابداری',
   }" />
 
 
   <VerticalNavGroup :item="{
-    title: 'حسابداری',
+    title: 'معاملات تلفنی',
     icon: 'ri-user-line',
   }">
     <VerticalNavLink :item="{
-      title: 'معاملات تلفنی',
+      title: 'خرید تلفنی',
       icon: 'ri-survey-line',
       href: '#',
       to: '/AccountingTrade'
     }" />
     <VerticalNavLink :item="{
-      title: 'برداشت صندوق طلا',
+      title: 'فروش تلفنی',
       icon: 'ri-creative-commons-nc-line',
       href: '#',
       to: '/AccountingSellTrade'
+    }" />
+  </VerticalNavGroup>
+
+  <VerticalNavGroup :item="{
+    title: 'معاملات آنلاین',
+    icon: 'ri-line-chart-line',
+  }">
+    <VerticalNavLink :item="{
+      title: 'خرید آنلاین',
+      icon: 'ri-bar-chart-line',
+      href: '#',
+      to: '/goldboxBuy'
+    }" />
+    <VerticalNavLink :item="{
+      title: 'فروش آنلاین',
+      icon: 'ri-bar-chart-grouped-line',
+      href: '#',
+      to: '/goldboxSell'
     }" />
   </VerticalNavGroup>
 
@@ -152,25 +170,14 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
 
 
   <VerticalNavSectionTitle :item="{
-    heading: 'معاملات',
+    heading: 'ثبت معامله',
   }" />
 
   <VerticalNavGroup :item="{
-    title: 'صندوق طلا',
+    title: 'معامله تلفنی',
     icon: 'ri-line-chart-line',
   }">
-    <VerticalNavLink :item="{
-      title: 'خرید',
-      icon: 'ri-bar-chart-line',
-      href: '#',
-      to: '/goldboxBuy'
-    }" />
-    <VerticalNavLink :item="{
-      title: 'فروش',
-      icon: 'ri-bar-chart-grouped-line',
-      href: '#',
-      to: '/goldboxSell'
-    }" />
+
     <VerticalNavLink :item="{
       title: 'ثبت معامله',
       icon: 'ri-pie-chart-line',
@@ -180,7 +187,7 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
   </VerticalNavGroup>
 
   <VerticalNavGroup :item="{
-    title: 'حواله',
+    title: 'معامله حواله ای',
     icon: 'ri-article-line',
   }">
     <VerticalNavLink :item="{
@@ -192,7 +199,7 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
   </VerticalNavGroup>
 
   <VerticalNavGroup :item="{
-    title: 'فروش حضوری',
+    title: 'معامله حضوری',
     icon: 'ri-store-2-line',
   }">
     <VerticalNavLink :item="{

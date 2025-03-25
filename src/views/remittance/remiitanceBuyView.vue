@@ -127,23 +127,21 @@
                         </div>
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>وزن طلای خریداری شده: </p>
-                            <p class="mx-2">{{ formatNumber(RemmitanceBuyDetail.goldWeight) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(RemmitanceBuyDetail.goldWeight) }} گرم</p>
                         </div>
                     </div>
                 </div>
                 <div class="form-box">
-                    <v-form ref="form">
-                        <v-textarea v-model="RemmmitanceBuySubmitDetail.description" label="توضیحات" variant="outlined"
-                            rows="2"></v-textarea>
-                        <div class="d-flex justify-space-between mt-5">
-                            <v-btn type="submit" size="large" class="my-2" color="#388E3C"
-                                :loading="acceptRemmitanceBuyLoading" @click="acceptRemmitanceBuy">تایید
-                                پرداخت</v-btn>
-                            <v-btn type="submit" size="large" class="my-2" color="error"
-                                :loading="rejectRemmitanceBuyLoading" @click="rejectRemmitanceBuy">رد
-                                پرداخت</v-btn>
-                        </div>
-                    </v-form>
+                    <v-textarea v-model="RemmitanceBuySubmitDetail.description" label="توضیحات" variant="outlined"
+                        rows="2"></v-textarea>
+                    <div class="d-flex justify-space-between mt-5">
+                        <v-btn type="submit" size="large" class="my-2" color="#388E3C"
+                            :loading="acceptRemmitanceBuyLoading" @click="acceptRemmitanceBuy">تایید
+                            پرداخت</v-btn>
+                        <v-btn type="submit" size="large" class="my-2" color="error"
+                            :loading="rejectRemmitanceBuyLoading" @click="rejectRemmitanceBuy">رد
+                            پرداخت</v-btn>
+                    </div>
                 </div>
                 <!-- <div class="form-box">
                     <v-form ref="form" @submit.prevent="submitRemmitanceBuy">
@@ -186,7 +184,7 @@ const RemmitanceBuySubmitLoading = ref(false);
 
 const rejectRemmitanceBuyLoading = ref(false);
 const acceptRemmitanceBuyLoading = ref(false);
-const RemmmitanceBuySubmitDetail = ref({
+const RemmitanceBuySubmitDetail = ref({
     description: '',
     id: ''
 });
@@ -333,10 +331,6 @@ const FailedRemiitanceBuyData = ref();
 const FailedRemiitanceBuySearch = ref();
 const RemmitanceBuyDetail = ref();
 const RemmitanceBuyDialog = ref(false);
-const RemmitanceBuySubmitDetail = ref({
-    authority: '',
-    id: '',
-})
 
 const GetPendingRemiitanceBuyList = async () => {
     try {
@@ -401,31 +395,6 @@ const PendingRemiitanceBuyInfo = (item) => {
     RemmitanceBuySubmitDetail.value.authority = item.authority;
 }
 
-// const submitRemmitanceBuy = async () => {
-//     try {
-//         RemmitanceBuySubmitLoading.value = true;
-//         const response = await GoldBoxService.SubmitRemmitanceBuy(RemmitanceBuySubmitDetail.value);
-//         successMsg.value = response.msg;
-//         alertSuccess.value = true;
-//         setTimeout(() => {
-//             alertSuccess.value = false;
-//         }, 5000)
-//         GetPendingRemiitanceBuyList();
-//         GetCompleteRemiitanceBuyList();
-//         GetFailedRemiitanceBuyList();
-//         RemmitanceBuyDialog.value = false;
-//         return response
-//     } catch (error) {
-//         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-//         alertError.value = true;
-//         setTimeout(() => {
-//             alertError.value = false;
-//         }, 10000)
-//     } finally {
-//         RemmitanceBuySubmitLoading.value = false;
-//     }
-// }
-
 
 const acceptRemmitanceBuy = async () => {
     try {
@@ -440,6 +409,7 @@ const acceptRemmitanceBuy = async () => {
         GetCompleteRemiitanceBuyList();
         GetFailedRemiitanceBuyList();
         RemmitanceBuyDialog.value = false;
+        RemmitanceBuySubmitDetail.value.description = '';
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -467,6 +437,7 @@ const rejectRemmitanceBuy = async () => {
         GetCompleteRemiitanceBuyList();
         GetFailedRemiitanceBuyList();
         RemmitanceBuyDialog.value = false;
+        RemmitanceBuySubmitDetail.value.description = '';
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
