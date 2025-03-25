@@ -13,7 +13,6 @@ const AuthService = {
         const response = await VerifyTemplate.post("/admin/login", body);
         const token = response.data.data.token;
         const userPermissions = response.data.data.accessPoints;
-        console.log(userPermissions)
         localStorage.setItem("token", token);
         localStorage.setItem("permissions", JSON.stringify(userPermissions));
         return response.data

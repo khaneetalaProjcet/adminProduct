@@ -10,7 +10,6 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!localStorage.getItem('token');
   const permissions = JSON.parse(localStorage.getItem("permissions")) || [];
-  console.log(permissions)
 
   if (to.meta.requiresAuth && !isAuthenticated) {
     next({ name: 'login' });
