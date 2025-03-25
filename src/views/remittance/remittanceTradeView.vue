@@ -220,13 +220,30 @@
                                                 </v-col>
                                                 <v-col cols="12" md="4">
                                                     <v-text-field v-model="remiitanceBuyForm.invoiceId"
-                                                        label="شناسه پرداخت" variant="outlined"
-                                                        :rules="validateInvoice"></v-text-field>
+                                                        label="شناسه پرداخت" variant="outlined"></v-text-field>
                                                 </v-col>
                                                 <v-divider class="my-9"></v-divider>
-                                                <v-col cols="12" md="6">
-                                                    <div class="d-flex justify-start align-items-center">
-                                                        <p class="pa-0">زمان ثبت معامله : </p>
+                                                <v-col cols="12" md="3">
+                                                    <div class="d-flex justify-start align-center h-100">
+                                                        <p class="ma-0">اطلاعات حساب بانکی : </p>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <div class="d-flex justify-start align-center h-100">
+                                                        <v-select v-model="remiitanceBuyForm.destCardPan"
+                                                            :items="bankAccounts" label="به حساب" variant="outlined"
+                                                            :rules="BankAccountRules" item-title="label"
+                                                            item-value="item"></v-select>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="12" md="3" v-if="remiitanceBuyForm.destCardPan == 'سایر'">
+                                                    <v-text-field v-model="otherBuyBankAccount" label="به حساب"
+                                                        variant="outlined"></v-text-field>
+                                                </v-col>
+                                                <v-divider class="my-9"></v-divider>
+                                                <v-col cols="12" md="3">
+                                                    <div class="d-flex justify-start align-center h-100">
+                                                        <p class="ma-0">زمان ثبت معامله : </p>
                                                     </div>
                                                 </v-col>
                                                 <v-col cols="12" md="3">
@@ -237,7 +254,9 @@
                                                     <persian-date-picker type="time" v-model="remiitanceBuyForm.time"
                                                         placeholder="زمان"></persian-date-picker>
                                                 </v-col>
-                                                <v-col cols="12">
+                                                <v-col cols="12" md="3" class="d-none d-md-flex">
+                                                </v-col>
+                                                <v-col cols="12" class="mt-2">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
                                                         v-model="remiitanceBuyForm.description"></v-textarea>
                                                 </v-col>
@@ -274,10 +293,6 @@
                                                         placeholder="زمان"></persian-date-picker>
                                                 </v-col>
                                                 <v-col cols="12" md="3">
-                                                    <!-- <div class="livePrice-box">
-                                                        <p>قیمت طلا : </p>
-                                                        <p>{{ formatNumber(goldPriceForm.sellPrice) }}</p>
-                                                    </div> -->
                                                     <v-text-field v-model="goldPriceForm.sellPrice"
                                                         label="قیمت طلا(تومان)" variant="outlined"></v-text-field>
                                                 </v-col>
@@ -310,9 +325,42 @@
                                                 </v-col>
                                                 <v-col cols="12" md="4">
                                                     <v-text-field v-model="remiitanceSellForm.invoiceId"
-                                                        label="شناسه پرداخت" variant="outlined"
-                                                        :rules="validateInvoice"></v-text-field>
+                                                        label="شناسه پرداخت" variant="outlined"></v-text-field>
                                                 </v-col>
+
+                                                <v-divider class="my-9"></v-divider>
+                                                <v-col cols="12" md="3">
+                                                    <div class="d-flex justify-start align-center h-100">
+                                                        <p class="ma-0">اطلاعات حساب بانکی : </p>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <div class="d-flex justify-start align-center h-100">
+                                                        <v-select v-model="remiitanceSellForm.destCardPan"
+                                                            :items="bankAccounts" label="از حساب" variant="outlined"
+                                                            :rules="BankAccountRules" item-title="label"
+                                                            item-value="item"></v-select>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="12" md="3" v-if="remiitanceSellForm.destCardPan == 'سایر'">
+                                                    <v-text-field v-model="otherSellBankAccount" label="از حساب"
+                                                        variant="outlined"></v-text-field>
+                                                </v-col>
+                                                <v-divider class="my-9"></v-divider>
+                                                <v-col cols="12" md="3">
+                                                    <div class="d-flex justify-start align-center h-100">
+                                                        <p class="ma-0">زمان ثبت معامله : </p>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <persian-date-picker v-model="remiitanceSellForm.date"
+                                                        placeholder="تاریخ"></persian-date-picker>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <persian-date-picker type="time" v-model="remiitanceSellForm.time"
+                                                        placeholder="زمان"></persian-date-picker>
+                                                </v-col>
+                                                <v-col cols="12" md="3" class="d-none d-md-flex"></v-col>
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
                                                         v-model="remiitanceSellForm.description"></v-textarea>
@@ -408,6 +456,29 @@
                                                 <p>{{ formatNumber(InvoiceForm.totalPrice) }} تومان</p>
                                             </div>
                                         </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>تاریخ ثبت حواله : </p>
+                                                <p v-if="InvoiceForm.type == 'خرید'">{{ remiitanceBuyForm.date }}</p>
+                                                <p v-else>{{ remiitanceSellForm.date }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>زمان ثبت حواله : </p>
+                                                <p v-if="InvoiceForm.type == 'خرید'">{{ remiitanceBuyForm.time }}</p>
+                                                <p v-else>{{ remiitanceSellForm.time }}</p>
+                                            </div>
+                                        </v-col>
+
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>از حساب : </p>
+                                                <p v-if="InvoiceForm.type == 'خرید'">{{ remiitanceBuyForm.destCardPan }}
+                                                </p>
+                                                <p v-else>{{ remiitanceSellForm.destCardPan }}</p>
+                                            </div>
+                                        </v-col>
                                         <v-divider></v-divider>
                                         <v-col cols="12">
                                             <div class="d-flex">
@@ -475,6 +546,8 @@ const selectedMonth = ref();
 const selectedYear = ref();
 const alertError = ref(false);
 const errorMsg = ref('');
+const otherBuyBankAccount = ref('');
+const otherSellBankAccount = ref('');
 const remittanceForm = ref({
     phoneNumber: '',
 });
@@ -520,6 +593,11 @@ const remiitanceSellForm = ref({
     description: '',
     totalPrice: '',
     invoiceId: '',
+    phoneNumber: '',
+    originCardPan: '',
+    destCardPan: '',
+    date: '',
+    time: '',
 });
 
 const InvoiceForm = ref({
@@ -547,6 +625,18 @@ const userVerificationDetail = ref({
     userExist: '',
     userVerified: '',
 });
+
+const bankAccounts = ref([
+    { label: "کشاورزی (مطهر معصومی)", value: "0" },
+    { label: "ملی (مطهر معصومی)", value: "1" },
+    { label: "ملت (مطهر معصومی)", value: "2" },
+    { label: "سپه (مطهر معصومی)", value: "3" },
+    { label: "صادرات (مطهر معصومی)", value: "4" },
+    { label: "کشاورزی (محمود معصومی)", value: "5" },
+    { label: "ملی (محمود معصومی)", value: "6" },
+    { label: "ملت (محمود معصومی)", value: "7" },
+    { label: "سایر", value: "8" },
+]);
 
 const persianDates = ref([
     { name: "1", value: 1 },
@@ -717,6 +807,28 @@ const isCompleted = s => s < step.value;
 
 const isFormValid = computed(() => {
     if (!formRefs.value[step.value]) return false;
+
+
+    if (step.value === 3) {
+        if (tab.value === "one") {
+            const remiitanceBuyDateValid = !!remiitanceBuyForm.value.date;
+            const remiitanceBuyTimeValid = !!remiitanceBuyForm.value.time;
+            return (
+                remiitanceBuyDateValid &&
+                remiitanceBuyTimeValid
+            );
+        }
+        else if (tab.value === "two") {
+            const remiitanceSellDateValid = !!remiitanceSellForm.value.date;
+            const remiitanceSellTimeValid = !!remiitanceSellForm.value.time;
+            return (
+                remiitanceSellDateValid &&
+                remiitanceSellTimeValid
+            );
+        }
+    }
+
+
     return formRefs.value[step.value].isValid;
 });
 
@@ -761,8 +873,9 @@ const remiitanceBuy = async () => {
         remiitanceBuyForm.value.userId = userInfo.value.id;
         remiitanceBuyForm.value.goldPrice = goldPriceForm.value.buyPrice;
         remiitanceBuyForm.value.phoneNumber = userInfo.value.phoneNumber;
-        remiitanceBuyForm.value.date = goldPriceForm.value.date;
-        remiitanceBuyForm.value.time = goldPriceForm.value.time;
+        if (remiitanceBuyForm.value.destCardPan == 'سایر') {
+            remiitanceBuyForm.value.destCardPan = otherBuyBankAccount.value;
+        }
         const response = await RemiitanceService.CreateRemiitanceBuy(remiitanceBuyForm.value);
         InvoiceForm.value.type = 'خرید';
         InvoiceForm.value.adminId = response?.data?.adminId;
@@ -796,8 +909,9 @@ const remiitanceSell = async () => {
         remiitanceSellForm.value.userId = userInfo.value.id;
         remiitanceSellForm.value.goldPrice = goldPriceForm.value.buyPrice;
         remiitanceSellForm.value.phoneNumber = userInfo.value.phoneNumber;
-        remiitanceSellForm.value.date = goldPriceForm.value.date;
-        remiitanceSellForm.value.time = goldPriceForm.value.time;
+        if (remiitanceSellForm.value.destCardPan == 'سایر') {
+            remiitanceSellForm.value.destCardPan = otherSellBankAccount.value;
+        }
         const response = await RemiitanceService.CreateRemiitanceSell(remiitanceSellForm.value);
         InvoiceForm.value.type = 'فروش';
         InvoiceForm.value.adminId = response?.data?.adminId;
@@ -947,9 +1061,14 @@ const validateWeight = [
     (v) => /^\d+(\.\d{1,3})?$/.test(v) || 'فقط عدد مجاز است و حداکثر 3 رقم اعشار',
 ];
 
+const BankAccountRules = [
+    (v) => !!v || "حساب بانکی را انتخاب کنید!",
+];
+
 const validateInvoice = [
     v => !!v || 'شناسه پرداخت الزامی است',
 ]
+
 
 const validateNationalCode = () => {
     userInfo.value.nationalCode = userInfo.value.nationalCode.replace(/\D/g, '').slice(0, 10);
@@ -1028,7 +1147,6 @@ const sellGoldweightConvert = () => {
 
     remiitanceSellForm.value.totalPrice = parseInt(remiitanceSellForm.value.goldWeight * goldPriceForm.value.sellPrice);
 }
-
 
 </script>
 
