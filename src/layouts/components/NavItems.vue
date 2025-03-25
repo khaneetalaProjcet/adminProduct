@@ -2,16 +2,22 @@
 import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue'
 import VerticalNavGroup from '@layouts/components/VerticalNavGroup.vue'
 import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
+
+
+const hasPermission = (routeName) => {
+  return JSON.parse(localStorage.getItem("permissions") || "[]").includes(routeName);
+};
+
 </script>
 
 <template>
-  <VerticalNavLink :item="{
+  <VerticalNavLink v-if="hasPermission('dashboard')" :item="{
     title: 'داشبورد',
     icon: 'ri-home-smile-line',
-    to: '/dashboard',
+    to: '/Dashboard',
   }" />
 
-  <VerticalNavSectionTitle :item="{
+  <VerticalNavSectionTitle v-if="hasPermission('userView')" :item="{
     heading: 'کاربران',
   }" />
 
@@ -51,11 +57,11 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     }" />
   </VerticalNavGroup> -->
 
-  <VerticalNavGroup :item="{
+  <VerticalNavGroup v-if="hasPermission('userView')" :item="{
     title: 'کاربران',
     icon: 'ri-user-line',
   }">
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('userView')" :item="{
       title: 'اطلاعات',
       icon: 'ri-id-card-line',
       href: '#',
@@ -65,23 +71,23 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     }" />
   </VerticalNavGroup>
 
+  <VerticalNavSectionTitle
+    v-if="hasPermission('AccountingTrade') || hasPermission('AccountingSellTrade') || hasPermission('goldboxBuy') || hasPermission('goldboxSell') || hasPermission('remiitanceSell') || hasPermission('remiitanceBuy') || hasPermission('inpersonBuy') || hasPermission('inpersonSell') || hasPermission('walletView') || hasPermission('withdrawWallet') || hasPermission('depositWallet')"
+    :item="{
+      heading: 'حسابداری',
+    }" />
 
-  <VerticalNavSectionTitle :item="{
-    heading: 'حسابداری',
-  }" />
-
-
-  <VerticalNavGroup :item="{
+  <VerticalNavGroup v-if="hasPermission('AccountingTrade') || hasPermission('AccountingSellTrade')" :item="{
     title: 'معاملات تلفنی',
     icon: 'ri-user-line',
   }">
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('AccountingTrade')" :item="{
       title: 'خرید تلفنی',
       icon: 'ri-survey-line',
       href: '#',
       to: '/AccountingTrade'
     }" />
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('AccountingSellTrade')" :item="{
       title: 'فروش تلفنی',
       icon: 'ri-creative-commons-nc-line',
       href: '#',
@@ -89,17 +95,17 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavGroup :item="{
+  <VerticalNavGroup v-if="hasPermission('goldboxBuy') || hasPermission('goldboxSell')" :item="{
     title: 'معاملات آنلاین',
     icon: 'ri-line-chart-line',
   }">
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('goldboxBuy')" :item="{
       title: 'خرید آنلاین',
       icon: 'ri-bar-chart-line',
       href: '#',
       to: '/goldboxBuy'
     }" />
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('goldboxSell')" :item="{
       title: 'فروش آنلاین',
       icon: 'ri-bar-chart-grouped-line',
       href: '#',
@@ -107,17 +113,17 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavGroup :item="{
+  <VerticalNavGroup v-if="hasPermission('remiitanceSell') || hasPermission('remiitanceBuy')" :item="{
     title: 'حواله',
     icon: 'ri-file-chart-line',
   }">
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('remiitanceSell')" :item="{
       title: 'فروش حواله ای',
       icon: 'ri-file-upload-line',
       href: '#',
       to: '/remiitanceSell'
     }" />
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('remiitanceBuy')" :item="{
       title: 'خرید حواله ای',
       icon: 'ri-file-download-line',
       href: '#',
@@ -125,17 +131,17 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavGroup :item="{
+  <VerticalNavGroup v-if="hasPermission('inpersonBuy') || hasPermission('inpersonSell')" :item="{
     title: 'معاملات حضوری',
     icon: 'ri-user-5-line',
   }">
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('inpersonBuy')" :item="{
       title: 'خرید حضوری',
       icon: 'ri-group-line',
       href: '#',
       to: '/inpersonBuy'
     }" />
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('inpersonSell')" :item="{
       title: 'فروش حضوری',
       icon: 'ri-group-3-line',
       href: '#',
@@ -144,23 +150,24 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
   </VerticalNavGroup>
 
 
-  <VerticalNavGroup :item="{
-    title: 'کیف پول',
-    icon: 'ri-wallet-3-line',
-  }">
-    <VerticalNavLink :item="{
+  <VerticalNavGroup
+    v-if="hasPermission('walletView') || hasPermission('withdrawWallet') || hasPermission('depositWallet')" :item="{
+      title: 'کیف پول',
+      icon: 'ri-wallet-3-line',
+    }">
+    <VerticalNavLink v-if="hasPermission('walletView')" :item="{
       title: 'کیف پول کاربران',
       icon: 'ri-money-dollar-box-line',
       href: '#',
       to: '/walletView'
     }" />
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('withdrawWallet')" :item="{
       title: 'برداشت',
       icon: 'ri-bar-chart-box-line',
       href: '#',
       to: '/withdrawWallet'
     }" />
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('depositWallet')" :item="{
       title: 'واریز',
       icon: 'ri-refund-2-line',
       href: '#',
@@ -169,16 +176,17 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
   </VerticalNavGroup>
 
 
-  <VerticalNavSectionTitle :item="{
-    heading: 'ثبت معامله',
-  }" />
+  <VerticalNavSectionTitle
+    v-if="hasPermission('goldboxTrade') || hasPermission('remittanceTrade') || hasPermission('inPersonTrade')" :item="{
+      heading: 'ثبت معامله',
+    }" />
 
-  <VerticalNavGroup :item="{
+  <VerticalNavGroup v-if="hasPermission('goldboxTrade')" :item="{
     title: 'معامله تلفنی',
     icon: 'ri-line-chart-line',
   }">
 
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('goldboxTrade')" :item="{
       title: 'ثبت معامله',
       icon: 'ri-pie-chart-line',
       href: '#',
@@ -186,11 +194,11 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavGroup :item="{
+  <VerticalNavGroup v-if="hasPermission('remittanceTrade')" :item="{
     title: 'معامله حواله ای',
     icon: 'ri-article-line',
   }">
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('remittanceTrade')" :item="{
       title: 'ثبت حواله',
       icon: 'ri-news-line',
       href: '#',
@@ -198,11 +206,11 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavGroup :item="{
+  <VerticalNavGroup v-if="hasPermission('inPersonTrade')" :item="{
     title: 'معامله حضوری',
     icon: 'ri-store-2-line',
   }">
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('inPersonTrade')" :item="{
       title: 'ثبت سفارش',
       icon: 'ri-shopping-bag-4-line',
       href: '#',
@@ -210,21 +218,21 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavSectionTitle :item="{
+  <VerticalNavSectionTitle v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity')" :item="{
     heading: 'مدیریت',
   }" />
 
-  <VerticalNavGroup :item="{
+  <VerticalNavGroup v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity')" :item="{
     title: 'مدیریت',
     icon: 'ri-admin-line',
   }">
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('managmentAdmin')" :item="{
       title: 'ادمین',
       icon: 'ri-admin-line',
       href: '#',
       to: '/managmentAdmin'
     }" />
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('managmentActivity')" :item="{
       title: 'فعالیت ها',
       icon: 'ri-user-settings-line',
       href: '#',
@@ -232,15 +240,15 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavSectionTitle :item="{
+  <VerticalNavSectionTitle v-if="hasPermission('installmentLanding')" :item="{
     heading: 'لندینگ',
   }" />
 
-  <VerticalNavGroup :item="{
+  <VerticalNavGroup v-if="hasPermission('installmentLanding')" :item="{
     title: 'لندینگ ها',
     icon: 'ri-pages-line',
   }">
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('installmentLanding')" :item="{
       title: 'فروش اقساطی',
       icon: 'ri-funds-line',
       href: '#',
@@ -249,16 +257,16 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
   </VerticalNavGroup>
 
 
-  <VerticalNavSectionTitle :item="{
+  <VerticalNavSectionTitle v-if="hasPermission('serverMonitor')" :item="{
     heading: 'سرور',
   }" />
 
 
-  <VerticalNavGroup :item="{
+  <VerticalNavGroup v-if="hasPermission('serverMonitor')" :item="{
     title: 'سرور',
     icon: 'ri-computer-line',
   }">
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('serverMonitor')" :item="{
       title: 'مانیتور سرور',
       icon: 'ri-server-line',
       href: '#',
@@ -267,16 +275,16 @@ import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
   </VerticalNavGroup>
 
 
-  <VerticalNavSectionTitle :item="{
+  <VerticalNavSectionTitle v-if="hasPermission('TotalReport')" :item="{
     heading: 'گزارشات',
   }" />
 
 
-  <VerticalNavGroup :item="{
+  <VerticalNavGroup v-if="hasPermission('TotalReport')" :item="{
     title: 'گزارشات',
     icon: 'ri-file-chart-2-line',
   }">
-    <VerticalNavLink :item="{
+    <VerticalNavLink v-if="hasPermission('TotalReport')" :item="{
       title: 'گزارش جامع',
       icon: 'ri-folder-chart-line',
       href: '#',
