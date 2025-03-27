@@ -55,7 +55,7 @@ const GoldBoxSellReviewHeader = ref([
         key: 'invoiceId',
     },
     {
-        title: 'مبلغ (ریال)',
+        title: 'مبلغ (تومان)',
         key: 'totalPrice',
     },
     {
@@ -63,7 +63,7 @@ const GoldBoxSellReviewHeader = ref([
         key: 'goldWeight',
     },
     {
-        title: 'قیمت طلا (ریال)',
+        title: 'قیمت طلا (تومان)',
         key: 'goldPrice',
     },
     {

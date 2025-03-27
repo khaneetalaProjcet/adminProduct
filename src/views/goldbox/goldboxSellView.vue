@@ -99,7 +99,7 @@ const CompleteGoldBoxSellHeader = ref([
         key: 'seller.lastName',
     },
     {
-        title: 'مبلغ خرید (ریال)',
+        title: 'مبلغ خرید (تومان)',
         key: 'totalPrice',
     },
     {
@@ -133,7 +133,7 @@ const FailedGoldBoxSellHeader = ref([
         key: 'seller.lastName',
     },
     {
-        title: 'مبلغ خرید (ریال)',
+        title: 'مبلغ خرید (تومان)',
         key: 'totalPrice',
     },
     {

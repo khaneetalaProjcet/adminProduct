@@ -127,7 +127,7 @@
                     <v-col cols="6" md="4" class="my-1">
                         <div class="d-flex align-items-center">
                             <p>مبلغ کل: </p>
-                            <p class="mx-2">{{ formatNumber(InPersonBuyDetail.totalPrice) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(InPersonBuyDetail.totalPrice) }} تومان</p>
                         </div>
                     </v-col>
                     <v-col cols="6" md="4" class="my-1">
@@ -139,7 +139,7 @@
                     <v-col cols="6" md="4" class="my-1">
                         <div class="d-flex align-items-center">
                             <p>قیمت طلا : </p>
-                            <p class="mx-2">{{ formatNumber(InPersonBuyDetail.goldPrice) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(InPersonBuyDetail.goldPrice) }} تومان</p>
                         </div>
                     </v-col>
                     <v-col cols="6" md="4" class="my-1">
@@ -204,7 +204,7 @@
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>مبلغ کل: </p>
-                            <p class="mx-2">{{ formatNumber(InPersonBuyDetail.totalPrice) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(InPersonBuyDetail.totalPrice) }} تومان</p>
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>کارشناس: </p>
@@ -223,11 +223,11 @@
 
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>قیمت لحظه ای طلا: </p>
-                            <p class="mx-2">{{ formatNumber(InPersonBuyDetail.goldPrice) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(InPersonBuyDetail.goldPrice) }} تومان</p>
                         </div>
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>وزن طلای خریداری شده: </p>
-                            <p class="mx-2">{{ formatNumber(InPersonBuyDetail.goldWeight) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(InPersonBuyDetail.goldWeight) }} تومان</p>
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>توضیحات: </p>
@@ -290,7 +290,7 @@ const PendingInPersonBuyHeader = ref([
         key: 'buyer.phoneNumber',
     },
     {
-        title: 'مبلغ خرید (ریال)',
+        title: 'مبلغ خرید (تومان)',
         key: 'totalPrice',
     },
     {
@@ -335,7 +335,7 @@ const CompleteInPersonBuyHeader = ref([
         key: 'buyer.phoneNumber',
     },
     {
-        title: 'مبلغ خرید (ریال)',
+        title: 'مبلغ خرید (تومان)',
         key: 'totalPrice',
     },
     {
@@ -373,7 +373,7 @@ const FailedInPersonBuyHeader = ref([
         key: 'buyer.phoneNumber',
     },
     {
-        title: 'مبلغ خرید (ریال)',
+        title: 'مبلغ خرید (تومان)',
         key: 'totalPrice',
     },
     {

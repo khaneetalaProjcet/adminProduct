@@ -112,7 +112,7 @@
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>مبلغ کل: </p>
-                            <p class="mx-2">{{ formatNumber(RemmitanceBuyDetail.totalPrice) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(RemmitanceBuyDetail.totalPrice) }} تومان</p>
                         </div>
                     </div>
                     <div class="d-flex flex-column w-100 px-4">
@@ -123,7 +123,7 @@
 
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>قیمت لحظه ای طلا: </p>
-                            <p class="mx-2">{{ formatNumber(RemmitanceBuyDetail.goldPrice) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(RemmitanceBuyDetail.goldPrice) }} تومان</p>
                         </div>
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>وزن طلای خریداری شده: </p>
@@ -205,7 +205,7 @@ const PendingRemiitanceBuyHeader = ref([
         key: 'buyer.phoneNumber',
     },
     {
-        title: 'مبلغ خرید (ریال)',
+        title: 'مبلغ خرید (تومان)',
         key: 'totalPrice',
     },
     {
@@ -254,7 +254,7 @@ const CompleteRemiitanceBuyHeader = ref([
         key: 'buyer.phoneNumber',
     },
     {
-        title: 'مبلغ خرید (ریال)',
+        title: 'مبلغ خرید (تومان)',
         key: 'totalPrice',
     },
     {
@@ -296,7 +296,7 @@ const FailedRemiitanceBuyHeader = ref([
         key: 'buyer.phoneNumber',
     },
     {
-        title: 'مبلغ خرید (ریال)',
+        title: 'مبلغ خرید (تومان)',
         key: 'totalPrice',
     },
     {

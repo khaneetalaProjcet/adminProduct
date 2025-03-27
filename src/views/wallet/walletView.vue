@@ -30,7 +30,7 @@
                     <v-card>
                         <v-toolbar class="px-7">
                             <v-toolbar-title> کیف پول {{ walletDetail.user.firstName }} {{ walletDetail.user.lastName
-                            }}</v-toolbar-title>
+                                }}</v-toolbar-title>
                             <v-spacer></v-spacer>
                             <v-btn icon="ri-close-large-line" color="#000" @click="walletSheet = false"></v-btn>
                         </v-toolbar>
@@ -68,8 +68,8 @@
                                 </v-col>
                                 <v-col cols="6" md="3" class="my-3">
                                     <div class="content">
-                                        <p class="title">دارایی ریالی: </p>
-                                        <p class="desc">{{ formatNumber(walletDetail.balance) }} ریال</p>
+                                        <p class="title">دارایی تومانی: </p>
+                                        <p class="desc">{{ formatNumber(walletDetail.balance) }} تومان</p>
                                     </div>
                                 </v-col>
                                 <v-col cols="6" md="3" class="my-3">
@@ -81,7 +81,7 @@
                                 <v-col cols="6" md="3" class="my-3">
                                     <div class="content">
                                         <p class="title red">در انتظار برداشت: </p>
-                                        <p class="desc">{{ formatNumber(walletDetail.blocked) }} ریال</p>
+                                        <p class="desc">{{ formatNumber(walletDetail.blocked) }} تومان</p>
                                     </div>
                                 </v-col>
                                 <v-divider class="my-10"></v-divider>
@@ -101,9 +101,7 @@
                                         </template>
                                         <template v-slot:item.type="{ item }">
                                             <div>
-                                                <v-chip
-                                                    color="#000"
-                                                    size="small">
+                                                <v-chip color="#000" size="small">
                                                     <v-icon
                                                         :icon="item.type == 'deposit' ? 'ri-arrow-up-long-line' : 'ri-arrow-down-long-line'"
                                                         start></v-icon>
@@ -141,7 +139,7 @@ const walletTransactionHeader = ref([
         key: 'type',
     },
     {
-        title: 'مبلغ (ریال)',
+        title: 'مبلغ (تومان)',
         key: 'amount',
     },
     {
@@ -168,7 +166,7 @@ const walletHeader = ref([
         key: 'user.lastName',
     },
     {
-        title: 'دارایی ریالی',
+        title: 'دارایی تومانی',
         key: 'balance',
     },
     {
@@ -278,5 +276,4 @@ onMounted(() => {
 .v-table thead {
     border-radius: 8px 8px 0 0 !important;
 }
-
 </style>

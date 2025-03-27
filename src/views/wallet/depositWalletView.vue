@@ -108,7 +108,7 @@
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>مبلغ: </p>
-                            <p class="mx-2">{{ formatNumber(DepositDetail.amount) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(DepositDetail.amount) }} تومان</p>
                         </div>
                     </div>
                     <div class="d-flex flex-column w-100 px-4">
@@ -119,7 +119,7 @@
 
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>موجودی کیف پول: </p>
-                            <p class="mx-2">{{ formatNumber(DepositDetail.wallet.balance) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(DepositDetail.wallet.balance) }} تومان</p>
                         </div>
                     </div>
                 </div>
@@ -179,7 +179,7 @@ const PendingDepositHeader = ref([
         key: 'wallet.user.phoneNumber',
     },
     {
-        title: 'مبلغ (ریال)',
+        title: 'مبلغ (تومان)',
         key: 'amount',
     },
     {
@@ -216,7 +216,7 @@ const CompleteDepositHeader = ref([
         key: 'wallet.user.phoneNumber',
     },
     {
-        title: 'مبلغ (ریال)',
+        title: 'مبلغ (تومان)',
         key: 'amount',
     },
     {
@@ -254,7 +254,7 @@ const FailedDepositHeader = ref([
         key: 'wallet.user.phoneNumber',
     },
     {
-        title: 'مبلغ (ریال)',
+        title: 'مبلغ (تومان)',
         key: 'amount',
     },
     {

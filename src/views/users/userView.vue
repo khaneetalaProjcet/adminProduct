@@ -78,7 +78,7 @@
             </div>
             <div class="d-flex align-items-center my-2 user-price">
               <p>موجودی کیف پول: </p>
-              <p class="mx-2">{{ formatNumber(UserInfo.wallet.balance) }} ریال</p>
+              <p class="mx-2">{{ formatNumber(UserInfo.wallet.balance) }} تومان</p>
             </div>
             <div class="d-flex align-items-center my-2">
               <p>شماره کارت: </p>
@@ -197,7 +197,7 @@ const userHeader = ref([
     key: 'wallet.goldWeight',
   },
   {
-    title: 'دارایی ریالی',
+    title: 'دارایی تومانی',
     key: 'wallet.balance',
   },
   {
@@ -231,7 +231,7 @@ const OldUserHeader = ref([
     key: 'wallet.goldWeight',
   },
   {
-    title: 'دارایی ریالی',
+    title: 'دارایی تومانی',
     key: 'wallet.balance',
   },
   {

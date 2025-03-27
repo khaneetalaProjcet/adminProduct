@@ -85,7 +85,7 @@
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>مبلغ کل: </p>
-                            <p class="mx-2">{{ formatNumber(InPersonSellDetail.totalPrice) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(InPersonSellDetail.totalPrice) }} تومان</p>
                         </div>
                     </div>
                     <div class="d-flex flex-column w-100 px-4">
@@ -96,11 +96,11 @@
 
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>قیمت لحظه ای طلا: </p>
-                            <p class="mx-2">{{ formatNumber(InPersonSellDetail.goldPrice) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(InPersonSellDetail.goldPrice) }} تومان</p>
                         </div>
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>وزن طلای خریداری شده: </p>
-                            <p class="mx-2">{{ formatNumber(InPersonSellDetail.goldWeight) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(InPersonSellDetail.goldWeight) }} تومان</p>
                         </div>
                     </div>
                 </div>
@@ -162,7 +162,7 @@ const CompleteInPersonSellHeader = ref([
         key: 'Seller.phoneNumber',
     },
     {
-        title: 'مبلغ خرید (ریال)',
+        title: 'مبلغ خرید (تومان)',
         key: 'totalPrice',
     },
     {
@@ -200,7 +200,7 @@ const FailedInPersonSellHeader = ref([
         key: 'Seller.phoneNumber',
     },
     {
-        title: 'مبلغ خرید (ریال)',
+        title: 'مبلغ خرید (تومان)',
         key: 'totalPrice',
     },
     {

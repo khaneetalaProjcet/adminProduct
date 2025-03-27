@@ -323,10 +323,10 @@
                                                         @input="sellGoldweightConvert"
                                                         :disabled="goldPriceForm.sellPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
-                                                <v-col cols="12" md="4">
+                                                <!-- <v-col cols="12" md="4">
                                                     <v-text-field v-model="remiitanceSellForm.invoiceId"
                                                         label="شناسه پرداخت" variant="outlined"></v-text-field>
-                                                </v-col>
+                                                </v-col> -->
 
                                                 <v-divider class="my-9"></v-divider>
                                                 <v-col cols="12" md="3">
@@ -488,7 +488,7 @@
                                         <v-col cols="6" md="3">
                                             <div class="invoice-box">
                                                 <p> موجودی کیف پول : </p>
-                                                <p>{{ formatNumber(InvoiceForm.wallet.balance) }} ریال</p>
+                                                <p>{{ formatNumber(InvoiceForm.wallet.balance) }} تومان</p>
                                             </div>
                                         </v-col>
                                         <v-col cols="6" md="3">

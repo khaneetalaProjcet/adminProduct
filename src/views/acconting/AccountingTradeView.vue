@@ -121,7 +121,7 @@
                     <v-col cols="6" md="4" class="my-1">
                         <div class="d-flex align-items-center">
                             <p>مبلغ کل: </p>
-                            <p class="mx-2">{{ formatNumber(AccountingReviewDetail.totalPrice) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(AccountingReviewDetail.totalPrice) }} تومان</p>
                         </div>
                     </v-col>
                     <v-col cols="6" md="4" class="my-1">
@@ -133,7 +133,7 @@
                     <v-col cols="6" md="4" class="my-1">
                         <div class="d-flex align-items-center">
                             <p>قیمت طلا : </p>
-                            <p class="mx-2">{{ formatNumber(AccountingReviewDetail.goldPrice) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(AccountingReviewDetail.goldPrice) }} تومان</p>
                         </div>
                     </v-col>
                     <v-col cols="6" md="4" class="my-1">
@@ -217,7 +217,7 @@ const PendingAccountingReviewHeader = ref([
         key: 'invoiceId',
     },
     {
-        title: 'مبلغ (ریال)',
+        title: 'مبلغ (تومان)',
         key: 'totalPrice',
     },
     {
@@ -258,7 +258,7 @@ const CompleteAccountingReviewHeader = ref([
         key: 'invoiceId',
     },
     {
-        title: 'مبلغ (ریال)',
+        title: 'مبلغ (تومان)',
         key: 'totalPrice',
     },
     {
@@ -301,7 +301,7 @@ const rejectAccountingReviewHeader = ref([
         key: 'invoiceId',
     },
     {
-        title: 'مبلغ (ریال)',
+        title: 'مبلغ (تومان)',
         key: 'totalPrice',
     },
     {

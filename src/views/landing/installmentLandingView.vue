@@ -43,7 +43,7 @@
                         </div>
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>موجودی کیف پول: </p>
-                            <p class="mx-2">{{ formatNumber(UserInfo.wallet.balance) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(UserInfo.wallet.balance) }} تومان</p>
                         </div>
                     </div>
                     <div class="d-flex flex-column w-100 px-4">

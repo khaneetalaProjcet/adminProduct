@@ -202,7 +202,7 @@
                                                 <v-col cols="12" md="3">
                                                     <div class="livePrice-box py-2">
                                                         <p>قیمت طلا : </p>
-                                                        <p>{{ formatNumber(goldPriceForm.buyPrice) }}</p>
+                                                        <p>{{ formatNumber(goldPriceForm.buyPrice) }} تومان</p>
                                                     </div>
                                                 </v-col>
                                                 <v-col cols="12" md="3">
@@ -215,7 +215,7 @@
                                             </v-row>
                                             <v-row>
                                                 <v-col cols="12" md="3">
-                                                    <v-text-field v-model="tradeBuyForm.totalPrice" label="مبلغ (ریال)"
+                                                    <v-text-field v-model="tradeBuyForm.totalPrice" label="مبلغ (تومان)"
                                                         variant="outlined" @input="buyGoldpriceConvert"
                                                         :disabled="goldPriceForm.buyPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
@@ -274,7 +274,7 @@
                                                 <v-col cols="12" md="3">
                                                     <div class="livePrice-box">
                                                         <p>قیمت طلا : </p>
-                                                        <p>{{ formatNumber(goldPriceForm.sellPrice) }}</p>
+                                                        <p>{{ formatNumber(goldPriceForm.sellPrice) }} تومان</p>
                                                     </div>
                                                 </v-col>
                                                 <v-col cols="12" md="3">
@@ -287,8 +287,9 @@
                                             </v-row>
                                             <v-row>
                                                 <v-col cols="12" md="3">
-                                                    <v-text-field v-model="tradeSellForm.totalPrice" label="مبلغ (ریال)"
-                                                        variant="outlined" @input="sellGoldpriceConvert"
+                                                    <v-text-field v-model="tradeSellForm.totalPrice"
+                                                        label="مبلغ (تومان)" variant="outlined"
+                                                        @input="sellGoldpriceConvert"
                                                         :disabled="goldPriceForm.sellPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
                                                 <v-col cols="12" md="2">
@@ -303,10 +304,10 @@
                                                         @input="sellGoldweightConvert"
                                                         :disabled="goldPriceForm.sellPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
-                                                <v-col cols="12" md="4">
+                                                <!-- <v-col cols="12" md="4">
                                                     <v-text-field v-model="tradeSellForm.invoiceId" label="شناسه پرداخت"
                                                         variant="outlined" :rules="validateInvoice"></v-text-field>
-                                                </v-col>
+                                                </v-col> -->
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
                                                         v-model="tradeSellForm.description"></v-textarea>
@@ -393,13 +394,13 @@
                                         <v-col cols="6" md="3">
                                             <div class="invoice-box">
                                                 <p>قیمت طلا : </p>
-                                                <p>{{ formatNumber(InvoiceForm.goldPrice) }} ریال</p>
+                                                <p>{{ formatNumber(InvoiceForm.goldPrice) }} تومان</p>
                                             </div>
                                         </v-col>
                                         <v-col cols="6" md="3">
                                             <div class="invoice-box">
                                                 <p>قیمت کل : </p>
-                                                <p>{{ formatNumber(InvoiceForm.totalPrice) }} ریال</p>
+                                                <p>{{ formatNumber(InvoiceForm.totalPrice) }} تومان</p>
                                             </div>
                                         </v-col>
                                         <v-divider></v-divider>
@@ -411,7 +412,7 @@
                                         <v-col cols="6" md="3">
                                             <div class="invoice-box">
                                                 <p> موجودی کیف پول : </p>
-                                                <p>{{ formatNumber(InvoiceForm.wallet.balance) }} ریال</p>
+                                                <p>{{ formatNumber(InvoiceForm.wallet.balance) }} تومان</p>
                                             </div>
                                         </v-col>
                                         <v-col cols="6" md="3">
@@ -423,7 +424,7 @@
                                         <v-col cols="6" md="3">
                                             <div class="invoice-box">
                                                 <p>مبلغ در انتظار برداشت : </p>
-                                                <p>{{ formatNumber(InvoiceForm.wallet.blocked) }} ریال</p>
+                                                <p>{{ formatNumber(InvoiceForm.wallet.blocked) }} تومان</p>
                                             </div>
                                         </v-col>
                                     </v-row>

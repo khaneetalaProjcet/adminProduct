@@ -81,7 +81,7 @@
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>مبلغ: </p>
-                            <p class="mx-2">{{ formatNumber(WithdrawDetail.amount) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(WithdrawDetail.amount) }} تومان</p>
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>شماره کارت: </p>
@@ -100,7 +100,7 @@
 
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>موجودی کیف پول: </p>
-                            <p class="mx-2">{{ formatNumber(WithdrawDetail.wallet.balance) }} ریال</p>
+                            <p class="mx-2">{{ formatNumber(WithdrawDetail.wallet.balance) }} تومان</p>
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>شماره شبا: </p>
@@ -110,7 +110,7 @@
                 </div>
                 <div class="form-box">
                     <v-form ref="form" v-model="isValid" @submit.prevent="submitWithdraw">
-                        
+
                         <v-text-field v-model="withdrawalDetail.withdrawalId" label="شناسه پرداخت"
                             :rules="withdrawalIdRule" class="my-2"></v-text-field>
                         <v-btn type="submit" :disabled="!isValid" size="large" class="my-2"
@@ -158,7 +158,7 @@ const PendingWithdrawHeader = ref([
         key: 'wallet.user.phoneNumber',
     },
     {
-        title: 'مبلغ (ریال)',
+        title: 'مبلغ (تومان)',
         key: 'amount',
     },
     {
@@ -195,7 +195,7 @@ const CompleteWithdrawHeader = ref([
         key: 'wallet.user.phoneNumber',
     },
     {
-        title: 'مبلغ (ریال)',
+        title: 'مبلغ (تومان)',
         key: 'amount',
     },
     {
