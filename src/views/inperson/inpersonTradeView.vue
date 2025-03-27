@@ -144,9 +144,9 @@
                                             <div class="d-flex">
                                                 <p class="mb-0">کارت بانکی : </p>
                                                 <v-icon size="small" icon="ri-close-line" color="#c9190c"
-                                                    v-if="userInfo.isHaveBank == true"></v-icon>
+                                                    v-if="userInfo.isHaveBank == false"></v-icon>
                                                 <v-icon size="small" icon="ri-check-line" color="#0b8707"
-                                                    v-else-if="userInfo.isHaveBank == false"></v-icon>
+                                                    v-else-if="userInfo.isHaveBank == true"></v-icon>
                                             </div>
                                         </v-col>
                                         <v-col cols="12" md="3" class="my-3">

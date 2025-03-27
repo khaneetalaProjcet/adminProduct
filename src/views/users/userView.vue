@@ -21,9 +21,9 @@
                     <p>{{ formatNumber(item.wallet.balance) }}</p>
                   </template>
                   <template v-slot:item.isHaveBank="{ item }">
-                    <v-icon size="small" icon="ri-close-line" color="#c9190c" v-if="item.isHaveBank == true"></v-icon>
+                    <v-icon size="small" icon="ri-close-line" color="#c9190c" v-if="item.isHaveBank == false"></v-icon>
                     <v-icon size="small" icon="ri-check-line" color="#0b8707"
-                      v-else-if="item.isHaveBank == false"></v-icon>
+                      v-else-if="item.isHaveBank == true"></v-icon>
                   </template>
                   <template v-slot:item.action="{ item }">
                     <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
