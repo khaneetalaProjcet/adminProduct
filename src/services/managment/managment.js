@@ -1,3 +1,4 @@
+import ServerTemplate from "../server/api";
 import ManagmentTemplate from "./api";
 
 
@@ -21,6 +22,16 @@ const ManagmentService = {
     async AddAdmin(info) {
         const body = JSON.stringify(info);
         const response = await ManagmentTemplate.post(`/create`, body);
+        return response.data;
+    },
+
+    async GetUserActivity() {
+        const response = await ServerTemplate.get('/logger/admin/all');
+        return response.data;
+    },
+
+    async GetExpertActivity() {
+        const response = await ServerTemplate.get('/logger/user/all');
         return response.data;
     },
 }

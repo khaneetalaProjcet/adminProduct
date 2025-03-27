@@ -11,7 +11,7 @@ const hasPermission = (routeName) => {
 </script>
 
 <template>
-  <VerticalNavLink v-if="hasPermission('dashboard')" :item="{
+  <VerticalNavLink :item="{
     title: 'داشبورد',
     icon: 'ri-home-smile-line',
     to: '/Dashboard',
