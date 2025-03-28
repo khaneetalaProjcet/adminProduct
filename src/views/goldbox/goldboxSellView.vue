@@ -6,6 +6,7 @@
                     <v-tab value="one">فروش های موفق</v-tab>
                     <v-tab value="two">فروش های ناموفق</v-tab>
                 </v-tabs>
+                
             </v-col>
             <v-col cols="12">
                 <v-card-text>

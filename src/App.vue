@@ -5,5 +5,4 @@
   <VApp>
     <RouterView />
   </VApp>
-  
 </template>
