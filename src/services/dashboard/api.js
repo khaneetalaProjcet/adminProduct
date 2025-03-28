@@ -5,7 +5,8 @@ const router = useRouter();
 
 
 const DashboardTemplate = axios.create({
-    baseURL: "https://khaneetala.ir/api",
+    // baseURL: "https://khaneetala.ir/api",
+    baseURL: "https://gateway.khanetala.ir/v1/main",
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",

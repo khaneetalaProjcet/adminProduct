@@ -5,7 +5,8 @@ const router = useRouter();
 
 
 const ManagmentTemplate = axios.create({
-    baseURL: "https://gateway.khaneetala.ir/v1/admin",
+    // baseURL: "https://gateway.khaneetala.ir/v1/admin",
+    baseURL: "https://gateway.khanetala.ir/v1/admin",
     headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",

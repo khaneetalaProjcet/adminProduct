@@ -5,7 +5,8 @@ const router = useRouter();
 
 
 const RemittanceTemplate = axios.create({
-    baseURL: "https://gateway.khaneetala.ir/v1/remmitance",
+    // baseURL: "https://gateway.khaneetala.ir/v1/remmitance",
+    baseURL: "https://gateway.khanetala.ir/v1/remmitance",
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",

@@ -5,7 +5,8 @@ const router = useRouter();
 
 
 const WalletTemplate = axios.create({
-    baseURL: "https://khaneetala.ir/api/admin",
+    // baseURL: "https://khaneetala.ir/api/admin",
+    baseURL: "https://gateway.khanetala.ir/v1/main/admin",
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",
