@@ -29,24 +29,24 @@ const InPersonService = {
 
     async CreateBuy(item) {
         const body = JSON.stringify(item);
-        const response = await InPersonTemplate.post(`/buy/create`, body);
+        const response = await InPersonTemplate.post(`/inperson/buy/create`, body);
         return response.data;
     },
 
 
     async CreateSell(item) {
         const body = JSON.stringify(item);
-        const response = await InPersonTemplate.post(`/sell/create`, body);
+        const response = await InPersonTemplate.post(`/inperson/sell/create`, body);
         return response.data
     },
 
     async InPersonBuy(item) {
-        const response = await InPersonTemplate.get(`/buy/all/${item}`);
+        const response = await InPersonTemplate.get(`/inperson/buy/all/${item}`);
         return response.data
     },
 
     async InPersonSell(item) {
-        const response = await InPersonTemplate.get(`/sell/all/${item}`);
+        const response = await InPersonTemplate.get(`/inperson/sell/all/${item}`);
         return response.data
     },
 
