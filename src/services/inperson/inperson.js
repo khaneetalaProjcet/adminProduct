@@ -11,7 +11,7 @@ const InPersonService = {
 
     async submitOtp(item) {
         const body = JSON.stringify(item);
-        const response = await InPersonTemplate.post(`/otp/verify`, body);
+        const response = await InPersonTemplate.post(`/inperson/otp/verify`, body);
         return response.data
     },
 
