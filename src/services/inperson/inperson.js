@@ -56,7 +56,7 @@ const InPersonService = {
             id: item.id,
             description: item.description
         });
-        const response = await InPersonTemplate.post(`/transaction/changestatus`, body);
+        const response = await InPersonTemplate.post(`/inperson/transaction/changestatus`, body);
         return response.data
     },
 
