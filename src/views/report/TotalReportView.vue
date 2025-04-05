@@ -113,8 +113,8 @@ const TransactionType = ref([
 
 const TradeType = ref([
     { value: 'all', label: 'همه' },
-    { value: 'sell', label: 'خرید' },
-    { value: 'buy', label: 'فروش' },
+    { value: 'sell', label: 'فروش' },
+    { value: 'buy', label: 'خرید' },
 ]);
 
 const authType = ref([
