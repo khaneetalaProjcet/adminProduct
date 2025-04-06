@@ -224,7 +224,7 @@ const managmentDialogRequest = async () => {
     try {
         managmentAccessLoading.value = true;
         const response = await ManagmentService.GetPermission();
-        if (response.data.data == 0) {
+        if (response.data == 0) {
             closeTradePermission.value = false;
         } else {
             closeTradePermission.value = true;
