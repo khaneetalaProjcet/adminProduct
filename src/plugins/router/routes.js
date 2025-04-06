@@ -115,6 +115,12 @@ export const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: '/recruitmentLanding',
+        name: 'recruitmentLanding',
+        component: () => import('@/views/landing/recruitmentLandingView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: '/serverMonitor',
         name: 'serverMonitor',
         component: () => import('@/views/server/serverMonitorView.vue'),

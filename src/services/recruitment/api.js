@@ -5,9 +5,8 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 
-const LandingTemplate = axios.create({
-    baseURL: "https://gateway.khanetala.ir/v1/installment",
-    // timeout: 10000,
+const RecruitmentTemplate = axios.create({
+    baseURL: "https://gateway.khanetala.ir/v1/admin",
     headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
@@ -16,7 +15,7 @@ const LandingTemplate = axios.create({
 
 
 // before request
-LandingTemplate.interceptors.request.use(
+RecruitmentTemplate.interceptors.request.use(
     (config) => {
         const token = localStorage.getItem("token");
         if (token) {
@@ -33,7 +32,7 @@ LandingTemplate.interceptors.request.use(
 
 
 // after response
-LandingTemplate.interceptors.response.use(
+RecruitmentTemplate.interceptors.response.use(
     (response) => {
         return response;
     },
@@ -47,4 +46,4 @@ LandingTemplate.interceptors.response.use(
     }
 );
 
-export default LandingTemplate;
+export default RecruitmentTemplate;

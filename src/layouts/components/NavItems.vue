@@ -250,7 +250,7 @@ const hasPermission = (routeName) => {
     heading: 'لندینگ',
   }" />
 
-  <VerticalNavGroup v-if="hasPermission('installmentLanding')" :item="{
+  <VerticalNavGroup v-if="hasPermission('installmentLanding') || hasPermission('recruitmentLanding')" :item="{
     title: 'لندینگ ها',
     icon: 'ri-pages-line',
   }">
@@ -259,6 +259,12 @@ const hasPermission = (routeName) => {
       icon: 'ri-funds-line',
       href: '#',
       to: '/installmentLanding'
+    }" />
+    <VerticalNavLink v-if="hasPermission('recruitmentLanding')" :item="{
+      title: 'استخدام',
+      icon: 'ri-user-search-line',
+      href: '#',
+      to: '/recruitmentLanding'
     }" />
   </VerticalNavGroup>
 
