@@ -287,8 +287,241 @@
                     </v-stepper-window-item>
                     <v-stepper-window-item :value="4">
                         <v-card class="step-card">
-
-
+                            <v-form :ref="(el) => setFormRef(el, 4)">
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <div class="w-100 d-flex justify-space-between align-items-center">
+                                                <h3 class="trade-step-title">فاکتور فروش</h3>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <div class="d-flex">
+                                                <h4>اطلاعات کاربر</h4>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="d-flex">
+                                                <p>نام : </p>
+                                                <p>{{ invoiceDetail.buyer.firstName }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="d-flex">
+                                                <p>نام خانوادگی : </p>
+                                                <p>{{ invoiceDetail.buyer.lastName }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="d-flex">
+                                                <p>نام پدر : </p>
+                                                <p>{{ invoiceDetail.buyer.fatherName }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="d-flex">
+                                                <p>کد ملی : </p>
+                                                <p>{{ invoiceDetail.buyer.nationalCode }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="d-flex">
+                                                <p> شماره همراه : </p>
+                                                <p>{{ invoiceDetail.buyer.phoneNumber }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="d-flex">
+                                                <p>کارشناس : </p>
+                                                <p>{{ invoiceDetail.adminId }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-divider></v-divider>
+                                        <v-col cols="12 my-2">
+                                            <div class="d-flex">
+                                                <h4>اطلاعات محصولات خریداری شده</h4>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="12">
+                                            <v-row v-for="(item, i) in invoiceDetail.productList" :key="i"
+                                                class="product-row">
+                                                <v-col cols="6" md="3">
+                                                    <div class="d-flex">
+                                                        <p>نام محصول : </p>
+                                                        <p>{{ item.title }} گرم</p>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="6" md="3">
+                                                    <div class="d-flex">
+                                                        <p>دسته بندی : </p>
+                                                        <p>{{ item.category }}</p>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="6" md="3">
+                                                    <div class="d-flex">
+                                                        <p>تعداد : </p>
+                                                        <p>{{ item.number }}</p>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="6" md="3">
+                                                    <div class="d-flex">
+                                                        <p>وزن کل : </p>
+                                                        <p>{{ item.weight }}</p>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="6" md="3">
+                                                    <div class="d-flex">
+                                                        <p>اجرت : </p>
+                                                        <p>{{ item.wage }} %</p>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="6" md="3">
+                                                    <div class="d-flex">
+                                                        <p>قیمت کل : </p>
+                                                        <p>{{ formatNumber(item.totalPrice) }} تومان</p>
+                                                    </div>
+                                                </v-col>
+                                            </v-row>
+                                        </v-col>
+                                        <v-divider></v-divider>
+                                        <v-col cols="12">
+                                            <div class="d-flex">
+                                                <h4>صورتحساب</h4>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="d-flex">
+                                                <p> قیمت لحظه ای طلا : </p>
+                                                <p>{{ formatNumber(invoiceDetail.goldPrice) }} تومان</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="d-flex form-total-price">
+                                                <p>جمع کل: </p>
+                                                <p>{{ formatNumber(invoiceDetail.totalInvoicePrice) }} تومان</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3">
+                                            <!-- <div class="invoice-box">
+                                                <p>مبلغ در انتظار برداشت : </p>
+                                                <p>{{ formatNumber(InvoiceForm.wallet.blocked) }} تومان</p>
+                                            </div> -->
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-form>
+                            <v-card-actions class="btn-box">
+                                <v-btn @click="prevStep" size="large">قبلی</v-btn>
+                                <v-btn @click="nextStep" color="primary" size="large" variant="elevated">
+                                    نحوه پرداخت
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-stepper-window-item>
+                    <v-stepper-window-item :value="5">
+                        <v-card class="step-card">
+                            <v-form :ref="(el) => setFormRef(el, 5)">
+                                <v-container>
+                                    <v-row>
+                                        <v-col cols="12">
+                                            <div class="goldbox-section">
+                                                <p class="ma-0">موجودی صندوق طلا</p>
+                                                <p class="ma-0">{{ userInfo.wallet.goldWeight }} گرم</p>
+                                            </div>
+                                            <div class="goldbox-section">
+                                                <p class="ma-0">مبلغ قابل پرداخت</p>
+                                                <p class="ma-0">{{ formatNumber(invoiceDetail.totalInvoicePrice) }}
+                                                    تومان</p>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col cols="12" md="6">
+                                            <v-select v-model="paymentDetail.paymentType" label="نحوه پرداخت"
+                                                :items="paymentMethodList" variant="outlined" item-title="name"
+                                                item-value="value" @update:model-value="paymentSelected"
+                                                :rules="[v => !!v || 'نحوه پرداخت رو انتخاب کنید']"></v-select>
+                                        </v-col>
+                                        <v-col cols="12" md="6"
+                                            v-if="paymentDetail.paymentType == 0 || paymentDetail.paymentType == 1">
+                                            <v-select v-model="selectCashMethod" label="روش پرداخت نقدی"
+                                                :items="cashMethodList" variant="outlined" item-title="name"
+                                                item-value="value"
+                                                :rules="[v => !!v || 'نحوه پرداخت نقدی رو انتخاب کنید']"></v-select>
+                                        </v-col>
+                                        <v-col cols="12" md="6" v-if="paymentDetail.paymentType == 2">
+                                            <v-text-field v-model="paymentDetail.goldWeight" label="طلا (گرم)"
+                                                variant="outlined"></v-text-field>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row
+                                        v-if="selectCashMethod == 0 || selectCashMethod == 1 || selectCashMethod == 2">
+                                        <v-col cols="6" md="4" class="my-2">
+                                            <div class="d-flex flex-column">
+                                                <v-text-field v-model="paymentDetail.cash" label="مبلغ نقد"
+                                                    variant="outlined" class="my-2"></v-text-field>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="4" class="my-2">
+                                            <div class="d-flex flex-column">
+                                                <v-text-field v-model="paymentDetail.creditCard" label="دستگاه پوز"
+                                                    variant="outlined" class="my-2"></v-text-field>
+                                                <v-text-field v-model="paymentDetail.creditCardId" label="شناسه"
+                                                    variant="outlined" class="my-2"></v-text-field>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="4" class="my-2">
+                                            <div class="d-flex flex-column">
+                                                <v-text-field v-model="paymentDetail.transfer" label="کارت به کارت"
+                                                    variant="outlined" class="my-2"></v-text-field>
+                                                <v-text-field v-model="paymentDetail.transferId" label="شناسه"
+                                                    variant="outlined" class="my-2"></v-text-field>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="4" class="my-2" v-if="paymentDetail.paymentType == 1">
+                                            <v-text-field v-model="paymentDetail.goldWeight" label="طلا (گرم)"
+                                                variant="outlined" class="my-2"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="6" md="4" v-if="selectCashMethod == 1">
+                                            <div class="d-flex justify-center align-center w-100 h-100">
+                                                <p class="ma-0">مبلغ چک : </p>
+                                                <p class="ma-0">{{ invoiceDetail.totalInvoicePrice -
+                                                    (+paymentDetail.cash
+                                                        + (paymentDetail.goldWeight * goldPriceForm.buyPrice)) }} تومان</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="4" class="my-2" v-if="selectCashMethod == 1">
+                                            <v-text-field v-model="paymentDetail.chequeNumber" label="شناسه چک"
+                                                variant="outlined" class="my-2"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="6" md="4" class="my-2" v-if="selectCashMethod == 0">
+                                            <div class="d-flex justify-center align-center w-100 h-100">
+                                                <p class="ma-0">مبلغ قسط : </p>
+                                                <p class="ma-0">{{ invoiceDetail.totalInvoicePrice -
+                                                    (+paymentDetail.cash
+                                                        + (paymentDetail.goldWeight * goldPriceForm.buyPrice)) }} تومان</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="4" class="my-2" v-if="selectCashMethod == 0">
+                                            <div class="d-flex flex-column">
+                                                <v-select v-model="paymentDetail.installmentType" label="نوع قسط"
+                                                    :items="installmentList" variant="outlined" item-title="name"
+                                                    item-value="value"
+                                                    :rules="[v => !!v || 'نحوه پرداخت قسطی رو انتخاب کنید']"
+                                                    class="my-2"></v-select>
+                                            </div>
+                                        </v-col>
+                                    </v-row>
+                                </v-container>
+                            </v-form>
+                            <v-card-actions class="btn-box">
+                                <v-btn @click="prevStep" size="large">قبلی</v-btn>
+                                <v-btn @click="SubmitPaymentType" color="primary" size="large" variant="elevated">
+                                    ثبت نهایی
+                                </v-btn>
+                            </v-card-actions>
                         </v-card>
                     </v-stepper-window-item>
                 </v-stepper-window>
@@ -298,6 +531,14 @@
     <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
         {{ errorMsg }}
     </v-alert>
+    <v-dialog v-model="successModal" max-width="500" persistent>
+        <v-card title="تایید فاکتور" class="modal-card">
+            <v-icon class="mt-3 mb-6" icon="ri-checkbox-circle-fill" color="#0b8707"></v-icon>
+            <h4>
+                <!-- خرید {{ confirmConvert.buyer.firstName }} {{ confirmConvert.buyer.firstName }} با موفقیت ثبت شد -->
+            </h4>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
@@ -306,12 +547,44 @@ import GoldPriceService from '@/services/priceApi/price';
 import jalaaliJs from 'jalaali-js';
 import { ref } from 'vue';
 
-const steps = ref([1, 2, 3, 4]);
+const steps = ref([1, 2, 3, 4, 5]);
+const paymentMethodList = ref([
+    { name: 'نقد', value: '0' },
+    { name: 'نقد و صندوق طلا', value: '1' },
+    { name: 'صندوق طلا', value: '2' },
+]);
+const cashMethodList = ref([
+    { name: 'قسطی', value: '0' },
+    { name: 'چکی', value: '1' },
+    { name: 'نقد', value: '2' },
+]);
+
+const installmentList = ref([
+    { name: '3 ماهه 3٪', value: '0' },
+    { name: '6ماه 12٪', value: '1' },
+    { name: '12ماهه 23٪', value: '2' },
+]);
+
+const paymentDetail = ref({
+    paymentType: null,
+    cash: 0,
+    totalCash: '',
+    installmentType: '',
+    payment: '',
+    creditCard: 0,
+    transfer: 0,
+    chequeNumber: '',
+    goldWeight: '',
+    creditCardId: '',
+    transferId: '',
+    paymentType: ''
+});
 const step = ref(1);
 const formRefs = ref({});
 const stepOneLoading = ref(false);
 const stepTwoLoading = ref(false);
 const stepThreeLoading = ref(false);
+const stepFiveLoading = ref(false);
 const GoldPriceLoading = ref(false);
 const successModal = ref(false);
 const otpLoading = ref(false);
@@ -319,16 +592,16 @@ const otpVerification = ref(false);
 const selectedDate = ref();
 const selectedMonth = ref();
 const selectedYear = ref();
+const selectCashMethod = ref(null);
 const alertError = ref(false);
 const errorMsg = ref('');
 const productValid = ref(false);
-const addProductValid = ref(true);
 const inPersonForm = ref({
     phoneNumber: '',
     otp: '',
 });
 
-const categoryList = ref(['النگو', 'زنجیر', 'دستبند', 'پلاک', 'گوشواره', 'کلاسیک', 'همکاری', 'طلاجات کلی'])
+const categoryList = ref(['النگو', 'سرویس', 'انگشتر', 'زنجیر', 'دستبند', 'پلاک', 'گوشواره', 'کلاسیک', 'همکاری', 'طلاجات کلی'])
 
 const product = ref({
     title: '',
@@ -367,6 +640,8 @@ const goldPriceForm = ref({
     sellPrice: '',
     milliseconds: '',
 });
+
+const confirmConvert = ref({});
 
 const invoiceDetail = ref();
 
@@ -612,7 +887,10 @@ const TradeRequest = async () => {
         return await ConvertTrade();
     } else if (step.value === 4) {
         return true;
+    } else if (step.value === 5) {
+        return await SubmitPaymentType();
     }
+
 }
 
 const sendOtp = async () => {
@@ -689,8 +967,7 @@ const ConvertTrade = async () => {
         invoiceConverterForm.value.nationalCode = userInfo.value.nationalCode;
         invoiceConverterForm.value.productList = productList.value;
         const response = await InPersonService.SubmitConvertTrade(invoiceConverterForm.value);
-        invoiceDetail.value = response.data.data
-        console.log(invoiceDetail.value)
+        invoiceDetail.value = response.data
         return response
     } catch (error) {
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
@@ -702,7 +979,6 @@ const ConvertTrade = async () => {
         stepThreeLoading.value = false;
     }
 }
-
 
 const getGoldPrice = async () => {
     convertDate()
@@ -723,6 +999,24 @@ const getGoldPrice = async () => {
     }
 }
 
+const SubmitPaymentType = async () => {
+    try {
+        stepFiveLoading.value = true;
+        paymentDetail.value.totalCash = +paymentDetail.value.cash + +paymentDetail.value.creditCard + +paymentDetail.value.transfer
+        const response = await InPersonService.SubmitPayment(paymentDetail.value, invoiceDetail.value.id);
+        confirmConvert.value = response.data
+        submitForm()
+        return response
+    } catch (error) {
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        stepFiveLoading.value = false;
+    }
+}
 
 const convertDate = () => {
     const [year, month, day] = goldPriceForm.value.date.split('/').map(Number);
@@ -812,14 +1106,28 @@ const updateBirthDate = () => {
     }
 };
 
+const paymentSelected = () => {
+    selectCashMethod.value = null;
+}
+
 const validateNationalCode = () => {
     userInfo.value.nationalCode = userInfo.value.nationalCode.replace(/\D/g, '').slice(0, 10);
     nationalCodeRules.every(rule => rule(userInfo.value.nationalCode) === true);
 };
 
-
 const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
+
+const submitForm = async () => {
+    successModal.value = true;
+    setInterval(() => {
+        successModal.value = false;
+        otpVerification.value = false;
+        inPersonForm.value.phoneNumber = '';
+        inPersonForm.value.otp = '';
+        step.value = 1;
+    }, 3000)
 };
 
 </script>
@@ -920,5 +1228,29 @@ const formatNumber = (num) => {
 
 .total-price {
     font-weight: bold;
+}
+
+.product-row {
+    border-bottom: 1px solid #000;
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    padding: 0.2rem;
+    margin: 0.5rem 0.2rem;
+}
+
+.form-total-price {
+    color: red;
+    font-weight: bold;
+}
+
+.goldbox-section {
+    padding: 1rem 0.5rem;
+    border-radius: 10px;
+    margin: 0.5rem 0;
+    background-color: rgb(255, 219, 219);
+    color: red;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 </style>

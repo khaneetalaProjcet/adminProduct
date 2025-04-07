@@ -62,6 +62,12 @@ const InPersonService = {
         const body = JSON.stringify(detail);
         const response = await InPersonTemplate.post(`/inperson/convert/create`, body);
         return response.data
+    },
+
+    async SubmitPayment(paymentForm,id) {
+        const body = JSON.stringify(paymentForm);
+        const response = await InPersonTemplate.post(`/inperson/convert/payment/${id}`, body);
+        return response.data
     }
 
 }
