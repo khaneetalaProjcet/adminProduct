@@ -391,13 +391,13 @@
                                                 <h4>صورتحساب</h4>
                                             </div>
                                         </v-col>
-                                        <v-col cols="6" md="3">
+                                        <v-col cols="12" md="6">
                                             <div class="d-flex">
                                                 <p> قیمت لحظه ای طلا : </p>
                                                 <p>{{ formatNumber(invoiceDetail.goldPrice) }} تومان</p>
                                             </div>
                                         </v-col>
-                                        <v-col cols="6" md="3">
+                                        <v-col cols="12" md="6">
                                             <div class="d-flex form-total-price">
                                                 <p>جمع کل: </p>
                                                 <p>{{ formatNumber(invoiceDetail.totalInvoicePrice) }} تومان</p>
@@ -427,12 +427,17 @@
                                     <v-row>
                                         <v-col cols="12">
                                             <div class="goldbox-section">
-                                                <p class="ma-0">موجودی صندوق طلا</p>
+                                                <p class="ma-0">موجودی صندوق طلا :</p>
                                                 <p class="ma-0">{{ userInfo.wallet.goldWeight }} گرم</p>
                                             </div>
                                             <div class="goldbox-section">
-                                                <p class="ma-0">مبلغ قابل پرداخت</p>
+                                                <p class="ma-0">مبلغ قابل پرداخت :</p>
                                                 <p class="ma-0">{{ formatNumber(invoiceDetail.totalInvoicePrice) }}
+                                                    تومان</p>
+                                            </div>
+                                            <div class="goldbox-section">
+                                                <p class="ma-0">مبلغ مانده :</p>
+                                                <p class="ma-0">{{ formatNumber(AmountRemaining()) }}
                                                     تومان</p>
                                             </div>
                                         </v-col>
@@ -460,22 +465,30 @@
                                         v-if="selectCashMethod == 0 || selectCashMethod == 1 || selectCashMethod == 2">
                                         <v-col cols="6" md="4" class="my-2">
                                             <div class="d-flex flex-column">
-                                                <v-text-field v-model="paymentDetail.cash" label="مبلغ نقد"
-                                                    variant="outlined" class="my-2"></v-text-field>
+                                                <MoneyInput v-model="paymentDetail.cash" label="مبلغ نقد"
+                                                    variant="outlined" class="my-2" />
+                                                <v-text-field v-model="paymentDetail.chequeNumber" label="شناسه چک"
+                                                    variant="outlined" class="my-2"
+                                                    v-if="selectCashMethod == 1"></v-text-field>
+                                                <v-select v-model="paymentDetail.installmentType" label="نوع قسط"
+                                                    :items="installmentList" variant="outlined" item-title="name"
+                                                    item-value="value"
+                                                    :rules="[v => !!v || 'نحوه پرداخت قسطی رو انتخاب کنید']"
+                                                    class="my-2" v-if="selectCashMethod == 0"></v-select>
                                             </div>
                                         </v-col>
                                         <v-col cols="6" md="4" class="my-2">
                                             <div class="d-flex flex-column">
-                                                <v-text-field v-model="paymentDetail.creditCard" label="دستگاه پوز"
-                                                    variant="outlined" class="my-2"></v-text-field>
+                                                <MoneyInput v-model="paymentDetail.creditCard" label="دستگاه پوز"
+                                                    variant="outlined" class="my-2" />
                                                 <v-text-field v-model="paymentDetail.creditCardId" label="شناسه"
                                                     variant="outlined" class="my-2"></v-text-field>
                                             </div>
                                         </v-col>
                                         <v-col cols="6" md="4" class="my-2">
                                             <div class="d-flex flex-column">
-                                                <v-text-field v-model="paymentDetail.transfer" label="کارت به کارت"
-                                                    variant="outlined" class="my-2"></v-text-field>
+                                                <MoneyInput v-model="paymentDetail.transfer" label="کارت به کارت"
+                                                    variant="outlined" class="my-2" />
                                                 <v-text-field v-model="paymentDetail.transferId" label="شناسه"
                                                     variant="outlined" class="my-2"></v-text-field>
                                             </div>
@@ -484,33 +497,10 @@
                                             <v-text-field v-model="paymentDetail.goldWeight" label="طلا (گرم)"
                                                 variant="outlined" class="my-2"></v-text-field>
                                         </v-col>
-                                        <v-col cols="6" md="4" v-if="selectCashMethod == 1">
-                                            <div class="d-flex justify-center align-center w-100 h-100">
-                                                <p class="ma-0">مبلغ چک : </p>
-                                                <p class="ma-0">{{ invoiceDetail.totalInvoicePrice -
-                                                    (+paymentDetail.cash
-                                                        + (paymentDetail.goldWeight * goldPriceForm.buyPrice)) }} تومان</p>
-                                            </div>
-                                        </v-col>
-                                        <v-col cols="6" md="4" class="my-2" v-if="selectCashMethod == 1">
-                                            <v-text-field v-model="paymentDetail.chequeNumber" label="شناسه چک"
-                                                variant="outlined" class="my-2"></v-text-field>
-                                        </v-col>
-                                        <v-col cols="6" md="4" class="my-2" v-if="selectCashMethod == 0">
-                                            <div class="d-flex justify-center align-center w-100 h-100">
-                                                <p class="ma-0">مبلغ قسط : </p>
-                                                <p class="ma-0">{{ invoiceDetail.totalInvoicePrice -
-                                                    (+paymentDetail.cash
-                                                        + (paymentDetail.goldWeight * goldPriceForm.buyPrice)) }} تومان</p>
-                                            </div>
-                                        </v-col>
-                                        <v-col cols="6" md="4" class="my-2" v-if="selectCashMethod == 0">
+
+                                        <v-col cols="6" md="4" class="my-2">
                                             <div class="d-flex flex-column">
-                                                <v-select v-model="paymentDetail.installmentType" label="نوع قسط"
-                                                    :items="installmentList" variant="outlined" item-title="name"
-                                                    item-value="value"
-                                                    :rules="[v => !!v || 'نحوه پرداخت قسطی رو انتخاب کنید']"
-                                                    class="my-2"></v-select>
+
                                             </div>
                                         </v-col>
                                     </v-row>
@@ -542,6 +532,7 @@
 </template>
 
 <script setup>
+import MoneyInput from '@/components/MoneyInput.vue';
 import InPersonService from '@/services/inperson/inperson';
 import GoldPriceService from '@/services/priceApi/price';
 import jalaaliJs from 'jalaali-js';
@@ -1130,6 +1121,14 @@ const submitForm = async () => {
     }, 3000)
 };
 
+const AmountRemaining = () => {
+    const Amount = ((invoiceDetail.value.totalInvoicePrice -
+        (+paymentDetail.value.cash + +paymentDetail.value.creditCard +
+            +paymentDetail.value.transfer)) - (+paymentDetail.value.goldWeight *
+                +invoiceDetail.value.goldPrice));
+
+    return Amount
+}
 </script>
 
 <style scoped>
