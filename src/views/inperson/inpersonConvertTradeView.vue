@@ -350,7 +350,7 @@
                                                 <v-col cols="6" md="3">
                                                     <div class="d-flex">
                                                         <p>نام محصول : </p>
-                                                        <p>{{ item.title }} گرم</p>
+                                                        <p>{{ item.title }}</p>
                                                     </div>
                                                 </v-col>
                                                 <v-col cols="6" md="3">
@@ -363,6 +363,12 @@
                                                     <div class="d-flex">
                                                         <p>تعداد : </p>
                                                         <p>{{ item.number }}</p>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="6" md="3">
+                                                    <div class="d-flex">
+                                                        <p>وزن کل : </p>
+                                                        <p>{{ item.weight }}</p>
                                                     </div>
                                                 </v-col>
                                                 <v-col cols="6" md="3">
@@ -414,9 +420,12 @@
                             </v-form>
                             <v-card-actions class="btn-box">
                                 <v-btn @click="prevStep" size="large">قبلی</v-btn>
-                                <v-btn @click="nextStep" color="primary" size="large" variant="elevated">
-                                    نحوه پرداخت
-                                </v-btn>
+                                <div>
+                                    <v-btn @click="nextStep" color="primary" size="large" variant="elevated">
+                                        نحوه پرداخت
+                                    </v-btn>
+                                    <v-btn @click="print" color="error" size="large" variant="elevated">پرینت</v-btn>
+                                </div>
                             </v-card-actions>
                         </v-card>
                     </v-stepper-window-item>
@@ -451,7 +460,7 @@
                                         </v-col>
                                         <v-col cols="12" md="6"
                                             v-if="paymentDetail.paymentType == 0 || paymentDetail.paymentType == 1">
-                                            <v-select v-model="selectCashMethod" label="روش پرداخت نقدی"
+                                            <v-select v-model="paymentDetail.payment" label="روش پرداخت نقدی"
                                                 :items="cashMethodList" variant="outlined" item-title="name"
                                                 item-value="value"
                                                 :rules="[v => !!v || 'نحوه پرداخت نقدی رو انتخاب کنید']"></v-select>
@@ -462,19 +471,19 @@
                                         </v-col>
                                     </v-row>
                                     <v-row
-                                        v-if="selectCashMethod == 0 || selectCashMethod == 1 || selectCashMethod == 2">
+                                        v-if="paymentDetail.payment == 0 || paymentDetail.payment == 1 || paymentDetail.payment == 2">
                                         <v-col cols="6" md="4" class="my-2">
                                             <div class="d-flex flex-column">
                                                 <MoneyInput v-model="paymentDetail.cash" label="مبلغ نقد"
                                                     variant="outlined" class="my-2" />
                                                 <v-text-field v-model="paymentDetail.chequeNumber" label="شناسه چک"
                                                     variant="outlined" class="my-2"
-                                                    v-if="selectCashMethod == 1"></v-text-field>
+                                                    v-if="paymentDetail.payment == 1"></v-text-field>
                                                 <v-select v-model="paymentDetail.installmentType" label="نوع قسط"
                                                     :items="installmentList" variant="outlined" item-title="name"
                                                     item-value="value"
                                                     :rules="[v => !!v || 'نحوه پرداخت قسطی رو انتخاب کنید']"
-                                                    class="my-2" v-if="selectCashMethod == 0"></v-select>
+                                                    class="my-2" v-if="paymentDetail.payment == 0"></v-select>
                                             </div>
                                         </v-col>
                                         <v-col cols="6" md="4" class="my-2">
@@ -1128,6 +1137,10 @@ const AmountRemaining = () => {
                 +invoiceDetail.value.goldPrice));
 
     return Amount
+}
+
+const print = () => {
+    window.print();
 }
 </script>
 
