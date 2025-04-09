@@ -1185,7 +1185,7 @@ const buyGoldweightConvert = () => {
 
 
 
-const sellGoldpriceConvert = () => {
+const sellGoldpriceConvert = (e) => {
     const cursorPosition = e.target.selectionStart;
     const originalLength = remiitanceSellForm.value.totalPrice.length;
 
