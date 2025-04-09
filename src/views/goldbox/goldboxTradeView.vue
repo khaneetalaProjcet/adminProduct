@@ -443,7 +443,7 @@
                             </v-form>
                             <v-card-actions class="btn-box">
                                 <v-btn @click="prevStep" size="large">قبلی</v-btn>
-                                <v-btn @click="submitForm" color="primary" size="large" variant="elevated">
+                                <v-btn @click="nextStep()" color="primary" size="large" variant="elevated">
                                     ثبت
                                 </v-btn>
                             </v-card-actions>
@@ -539,7 +539,7 @@ const tradeBuyForm = ref({
     description: '',
     totalPrice: '',
     invoiceId: '',
-    destCardPan:'',
+    destCardPan: '',
 });
 
 const tradeSellForm = ref({
@@ -778,7 +778,6 @@ const AuthNumber = async () => {
         userInfo.value.nationalCode = response.data.user.nationalCode;
         userInfo.value.isHaveBank = response.data.user.isHaveBank;
         userInfo.value.birthDate = response.data.user.birthDate;
-        console.log(userInfo.value);
         return response
     } catch (error) {
         // if (error.response.status == 401) {
@@ -836,6 +835,32 @@ const TradeBuy = async () => {
 }
 
 
+
+const SubmitTradeBuy = async () => {
+    try {
+        stepThreeLoading.value = true;
+        if (tradeBuyForm.value.destCardPan == 'سایر') {
+            tradeBuyForm.value.destCardPan = otherBuyBankAccount.value;
+        }
+        const response = await GoldBoxService.SubmitInvoiceTradeBuy(tradeBuyForm.value);
+        submitForm();
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        stepThreeLoading.value = false;
+    }
+}
+
+
 const TradeSell = async () => {
     try {
         stepThreeLoading.value = true;
@@ -873,6 +898,30 @@ const TradeSell = async () => {
     }
 }
 
+
+const SubmitTradeSell = async () => {
+    try {
+        stepThreeLoading.value = true;
+        tradeSellForm.value.userId = userInfo.value.id;
+        tradeSellForm.value.goldPrice = goldPriceForm.value.buyPrice;
+        const response = await GoldBoxService.SubmitInvoiceTradeSell(tradeSellForm.value);
+        submitForm();
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        stepThreeLoading.value = false;
+    }
+}
+
 const TradeRequest = async (type) => {
     if (step.value === 1) {
         return await AuthNumber();
@@ -885,7 +934,11 @@ const TradeRequest = async (type) => {
             return await TradeSell();
         }
     } else if (step.value === 4) {
-        return true;
+        if (InvoiceForm.value.type == 'خرید') {
+            return await SubmitTradeBuy();
+        } else {
+            return await SubmitTradeSell();
+        }
     }
 }
 
@@ -905,10 +958,10 @@ const identity = async () => {
             userVerificationDetail.value.userVerified = true;
             return response
         } catch (error) {
-            // if (error.response.status == 401) {
-            //     localStorage.clear();
-            //     router.replace("/login");
-            // }
+            if (error.response.status == 401) {
+                localStorage.clear();
+                router.replace("/login");
+            }
             errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
             alertError.value = true;
             setTimeout(() => {
@@ -1005,7 +1058,6 @@ const nextStep = async (type) => {
         const { valid } = await form.validate();
         if (valid) {
             const apiSuccess = await TradeRequest(type);
-            console.log(apiSuccess)
             if (apiSuccess)
                 step.value++;
         }

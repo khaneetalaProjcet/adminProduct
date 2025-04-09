@@ -52,13 +52,24 @@ const GoldBoxService = {
     },
 
     async CreateInvoiceTradeBuy(item) {
-        console.log(item)
+        const body = JSON.stringify(item);
+        const response = await DashboardTemplate.post(`/call/initbuy`, body);
+        return response.data
+    },
+
+    async SubmitInvoiceTradeBuy(item) {
         const body = JSON.stringify(item);
         const response = await DashboardTemplate.post(`/call/create`, body);
         return response.data
     },
 
     async CreateInvoiceTradeSell(item) {
+        const body = JSON.stringify(item);
+        const response = await DashboardTemplate.post(`/call/initsell`, body);
+        return response.data
+    },
+
+    async SubmitInvoiceTradeSell(item) {
         const body = JSON.stringify(item);
         const response = await DashboardTemplate.post(`/callsell/create`, body);
         return response.data
