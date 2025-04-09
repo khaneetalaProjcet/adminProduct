@@ -212,9 +212,6 @@
                                                     <v-text-field v-model="tradeBuyForm.totalPrice" label="مبلغ (تومان)"
                                                         variant="outlined" @input="buyGoldpriceConvert"
                                                         :disabled="goldPriceForm.buyPrice == '' ? true : false"></v-text-field>
-                                                    <!-- <MoneyInput v-model="tradeBuyForm.totalPrice" label="مبلغ (تومان)"
-                                                        variant="outlined" @input="buyGoldpriceConvert"
-                                                        :disabled="goldPriceForm.buyPrice == '' ? true : false" /> -->
                                                 </v-col>
                                                 <v-col cols="12" md="2">
                                                     <div class="d-flex justify-center align-center h-100">
@@ -288,9 +285,6 @@
                                                         label="مبلغ (تومان)" variant="outlined"
                                                         @input="sellGoldpriceConvert"
                                                         :disabled="goldPriceForm.sellPrice == '' ? true : false"></v-text-field>
-                                                    <!-- <MoneyInput v-model="tradeSellForm.totalPrice" label="مبلغ (تومان)"
-                                                        variant="outlined" @input="sellGoldpriceConvert"
-                                                        :disabled="goldPriceForm.sellPrice == '' ? true : false" /> -->
                                                 </v-col>
                                                 <v-col cols="12" md="2">
                                                     <div class="d-flex justify-center align-center h-100">
@@ -304,10 +298,6 @@
                                                         @input="sellGoldweightConvert"
                                                         :disabled="goldPriceForm.sellPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
-                                                <!-- <v-col cols="12" md="4">
-                                                    <v-text-field v-model="tradeSellForm.invoiceId" label="شناسه پرداخت"
-                                                        variant="outlined" :rules="validateInvoice"></v-text-field>
-                                                </v-col> -->
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
                                                         v-model="tradeSellForm.description"></v-textarea>
@@ -944,7 +934,7 @@ const nationalCodeRules = [
 
 const validateWeight = [
     (v) => !!v || 'مقدار ورودی نمی‌تواند خالی باشد',
-    (v) => /^\d+(\.\d{1,3})?$/.test(v) || 'فقط عدد مجاز است و حداکثر 3 رقم اعشار',
+    // (v) => /^\d+(\.\d{1,3})?$/.test(v) || 'فقط عدد مجاز است و حداکثر 4 رقم اعشار',
 ];
 
 const validateNationalCode = () => {
@@ -1039,44 +1029,106 @@ const getGoldPrice = async () => {
     }
 }
 
-const buyGoldpriceConvert = () => {
-    tradeBuyForm.value.totalPrice = tradeBuyForm.value.totalPrice.replace(/[^0-9]/g, '');
-    tradeBuyForm.value.goldWeight = (tradeBuyForm.value.totalPrice / goldPriceForm.value.buyPrice).toFixed(3);
-}
+const formatNumberWithCommas = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
 
-const sellGoldpriceConvert = () => {
-    tradeSellForm.value.totalPrice = tradeSellForm.value.totalPrice.replace(/[^0-9]/g, '');
-    tradeSellForm.value.goldWeight = (tradeSellForm.value.totalPrice / goldPriceForm.value.sellPrice).toFixed(3);
-}
+const removeCommas = (str) => {
+    return str.replace(/,/g, "");
+};
 
+const buyGoldpriceConvert = (e) => {
+    const cursorPosition = e.target.selectionStart;
+    const originalLength = tradeBuyForm.value.totalPrice.length;
+
+    const rawValue = removeCommas(tradeBuyForm.value.totalPrice).replace(/[^0-9]/g, "");
+    const numericValue = parseInt(rawValue || 0);
+
+    tradeBuyForm.value.goldWeight = (
+        numericValue / goldPriceForm.value.buyPrice
+    ).toFixed(4);
+
+    const formattedValue = formatNumberWithCommas(numericValue);
+
+    tradeBuyForm.value.totalPrice = formattedValue;
+
+    nextTick(() => {
+        const newLength = formattedValue.length;
+        const offset = newLength - originalLength;
+        e.target.setSelectionRange(
+            cursorPosition + offset,
+            cursorPosition + offset
+        );
+    });
+}
 
 
 const buyGoldweightConvert = () => {
-    tradeBuyForm.value.goldWeight = tradeBuyForm.value.goldWeight.replace(/[^0-9.]/g, '');
-    const parts = tradeBuyForm.value.goldWeight.split('.');
+    tradeBuyForm.value.goldWeight = tradeBuyForm.value.goldWeight.replace(/[^0-9.]/g, "");
+    const parts = tradeBuyForm.value.goldWeight.split(".");
     if (parts.length > 1) {
-        tradeBuyForm.value.goldWeight = parts[0] + '.' + parts.slice(1).join('');
+        tradeBuyForm.value.goldWeight = parts[0] + "." + parts.slice(1).join("");
     }
 
     if (parts.length > 1 && parts[1].length > 2) {
-        tradeBuyForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 3);
+        tradeBuyForm.value.goldWeight = parts[0] + "." + parts[1].slice(0, 3);
     }
 
-    tradeBuyForm.value.totalPrice = parseInt(tradeBuyForm.value.goldWeight * goldPriceForm.value.buyPrice);
+    tradeBuyForm.value.totalPrice = parseInt(
+        tradeBuyForm.value.goldWeight * goldPriceForm.value.buyPrice
+    );
+
+    const calculatedPrice = parseInt(
+        tradeBuyForm.value.goldWeight * goldPriceForm.value.buyPrice
+    );
+    tradeBuyForm.value.totalPrice = formatNumberWithCommas(calculatedPrice);
 }
 
+const sellGoldpriceConvert = (e) => {
+    const cursorPosition = e.target.selectionStart;
+    const originalLength = tradeSellForm.value.totalPrice.length;
+
+    const rawValue = removeCommas(tradeSellForm.value.totalPrice).replace(/[^0-9]/g, "");
+    const numericValue = parseInt(rawValue || 0);
+
+    tradeSellForm.value.goldWeight = (
+        numericValue / goldPriceForm.value.sellPrice
+    ).toFixed(4);
+
+    const formattedValue = formatNumberWithCommas(numericValue);
+
+    tradeSellForm.value.totalPrice = formattedValue;
+
+    nextTick(() => {
+        const newLength = formattedValue.length;
+        const offset = newLength - originalLength;
+        e.target.setSelectionRange(
+            cursorPosition + offset,
+            cursorPosition + offset
+        );
+    });
+}
+
+
 const sellGoldweightConvert = () => {
-    tradeSellForm.value.goldWeight = tradeSellForm.value.goldWeight.replace(/[^0-9.]/g, '');
-    const parts = tradeSellForm.value.goldWeight.split('.');
+    tradeSellForm.value.goldWeight = tradeSellForm.value.goldWeight.replace(/[^0-9.]/g, "");
+    const parts = tradeSellForm.value.goldWeight.split(".");
     if (parts.length > 1) {
-        tradeSellForm.value.goldWeight = parts[0] + '.' + parts.slice(1).join('');
+        tradeSellForm.value.goldWeight = parts[0] + "." + parts.slice(1).join("");
     }
 
     if (parts.length > 1 && parts[1].length > 2) {
-        tradeSellForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 3);
+        tradeSellForm.value.goldWeight = parts[0] + "." + parts[1].slice(0, 3);
     }
 
-    tradeSellForm.value.totalPrice = parseInt(tradeSellForm.value.goldWeight * goldPriceForm.value.sellPrice);
+    tradeSellForm.value.totalPrice = parseInt(
+        tradeSellForm.value.goldWeight * goldPriceForm.value.sellPrice
+    );
+
+    const calculatedPrice = parseInt(
+        tradeSellForm.value.goldWeight * goldPriceForm.value.sellPrice
+    );
+    tradeSellForm.value.totalPrice = formatNumberWithCommas(calculatedPrice);
 }
 
 </script>
