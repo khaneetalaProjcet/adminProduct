@@ -16,7 +16,8 @@
                             <template v-slot:item.status="{ item }">
                                 <div>
                                     <v-chip :text="item.status == 'completed' ? 'برداشت شده' : 'در انتظار برداشت'"
-                                        :color="item.status == 'completed' ? '#ff0000' : '#66666'" size="small"></v-chip>
+                                        :color="item.status == 'completed' ? '#ff0000' : '#66666'"
+                                        size="small"></v-chip>
                                 </div>
                             </template>
                         </v-data-table>
@@ -94,6 +95,10 @@ const GetGoldboxSellList = async () => {
         GoldBoxSellReviewData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {

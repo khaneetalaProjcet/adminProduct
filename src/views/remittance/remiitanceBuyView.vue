@@ -339,6 +339,10 @@ const GetPendingRemiitanceBuyList = async () => {
         PendingRemiitanceBuyData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -356,6 +360,10 @@ const GetCompleteRemiitanceBuyList = async () => {
         CompleteRemiitanceBuyData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -373,6 +381,10 @@ const GetFailedRemiitanceBuyList = async () => {
         FailedRemiitanceBuyData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -412,6 +424,10 @@ const acceptRemmitanceBuy = async () => {
         RemmitanceBuySubmitDetail.value.description = '';
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -440,6 +456,10 @@ const rejectRemmitanceBuy = async () => {
         RemmitanceBuySubmitDetail.value.description = '';
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {

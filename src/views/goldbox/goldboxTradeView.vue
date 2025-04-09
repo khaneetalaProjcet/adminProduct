@@ -750,6 +750,10 @@ const AuthNumber = async () => {
         userInfo.value.birthDate = response.data.user.birthDate;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -783,6 +787,10 @@ const TradeBuy = async () => {
         InvoiceForm.value.wallet.goldWeight = response.data.wallet.goldWeight;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -817,6 +825,10 @@ const TradeSell = async () => {
         InvoiceForm.value.wallet.goldWeight = response.data.wallet.goldWeight;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -858,6 +870,10 @@ const identity = async () => {
             userVerificationDetail.value.userVerified = true;
             return response
         } catch (error) {
+            if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
             errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
             alertError.value = true;
             setTimeout(() => {
@@ -880,6 +896,10 @@ const identity = async () => {
             userVerificationDetail.value.userVerified = true;
             return response
         } catch (error) {
+            if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
             errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
             alertError.value = true;
             setTimeout(() => {
@@ -994,6 +1014,10 @@ const getGoldPrice = async () => {
         goldPriceForm.value.sellPrice = response.sellPrice;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {

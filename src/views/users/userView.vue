@@ -418,6 +418,10 @@ const Getuser = async () => {
     userData.value = response.data;
     return response
   } catch (error) {
+    if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
     alertError.value = true;
     setTimeout(() => {
@@ -435,6 +439,10 @@ const GetOldUser = async () => {
     OldUser.value = response.data;
     return response
   } catch (error) {
+    if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
     alertError.value = true;
     setTimeout(() => {
@@ -470,6 +478,10 @@ const sumbitVerify = async () => {
     Getuser();
     return response
   } catch (error) {
+    if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
     alertError.value = true;
     setTimeout(() => {
