@@ -141,9 +141,9 @@
                                             <div class="d-flex">
                                                 <p class="mb-0">کارت بانکی : </p>
                                                 <v-icon size="small" icon="ri-close-line" color="#c9190c"
-                                                    v-if="userInfo.isHaveBank == true"></v-icon>
+                                                    v-if="userInfo.isHaveBank == false"></v-icon>
                                                 <v-icon size="small" icon="ri-check-line" color="#0b8707"
-                                                    v-else-if="userInfo.isHaveBank == false"></v-icon>
+                                                    v-else-if="userInfo.isHaveBank == true"></v-icon>
                                             </div>
                                         </v-col>
                                     </v-row>
@@ -212,6 +212,9 @@
                                                     <v-text-field v-model="tradeBuyForm.totalPrice" label="مبلغ (تومان)"
                                                         variant="outlined" @input="buyGoldpriceConvert"
                                                         :disabled="goldPriceForm.buyPrice == '' ? true : false"></v-text-field>
+                                                    <!-- <MoneyInput v-model="tradeBuyForm.totalPrice" label="مبلغ (تومان)"
+                                                        variant="outlined" @input="buyGoldpriceConvert"
+                                                        :disabled="goldPriceForm.buyPrice == '' ? true : false" /> -->
                                                 </v-col>
                                                 <v-col cols="12" md="2">
                                                     <div class="d-flex justify-center align-center h-100">
@@ -281,9 +284,13 @@
                                             </v-row>
                                             <v-row>
                                                 <v-col cols="12" md="3">
-                                                    <v-text-field v-model="tradeSellForm.totalPrice" label="مبلغ (تومان)"
-                                                        variant="outlined" @input="sellGoldpriceConvert"
+                                                    <v-text-field v-model="tradeSellForm.totalPrice"
+                                                        label="مبلغ (تومان)" variant="outlined"
+                                                        @input="sellGoldpriceConvert"
                                                         :disabled="goldPriceForm.sellPrice == '' ? true : false"></v-text-field>
+                                                    <!-- <MoneyInput v-model="tradeSellForm.totalPrice" label="مبلغ (تومان)"
+                                                        variant="outlined" @input="sellGoldpriceConvert"
+                                                        :disabled="goldPriceForm.sellPrice == '' ? true : false" /> -->
                                                 </v-col>
                                                 <v-col cols="12" md="2">
                                                     <div class="d-flex justify-center align-center h-100">
@@ -748,12 +755,13 @@ const AuthNumber = async () => {
         userInfo.value.nationalCode = response.data.user.nationalCode;
         userInfo.value.isHaveBank = response.data.user.isHaveBank;
         userInfo.value.birthDate = response.data.user.birthDate;
+        console.log(userInfo.value);
         return response
     } catch (error) {
-        if (error.response.status == 401) {
-            localStorage.clear();
-            router.replace("/login");
-        }
+        // if (error.response.status == 401) {
+        //     localStorage.clear();
+        //     router.replace("/login");
+        // }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -867,13 +875,14 @@ const identity = async () => {
             userInfo.value.officeName = response.data.officeName;
             userInfo.value.firstName = response.data.firstName;
             userInfo.value.lastName = response.data.lastName;
+            userInfo.value.id = response.data.id;
             userVerificationDetail.value.userVerified = true;
             return response
         } catch (error) {
-            if (error.response.status == 401) {
-            localStorage.clear();
-            router.replace("/login");
-        }
+            // if (error.response.status == 401) {
+            //     localStorage.clear();
+            //     router.replace("/login");
+            // }
             errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
             alertError.value = true;
             setTimeout(() => {
@@ -893,13 +902,14 @@ const identity = async () => {
             userInfo.value.officeName = response.data.officeName;
             userInfo.value.firstName = response.data.firstName;
             userInfo.value.lastName = response.data.lastName;
+            userInfo.value.id = response.data.id;
             userVerificationDetail.value.userVerified = true;
             return response
         } catch (error) {
             if (error.response.status == 401) {
-            localStorage.clear();
-            router.replace("/login");
-        }
+                localStorage.clear();
+                router.replace("/login");
+            }
             errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
             alertError.value = true;
             setTimeout(() => {

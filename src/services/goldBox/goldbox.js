@@ -52,6 +52,7 @@ const GoldBoxService = {
     },
 
     async CreateInvoiceTradeBuy(item) {
+        console.log(item)
         const body = JSON.stringify(item);
         const response = await DashboardTemplate.post(`/call/create`, body);
         return response.data

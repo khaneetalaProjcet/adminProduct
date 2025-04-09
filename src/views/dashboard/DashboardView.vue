@@ -47,11 +47,6 @@
   font-weight: bold;
 }
 
-.dash-box .text {
-  
-}
-
-
 .welcome-text {
   font-size: 26px;
   font-weight: 500;
