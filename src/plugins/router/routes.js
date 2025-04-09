@@ -174,6 +174,12 @@ export const routes = [
         component: () => import('@/views/inperson/inpersonConvertTradeView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/Overview',
+        name: 'Overview',
+        component: () => import('@/views/report/OverviewView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {

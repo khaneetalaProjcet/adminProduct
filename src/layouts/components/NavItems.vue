@@ -292,7 +292,7 @@ const hasPermission = (routeName) => {
   }" />
 
 
-  <VerticalNavGroup v-if="hasPermission('TotalReport')" :item="{
+  <VerticalNavGroup v-if="hasPermission('TotalReport') || hasPermission('Overview')" :item="{
     title: 'گزارشات',
     icon: 'ri-file-chart-2-line',
   }">
@@ -301,6 +301,12 @@ const hasPermission = (routeName) => {
       icon: 'ri-folder-chart-line',
       href: '#',
       to: '/TotalReport'
+    }" />
+    <VerticalNavLink v-if="hasPermission('Overview')" :item="{
+      title: 'آمار',
+      icon: 'ri-donut-chart-line',
+      href: '#',
+      to: '/Overview'
     }" />
   </VerticalNavGroup>
 
