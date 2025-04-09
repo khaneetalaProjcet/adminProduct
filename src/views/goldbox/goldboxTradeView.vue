@@ -229,6 +229,18 @@
                                                     <v-text-field v-model="tradeBuyForm.invoiceId" label="شناسه پرداخت"
                                                         variant="outlined"></v-text-field>
                                                 </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <div class="d-flex justify-start align-center h-100">
+                                                        <v-select v-model="tradeBuyForm.destCardPan"
+                                                            :items="bankAccounts" label="به حساب" variant="outlined"
+                                                            :rules="BankAccountRules" item-title="label"
+                                                            item-value="item"></v-select>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="12" md="3" v-if="tradeBuyForm.destCardPan == 'سایر'">
+                                                    <v-text-field v-model="otherBuyBankAccount" label="به حساب"
+                                                        variant="outlined"></v-text-field>
+                                                </v-col>
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
                                                         v-model="tradeBuyForm.description"></v-textarea>
@@ -395,6 +407,13 @@
                                                 <p>{{ formatNumber(InvoiceForm.totalPrice) }} تومان</p>
                                             </div>
                                         </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>به حساب : </p>
+                                                <p v-if="InvoiceForm.type == 'خرید'">{{ tradeBuyForm.destCardPan }}
+                                                </p>
+                                            </div>
+                                        </v-col>
                                         <v-divider></v-divider>
                                         <v-col cols="12">
                                             <div class="d-flex">
@@ -475,6 +494,19 @@ const successMsg = ref('');
 const alertError = ref(false);
 const alertSuccess = ref(false);
 const successModal = ref(false);
+const otherBuyBankAccount = ref('');
+const bankAccounts = ref([
+    { label: "کشاورزی (مطهر معصومی)", value: "0" },
+    { label: "ملی (مطهر معصومی)", value: "1" },
+    { label: "ملت (مطهر معصومی)", value: "2" },
+    { label: "سپه (مطهر معصومی)", value: "3" },
+    { label: "صادرات (مطهر معصومی)", value: "4" },
+    { label: "کشاورزی (محمود معصومی)", value: "5" },
+    { label: "ملی (محمود معصومی)", value: "6" },
+    { label: "ملت (محمود معصومی)", value: "7" },
+    { label: "سایر", value: "8" },
+]);
+
 const InvoiceForm = ref({
     type: '',
     goldPrice: '',
@@ -507,6 +539,7 @@ const tradeBuyForm = ref({
     description: '',
     totalPrice: '',
     invoiceId: '',
+    destCardPan:'',
 });
 
 const tradeSellForm = ref({
@@ -767,6 +800,9 @@ const TradeBuy = async () => {
         stepThreeLoading.value = true;
         tradeBuyForm.value.userId = userInfo.value.id;
         tradeBuyForm.value.goldPrice = goldPriceForm.value.buyPrice;
+        if (tradeBuyForm.value.destCardPan == 'سایر') {
+            tradeBuyForm.value.destCardPan = otherBuyBankAccount.value;
+        }
         const response = await GoldBoxService.CreateInvoiceTradeBuy(tradeBuyForm.value);
         InvoiceForm.value.type = 'خرید';
         InvoiceForm.value.adminId = response.data.invoice.adminId;
@@ -935,6 +971,10 @@ const nationalCodeRules = [
 const validateWeight = [
     (v) => !!v || 'مقدار ورودی نمی‌تواند خالی باشد',
     // (v) => /^\d+(\.\d{1,3})?$/.test(v) || 'فقط عدد مجاز است و حداکثر 4 رقم اعشار',
+];
+
+const BankAccountRules = [
+    (v) => !!v || "حساب بانکی را انتخاب کنید!",
 ];
 
 const validateNationalCode = () => {
