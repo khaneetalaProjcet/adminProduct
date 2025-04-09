@@ -6,7 +6,7 @@ const router = useRouter();
 
 const AccountingTemplate = axios.create({
     // baseURL: "https://khaneetala.ir/api/call",
-    baseURL: "https://gateway.khanetala.ir/v1/main/call",
+    baseURL: "https://gateway.khanetala.ir/v1/secondmain/call",
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",
