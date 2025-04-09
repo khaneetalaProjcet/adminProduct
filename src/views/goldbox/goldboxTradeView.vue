@@ -141,9 +141,9 @@
                                             <div class="d-flex">
                                                 <p class="mb-0">کارت بانکی : </p>
                                                 <v-icon size="small" icon="ri-close-line" color="#c9190c"
-                                                    v-if="userInfo.isHaveBank == false"></v-icon>
+                                                    v-if="userInfo.isHaveBank == true"></v-icon>
                                                 <v-icon size="small" icon="ri-check-line" color="#0b8707"
-                                                    v-else-if="userInfo.isHaveBank == true"></v-icon>
+                                                    v-else-if="userInfo.isHaveBank == false"></v-icon>
                                             </div>
                                         </v-col>
                                     </v-row>
@@ -227,7 +227,7 @@
                                                 </v-col>
                                                 <v-col cols="12" md="4">
                                                     <v-text-field v-model="tradeBuyForm.invoiceId" label="شناسه پرداخت"
-                                                        variant="outlined" :rules="validateInvoice"></v-text-field>
+                                                        variant="outlined"></v-text-field>
                                                 </v-col>
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
@@ -782,9 +782,9 @@ const TradeBuy = async () => {
         InvoiceForm.value.user.fatherName = response.data.invoice.buyer.fatherName;
         InvoiceForm.value.user.nationalCode = response.data.invoice.buyer.nationalCode;
         InvoiceForm.value.user.phoneNumber = response.data.invoice.buyer.phoneNumber;
-        InvoiceForm.value.wallet.balance = response.data.wallet.balance;
-        InvoiceForm.value.wallet.blocked = response.data.wallet.blocked;
-        InvoiceForm.value.wallet.goldWeight = response.data.wallet.goldWeight;
+        InvoiceForm.value.wallet.balance = response.data.invoice.buyer.wallet.balance;
+        InvoiceForm.value.wallet.blocked = response.data.invoice.buyer.wallet.blocked;
+        InvoiceForm.value.wallet.goldWeight = response.data.invoice.buyer.wallet.goldWeight;
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -820,9 +820,9 @@ const TradeSell = async () => {
         InvoiceForm.value.user.fatherName = response.data.invoice.seller.fatherName;
         InvoiceForm.value.user.nationalCode = response.data.invoice.seller.nationalCode;
         InvoiceForm.value.user.phoneNumber = response.data.invoice.seller.phoneNumber;
-        InvoiceForm.value.wallet.balance = response.data.wallet.balance;
-        InvoiceForm.value.wallet.blocked = response.data.wallet.blocked;
-        InvoiceForm.value.wallet.goldWeight = response.data.wallet.goldWeight;
+        InvoiceForm.value.wallet.balance = response.data.invoice.seller.wallet.balance;
+        InvoiceForm.value.wallet.blocked = response.data.invoice.seller.wallet.blocked;
+        InvoiceForm.value.wallet.goldWeight = response.data.invoice.seller.wallet.goldWeight;
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -965,6 +965,7 @@ const nextStep = async (type) => {
         const { valid } = await form.validate();
         if (valid) {
             const apiSuccess = await TradeRequest(type);
+            console.log(apiSuccess)
             if (apiSuccess)
                 step.value++;
         }

@@ -901,7 +901,6 @@ const TradeBuy = async () => {
         InvoiceForm.value.wallet.balance = response?.data?.wallet?.balance;
         InvoiceForm.value.wallet.blocked = response?.data?.wallet?.blocked;
         InvoiceForm.value.wallet.goldWeight = response?.data?.wallet?.goldWeight;
-        console.log(InvoiceForm.value)
         return response
     } catch (error) {
         if (error.response.status == 401) {
