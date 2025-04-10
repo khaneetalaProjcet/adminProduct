@@ -175,6 +175,12 @@ export const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: '/inpersonCounterTrade',
+        name: 'inpersonCounterTrade',
+        component: () => import('@/views/inperson/inpersonCounterTrade.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: '/Overview',
         name: 'Overview',
         component: () => import('@/views/report/OverviewView.vue'),

@@ -222,6 +222,12 @@ const hasPermission = (routeName) => {
       href: '#',
       to: '/inpersonConvertTrade'
     }" />
+    <VerticalNavLink v-if="hasPermission('inpersonCounterTrade')" :item="{
+      title: 'کانتر فروش',
+      icon: 'ri-store-2-line',
+      href: '#',
+      to: '/inpersonCounterTrade'
+    }" />
   </VerticalNavGroup>
 
   <VerticalNavSectionTitle v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity')" :item="{
