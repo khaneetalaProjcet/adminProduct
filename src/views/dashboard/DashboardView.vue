@@ -23,13 +23,49 @@
             <p class="text">0 پیام نخوانده از طرف مدیر دارید</p>
           </div>
         </v-col>
+        <!-- <v-btn @click="handlePrintInvoice">چاپ فاکتور</v-btn> -->
       </v-row>
     </v-container>
+    <!-- <v-dialog v-model="showInvoice" max-width="800">
+      <InvoiceComponent ref="invoicePrintRef" :invoiceData="currentInvoice" :visible="showInvoice" />
+
+      <template v-slot:actions>
+        <v-btn @click="closeInvoice">بستن</v-btn>
+      </template>
+    </v-dialog> -->
   </div>
 </template>
 
 <script setup>
+import { ref } from 'vue';
+// import InvoiceComponent from '@/components/InvoiceComponent.vue';
 
+
+// const showInvoice = ref(false)
+// const invoicePrintRef = ref(null)
+// const currentInvoice = ref({
+//   id: 'INV-2023-001',
+//   items: [
+//     { name: 'النگو', quantity: 2, price: 2500000 },
+//     { name: 'گردنبند', quantity: 2, price: 500000 }
+//   ],
+//   total: 26000000
+// })
+
+
+// const handlePrintInvoice = () => {
+//   showInvoice.value = true
+
+//   setTimeout(() => {
+//     if (invoicePrintRef.value) {
+//       invoicePrintRef.value.printInvoice()
+//     }
+//   }, 300)
+// }
+
+// const closeInvoice = () => {
+//   showInvoice.value = false
+// }
 </script>
 
 <style scoped>
