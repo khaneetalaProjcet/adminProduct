@@ -151,15 +151,15 @@ const CompleteInPersonSellSearch = ref();
 const CompleteInPersonSellHeader = ref([
     {
         title: 'نام',
-        key: 'Seller.firstName',
+        key: 'seller.firstName',
     },
     {
         title: 'نام خانوادگی',
-        key: 'Seller.lastName',
+        key: 'seller.lastName',
     },
     {
         title: 'شماره همراه',
-        key: 'Seller.phoneNumber',
+        key: 'seller.phoneNumber',
     },
     {
         title: 'مبلغ خرید (تومان)',

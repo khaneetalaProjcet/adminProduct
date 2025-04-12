@@ -18,7 +18,7 @@
 
                 <v-data-table :headers="userHeader" :items="userData" :search="search" :loading="userLoading">
                   <template v-slot:item.wallet.balance="{ item }">
-                    <p>{{ formatNumber(item.wallet.balance) }}</p>
+                    <p>{{ formatNumber(item?.wallet?.balance) }}</p>
                   </template>
                   <template v-slot:item.isHaveBank="{ item }">
                     <v-icon size="small" icon="ri-close-line" color="#c9190c" v-if="item.isHaveBank == false"></v-icon>
@@ -38,7 +38,16 @@
                 <template v-slot:text>
                   <v-text-field v-model="OldSearch" label="جستجو" prepend-inner-icon="ri-search-line"></v-text-field>
                 </template>
-                <v-data-table :headers="OldUserHeader" :items="OldUser" :search="OldSearch" :loading="oldUserLoading">
+                <v-data-table
+                  :headers="OldUserHeader" 
+                  :items="OldUser" 
+                  :search="OldSearch" 
+                  :loading="oldUserLoading"
+                  v-model:page="currentPage" 
+                  v-model:items-per-page="itemsPerPage" 
+                  :server-items-length="totalItems"
+                  :items-per-page-options="itemsPerPageOptions" 
+                  @update:options="handleOptionsChange">
                   <template v-slot:item.wallet.balance="{ item }">
                     <p>{{ formatNumber(item.wallet.balance) }}</p>
                   </template>
@@ -179,6 +188,10 @@ const OldUser = ref();
 const UserInfoDialog = ref(false);
 const VerifyDialog = ref(false);
 const verifyLoading = ref(false);
+const itemsPerPage = ref(10);
+const currentPage = ref(1);
+const itemsPerPageOptions = ref([5, 10, 25, 50]);
+const totalItems = ref(0);
 const userHeader = ref([
   {
     title: 'نام',
@@ -419,9 +432,9 @@ const Getuser = async () => {
     return response
   } catch (error) {
     if (error.response.status == 401) {
-            localStorage.clear();
-            router.replace("/login");
-        }
+      localStorage.clear();
+      router.replace("/login");
+    }
     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
     alertError.value = true;
     setTimeout(() => {
@@ -432,18 +445,31 @@ const Getuser = async () => {
   }
 };
 
+const handleOptionsChange = (options) => {
+  currentPage.value = options.page;
+  itemsPerPage.value = options.itemsPerPage;
+  GetOldUser();
+};
+
+
 const GetOldUser = async () => {
   try {
     oldUserLoading.value = true;
-    const response = await UserService.oldUser();
-    OldUser.value = response.data;
-    return response
+
+    const response = await UserService.oldUser({
+      page: currentPage.value,
+      perPage: itemsPerPage.value,
+    });
+
+    OldUser.value = response.data.users;
+    totalItems.value = response.data.totalItem;
   } catch (error) {
+    c‍onsole.log(error)
     if (error.response.status == 401) {
-            localStorage.clear();
-            router.replace("/login");
-        }
-    errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+      localStorage.clear();
+      router.replace("/login");
+    }
+    errorMsg.value = error.response.error || 'خطایی رخ داده است!';
     alertError.value = true;
     setTimeout(() => {
       alertError.value = false;
@@ -452,6 +478,37 @@ const GetOldUser = async () => {
     oldUserLoading.value = false;
   }
 };
+
+
+// const GetOldUser = async (options) => {
+//   try {
+//     const page = options?.page || 1;
+//     const perPage = options?.itemsPerPage || itemsPerPage.value;
+//     params.value.page = page;
+//     params.value.perPage = perPage;
+//     oldUserLoading.value = true;
+//     const response = await UserService.oldUser(params.value);
+//     OldUser.value = response.data.users;
+//     currentPage.value = page;
+//     itemsPerPage.value = perPage;
+//     totalItems.value = response.data.totalItem;
+//     console.log(totalItems.value)
+//     return response
+//   } catch (error) {
+//     // c‍onsole.log(error)
+//     // if (error.response.status == 401) {
+//     //   localStorage.clear();
+//     //   router.replace("/login");
+//     // }
+//     errorMsg.value = error.response.error || 'خطایی رخ داده است!';
+//     alertError.value = true;
+//     setTimeout(() => {
+//       alertError.value = false;
+//     }, 10000)
+//   } finally {
+//     oldUserLoading.value = false;
+//   }
+// };
 
 const formatNumber = (num) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -479,9 +536,9 @@ const sumbitVerify = async () => {
     return response
   } catch (error) {
     if (error.response.status == 401) {
-            localStorage.clear();
-            router.replace("/login");
-        }
+      localStorage.clear();
+      router.replace("/login");
+    }
     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
     alertError.value = true;
     setTimeout(() => {

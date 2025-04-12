@@ -8,8 +8,9 @@ const UserService = {
         return response.data;
     },
 
-    async oldUser() {
-        const response = await VerifyTemplate.get('/old/users');
+    async oldUser(params) {
+        console.log(params)
+        const response = await VerifyTemplate.get(`/old/users/all/${params.page}/${params.perPage}`);
         return response.data;
     },
 
