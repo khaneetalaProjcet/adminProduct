@@ -109,7 +109,7 @@
                                     </template>
                                     <template v-slot:item.action="{ item }">
                                         <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
-                                            @click="PayInfo(item)" :loading="DetailPayLoading"></v-icon>
+                                            @click="PayInfo(item)"></v-icon>
                                     </template>
                                 </v-data-table>
                             </v-card>
@@ -178,7 +178,9 @@
                 <div class="k-dialog-title">
                     <p>اطلاعات پرداخت</p>
                 </div>
-                <p>تست</p>
+                <div class="d-flex my-6">
+                    <p>{{ payDetail }}</p>
+                </div>
             </v-card>
         </v-dialog>
 
@@ -397,6 +399,7 @@ const GoldBoxBuySubmitDetail = ref({
 })
 const DetailPayDialog = ref(false);
 const DetailPayLoading = ref(false);
+const payDetail = ref('')
 
 const GetPendingGoldBoxBuyList = async () => {
     try {
@@ -527,8 +530,9 @@ const submitGoldBoxBuy = async () => {
 const PayInfo = async (item) => {
     try {
         DetailPayLoading.value = true;
-        // const response = await GoldBoxService.SubmitGoldboxBuy(GoldBoxBuySubmitDetail.value);
+        const response = await GoldBoxService.payInfo(item.authority);
         DetailPayDialog.value = true;
+        payDetail.value = response.data
         return response
     } catch (error) {
         if (error.response.status == 401) {

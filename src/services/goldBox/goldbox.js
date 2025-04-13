@@ -74,9 +74,12 @@ const GoldBoxService = {
         const body = JSON.stringify(item);
         const response = await DashboardTemplate.post(`/callsell/create`, body);
         return response.data
-    }
+    },
 
-
+    async payInfo(item) {
+        const response = await DashboardTemplate.put(`/admin/transAction/${item}`);
+        return response.data
+    },
 }
 
 
