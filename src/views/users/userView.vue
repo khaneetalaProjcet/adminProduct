@@ -13,7 +13,8 @@
             <v-tabs-window-item value="one">
               <v-card title="کاربران احراز هویت شده">
                 <template v-slot:text>
-                  <v-text-field v-model="search" label="جستجو" prepend-inner-icon="ri-search-line"></v-text-field>
+                  <v-text-field v-model="search" label="جستجو" prepend-inner-icon="ri-search-line"
+                    @input="onSearchInput"></v-text-field>
                 </template>
 
                 <v-data-table :headers="userHeader" :items="userData" :search="search" :loading="userLoading">
@@ -38,17 +39,10 @@
                 <template v-slot:text>
                   <v-text-field v-model="OldSearch" label="جستجو" prepend-inner-icon="ri-search-line"></v-text-field>
                 </template>
-                <v-data-table
-                  :headers="OldUserHeader" 
-                  :items="OldUser" 
-                  :search="OldSearch" 
-                  :loading="oldUserLoading"
-                  v-model:page="currentPage" 
-                  v-model:items-per-page="itemsPerPage" 
-                  :server-items-length="totalItems"
-                  :items-per-page-options="itemsPerPageOptions" 
-                  @update:options="handleOptionsChange">
-                  <template v-slot:item.wallet.balance="{ item }">
+                <v-data-table :page="currentPage" :items-per-page="itemsPerPage" :headers="OldUserHeader"
+                  :items="OldUser" :loading="oldUserLoading" :server-items-length="totalItems"
+                  :items-per-page-options="itemsPerPageOptions" @update:options="handleOptionsChange">
+                  <template v-slot:item?.wallet?.balance="{ item }">
                     <p>{{ formatNumber(item.wallet.balance) }}</p>
                   </template>
                   <template v-slot:item.action="{ item }">
@@ -56,6 +50,11 @@
                       @click="userInfo(item)"></v-icon>
                     <v-icon class="me-2" size="small" icon="ri-user-follow-line" color="#FF3131"
                       @click="VerifyUser(item)"></v-icon>
+                  </template>
+                  <template v-slot:bottom>
+                    <div class="text-center pt-2">
+                      <v-pagination v-model="currentPage" :length="totalPages" :total-visible="4"></v-pagination>
+                    </div>
                   </template>
                 </v-data-table>
               </v-card>
@@ -92,6 +91,16 @@
             <div class="d-flex align-items-center my-2">
               <p>شماره کارت: </p>
               <p class="mx-2">{{ UserInfo.bankAccounts[0]?.cardNumber }}</p>
+            </div>
+            <div class="d-flex align-items-center my-2">
+              <p>تاریخ احراز هویت: </p>
+              <p class="mx-2" v-if="UserInfo.date != null">{{ UserInfo.date }}</p>
+              <p v-else>-</p>
+            </div>
+            <div class="d-flex align-items-center my-2">
+              <p>ساعت احراز هویت: </p>
+              <p class="mx-2" v-if="UserInfo.time != null">{{ UserInfo.time }}</p>
+              <p class="mx-2" v-else>-</p>
             </div>
           </div>
           <div class="d-flex flex-column w-100 px-4">
@@ -174,12 +183,13 @@
 
 <script setup>
 import UserService from '@/services/user/user';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import { debounce } from 'lodash'
 
 const userLoading = ref(false);
 const oldUserLoading = ref(false);
 const search = ref('');
-const OldSearch = ref('')
+const OldSearch = ref("")
 const tab = ref(null);
 const errorMsg = ref('');
 const alertError = ref(false);
@@ -188,10 +198,11 @@ const OldUser = ref();
 const UserInfoDialog = ref(false);
 const VerifyDialog = ref(false);
 const verifyLoading = ref(false);
-const itemsPerPage = ref(10);
+const itemsPerPage = ref(50);
 const currentPage = ref(1);
 const itemsPerPageOptions = ref([5, 10, 25, 50]);
 const totalItems = ref(0);
+const totalPages = ref(1);
 const userHeader = ref([
   {
     title: 'نام',
@@ -252,6 +263,7 @@ const OldUserHeader = ref([
     key: 'action'
   }
 ]);
+
 
 const VerifyInfo = ref({
   phoneNumber: '',
@@ -446,6 +458,7 @@ const Getuser = async () => {
 };
 
 const handleOptionsChange = (options) => {
+  console.log(options)
   currentPage.value = options.page;
   itemsPerPage.value = options.itemsPerPage;
   GetOldUser();
@@ -455,16 +468,16 @@ const handleOptionsChange = (options) => {
 const GetOldUser = async () => {
   try {
     oldUserLoading.value = true;
-
     const response = await UserService.oldUser({
       page: currentPage.value,
       perPage: itemsPerPage.value,
+      search: OldSearch.value,
     });
-
-    OldUser.value = response.data.users;
     totalItems.value = response.data.totalItem;
+    OldUser.value = response.data.users;
+    totalPages.value = Math.ceil(totalItems.value / itemsPerPage.value)
   } catch (error) {
-    c‍onsole.log(error)
+    console.log(error)
     if (error.response.status == 401) {
       localStorage.clear();
       router.replace("/login");
@@ -479,36 +492,28 @@ const GetOldUser = async () => {
   }
 };
 
+const onSearchInput = () => {
+  currentPage.value = 1
+  handleOptionsChange({
+    page: currentPage.value,
+    itemsPerPage: itemsPerPage.value
+  })
+};
 
-// const GetOldUser = async (options) => {
-//   try {
-//     const page = options?.page || 1;
-//     const perPage = options?.itemsPerPage || itemsPerPage.value;
-//     params.value.page = page;
-//     params.value.perPage = perPage;
-//     oldUserLoading.value = true;
-//     const response = await UserService.oldUser(params.value);
-//     OldUser.value = response.data.users;
-//     currentPage.value = page;
-//     itemsPerPage.value = perPage;
-//     totalItems.value = response.data.totalItem;
-//     console.log(totalItems.value)
-//     return response
-//   } catch (error) {
-//     // c‍onsole.log(error)
-//     // if (error.response.status == 401) {
-//     //   localStorage.clear();
-//     //   router.replace("/login");
-//     // }
-//     errorMsg.value = error.response.error || 'خطایی رخ داده است!';
-//     alertError.value = true;
-//     setTimeout(() => {
-//       alertError.value = false;
-//     }, 10000)
-//   } finally {
-//     oldUserLoading.value = false;
-//   }
-// };
+
+watch([currentPage, itemsPerPage], () => {
+  GetOldUser();
+});
+
+watch(
+  OldSearch,
+  debounce(() => {
+    GetOldUser()
+  }, 1000)
+)
+
+
+
 
 const formatNumber = (num) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');

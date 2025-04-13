@@ -6,6 +6,35 @@ const router = createRouter({
   routes,
 })
 
+const checkTokenValidity = async () => {
+  const token = localStorage.getItem('token')
+  if (!token) return false
+  
+  try {
+    // در اینجا باید API واقعی خود را فراخوانی کنید
+    const response = await fetch('/api/auth/validate-token', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    
+    if (!response.ok) {
+      localStorage.removeItem('token')
+      localStorage.removeItem('permissions')
+      return false
+    }
+    
+    const data = await response.json()
+    return data.valid
+  } catch (error) {
+    localStorage.removeItem('token')
+    localStorage.removeItem('permissions')
+    return false
+  }
+}
+
+
+
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!localStorage.getItem('token');
