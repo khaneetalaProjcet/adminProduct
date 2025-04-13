@@ -1,37 +1,58 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { routes } from './routes'
+import UserService from '@/services/user/user'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 })
 
+
 const checkTokenValidity = async () => {
   const token = localStorage.getItem('token')
   if (!token) return false
-  
+
   try {
-    // در اینجا باید API واقعی خود را فراخوانی کنید
-    const response = await fetch('/api/auth/validate-token', {
-      headers: {
-        'Authorization': `Bearer ${token}`
-      }
-    })
-    
+    const response = await UserService.CheckToken();
     if (!response.ok) {
-      localStorage.removeItem('token')
-      localStorage.removeItem('permissions')
+      clearAuthData();
       return false
     }
-    
     const data = await response.json()
-    return data.valid
+    if (!data.valid) {
+      clearAuthData()
+      return false
+    }
+    return true
   } catch (error) {
-    localStorage.removeItem('token')
-    localStorage.removeItem('permissions')
+    console.error('Error validating token:', error)
+    clearAuthData()
     return false
   }
 }
+
+const clearAuthData = () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('permissions');
+}
+
+
+// router.beforeEach(async (to, from, next) => {
+//   const isAuthenticated = !!localStorage.getItem('token');
+//   const permissions = JSON.parse(localStorage.getItem("permissions")) || [];
+
+//   if (to.meta.requiresAuth) {
+
+//     const isValid = await checkTokenValidity()
+//     if (!isValid) {
+//       return next({ name: 'login' })
+//     }
+
+//     if (!permissions.includes(to.name)) {
+//       return next({ name: 'login' })
+//     }
+//   }
+// })
 
 
 
@@ -39,7 +60,6 @@ const checkTokenValidity = async () => {
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!localStorage.getItem('token');
   const permissions = JSON.parse(localStorage.getItem("permissions")) || [];
-
   if (to.meta.requiresAuth && !isAuthenticated) {
     next({ name: 'login' });
   } else if (to.meta.requiresAuth && !permissions.includes(to.name)) {

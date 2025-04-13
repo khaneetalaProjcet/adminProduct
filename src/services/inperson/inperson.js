@@ -1,3 +1,4 @@
+import QueryTemplate from "../template/api";
 import InPersonTemplate from "./api";
 
 const InPersonService = {
@@ -39,12 +40,12 @@ const InPersonService = {
     },
 
     async InPersonBuy(item) {
-        const response = await InPersonTemplate.get(`/inperson/buy/all/${item}`);
+        const response = await QueryTemplate.get(`/inperson/buy/all/${item}`);
         return response.data
     },
 
     async InPersonSell(item) {
-        const response = await InPersonTemplate.get(`/inperson/sell/all/${item}`);
+        const response = await QueryTemplate.get(`/inperson/sell/all/${item}`);
         return response.data
     },
 

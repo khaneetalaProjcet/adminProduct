@@ -1,15 +1,16 @@
+import QueryTemplate from "../template/api";
 import VerifyTemplate from "../verify/api";
 import UserTemplate from "./api";
 
 
 const UserService = {
     async Alluser() {
-        const response = await UserTemplate.get('/admin/users/all');
+        const response = await QueryTemplate.get('/admin/users/all');
         return response.data;
     },
 
     async oldUser(params) {
-        console.log(params.search , typeof params.search)
+        console.log(params.search, typeof params.search)
         const response = await VerifyTemplate.get(`/old/users/all/${params.page}/${params.perPage}?search=${params.search}`);
         return response.data;
     },
@@ -21,6 +22,12 @@ const UserService = {
             'birthDate': info.birthDate,
         });
         const response = await VerifyTemplate.post(`old/approve/${info.id}`, body);
+        return response.data;
+    },
+
+    async CheckToken() {
+        const body = JSON.stringify({});
+        const response = await VerifyTemplate.post(`/checkToken`, body);
         return response.data;
     }
 }

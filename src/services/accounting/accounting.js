@@ -1,18 +1,18 @@
-import DashboardTemplate from "../dashboard/api";
+import QueryTemplate from "../template/api";
 import AccountingTemplate from "./api";
 
 
 const AccountingService = {
     async PendingAccountingList() {
-        const response = await AccountingTemplate.get('/status/pending');
+        const response = await QueryTemplate.get('/call/status/pending');
         return response.data;
     },
     async CompleteAccountingList() {
-        const response = await AccountingTemplate.get('/status/completed');
+        const response = await QueryTemplate.get('/call/status/completed');
         return response.data;
     },
     async rejectAccountingList() {
-        const response = await AccountingTemplate.get('/status/failed');
+        const response = await QueryTemplate.get('/call/status/failed');
         return response.data;
     },
     async SubmitAccountingReview(item) {
@@ -30,7 +30,7 @@ const AccountingService = {
         return response.data;
     },
     async GoldBoxSellList() {
-        const response = await DashboardTemplate.get('/selllist');
+        const response = await QueryTemplate.get('/selllist');
         return response.data;
     },
 }

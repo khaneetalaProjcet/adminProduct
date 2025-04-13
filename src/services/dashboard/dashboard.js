@@ -1,9 +1,9 @@
-import DashboardTemplate from "./api";
+import QueryTemplate from "../template/api";
 
 
 const DashboardService = {
     async Dashboard() {
-        const response = await DashboardTemplate.get('/home/charts');
+        const response = await QueryTemplate.get('/home/charts');
         return response.data;
     },
 }
