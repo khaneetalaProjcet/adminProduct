@@ -56,10 +56,10 @@
                                                 size="small"></v-chip>
                                         </div>
                                     </template>
-                                    <!-- <template v-slot:item.action="{ item }">
-                                        <v-icon class="me-2" size="small" icon="ri-refund-2-line" color="#d4af37"
-                                            @click="CompleteGoldBoxBuyInfo(item)"></v-icon>
-                                    </template> -->
+                                    <template v-slot:item.action="{ item }">
+                                        <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
+                                            @click="PayInfo(item)" :loading="DetailPayLoading"></v-icon>
+                                    </template>
                                 </v-data-table>
                             </v-card>
                         </v-tabs-window-item>
@@ -82,10 +82,10 @@
                                                 size="small"></v-chip>
                                         </div>
                                     </template>
-                                    <!-- <template v-slot:item.action="{ item }">
-                                        <v-icon class="me-2" size="small" icon="ri-refund-2-line" color="#d4af37"
-                                            @click="CompleteGoldBoxBuyInfo(item)"></v-icon>
-                                    </template> -->
+                                    <template v-slot:item.action="{ item }">
+                                        <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
+                                            @click="PayInfo(item)" :loading="DetailPayLoading"></v-icon>
+                                    </template>
                                 </v-data-table>
                             </v-card>
                         </v-tabs-window-item>
@@ -106,6 +106,10 @@
                                                 :color="item.status == 'init' ? '#d4af37' : '#d4af37'"
                                                 size="small"></v-chip>
                                         </div>
+                                    </template>
+                                    <template v-slot:item.action="{ item }">
+                                        <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
+                                            @click="PayInfo(item)" :loading="DetailPayLoading"></v-icon>
                                     </template>
                                 </v-data-table>
                             </v-card>
@@ -165,6 +169,16 @@
 
                     <v-btn text="بستن" @click="GoldBoxBuyDialog = false" size="large" class="m-3"></v-btn>
                 </v-card-actions>
+            </v-card>
+        </v-dialog>
+
+        <!-- Detail Dialog -->
+        <v-dialog v-model="DetailPayDialog" max-width="600" class="dialog">
+            <v-card class="dialog-card">
+                <div class="k-dialog-title">
+                    <p>اطلاعات پرداخت</p>
+                </div>
+                <p>تست</p>
             </v-card>
         </v-dialog>
 
@@ -278,6 +292,10 @@ const CompleteGoldBoxBuyHeader = ref([
         title: 'وضعیت',
         key: 'status'
     },
+    {
+        title: 'فعالیت',
+        key: 'action'
+    }
 ]);
 const FailedGoldBoxBuyHeader = ref([
     {
@@ -316,6 +334,10 @@ const FailedGoldBoxBuyHeader = ref([
         title: 'وضعیت',
         key: 'status'
     },
+    {
+        title: 'فعالیت',
+        key: 'action'
+    }
 ])
 const CompleteGoldBoxBuyData = ref();
 const CompleteGoldBoxBuyLoading = ref();
@@ -360,6 +382,10 @@ const InitGoldBoxBuyHeader = ref([
         title: 'وضعیت',
         key: 'status'
     },
+    {
+        title: 'فعالیت',
+        key: 'action'
+    }
 ]);
 const InitGoldBoxBuyData = ref();
 const InitGoldBoxBuyLoading = ref();
@@ -369,6 +395,8 @@ const GoldBoxBuySubmitDetail = ref({
     authority: '',
     id: '',
 })
+const DetailPayDialog = ref(false);
+const DetailPayLoading = ref(false);
 
 const GetPendingGoldBoxBuyList = async () => {
     try {
@@ -493,6 +521,27 @@ const submitGoldBoxBuy = async () => {
         }, 10000)
     } finally {
         GoldBoxBuySubmitLoading.value = false;
+    }
+}
+
+const PayInfo = async (item) => {
+    try {
+        DetailPayLoading.value = true;
+        // const response = await GoldBoxService.SubmitGoldboxBuy(GoldBoxBuySubmitDetail.value);
+        DetailPayDialog.value = true;
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        DetailPayLoading.value = false;
     }
 }
 

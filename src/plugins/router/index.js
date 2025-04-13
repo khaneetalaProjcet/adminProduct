@@ -9,23 +9,24 @@ const router = createRouter({
 
 
 const checkTokenValidity = async () => {
-  const token = localStorage.getItem('token')
-  if (!token) return false
-
   try {
     const response = await UserService.CheckToken();
     if (!response.ok) {
       clearAuthData();
       return false
     }
+
+
     const data = await response.json()
+
+
     if (!data.valid) {
       clearAuthData()
       return false
     }
     return true
   } catch (error) {
-    console.error('Error validating token:', error)
+    console.error('ارور token', error)
     clearAuthData()
     return false
   }
@@ -41,17 +42,21 @@ const clearAuthData = () => {
 //   const isAuthenticated = !!localStorage.getItem('token');
 //   const permissions = JSON.parse(localStorage.getItem("permissions")) || [];
 
-//   if (to.meta.requiresAuth) {
-
-//     const isValid = await checkTokenValidity()
-//     if (!isValid) {
-//       return next({ name: 'login' })
-//     }
-
-//     if (!permissions.includes(to.name)) {
-//       return next({ name: 'login' })
-//     }
+//   if (!isAuthenticated) {
+//     clearAuthData()
+//     return next({ name: 'login' })
 //   }
+
+//   const isValid = await checkTokenValidity()
+//   if (!isValid) {
+//     clearAuthData()
+//     return next({ name: 'login' })
+//   }
+
+//   if (!permissions.includes(to.name)) {
+//     return next({ name: 'login' })
+//   }
+//   next()
 // })
 
 
