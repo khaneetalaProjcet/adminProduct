@@ -88,7 +88,8 @@
   </template>
   
   <script setup>
-  import DashboardService from '@/services/dashboard/dashboard';
+  import { router } from '@/plugins/router';
+import DashboardService from '@/services/dashboard/dashboard';
   import { onMounted, ref } from 'vue';
   
   

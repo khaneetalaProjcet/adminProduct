@@ -125,6 +125,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import WalletService from '@/services/wallet/wallet';
 import { onMounted, ref } from 'vue';
 

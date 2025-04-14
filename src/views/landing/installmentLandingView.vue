@@ -82,6 +82,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import LandingService from '@/services/landing/landing';
 import { onMounted, ref } from 'vue';
 

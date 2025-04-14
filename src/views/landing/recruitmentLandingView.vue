@@ -102,6 +102,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import recruitmentService from '@/services/recruitment/recruitment';
 import { onMounted, ref } from 'vue';
 

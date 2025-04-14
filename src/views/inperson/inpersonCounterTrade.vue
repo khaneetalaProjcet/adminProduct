@@ -312,6 +312,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import InPersonService from '@/services/inperson/inperson';
 import { ref } from 'vue';
 

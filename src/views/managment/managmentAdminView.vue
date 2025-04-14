@@ -131,6 +131,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import ManagmentService from '@/services/managment/managment';
 import { onMounted, ref } from 'vue';
 

@@ -35,6 +35,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import AccountingService from '@/services/accounting/accounting';
 import { onMounted, ref } from 'vue';
 

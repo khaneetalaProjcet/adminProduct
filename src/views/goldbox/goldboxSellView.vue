@@ -80,6 +80,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import GoldBoxService from '@/services/goldBox/goldbox';
 import { onMounted, ref } from 'vue';
 

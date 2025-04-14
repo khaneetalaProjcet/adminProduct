@@ -527,6 +527,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import GoldPriceService from '@/services/priceApi/price';
 import RemiitanceService from '@/services/remittance/remiitance';
 import jalaaliJs from 'jalaali-js';

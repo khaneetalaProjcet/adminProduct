@@ -76,6 +76,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import ReportService from '@/services/report/report';
 import { ref } from 'vue';
 

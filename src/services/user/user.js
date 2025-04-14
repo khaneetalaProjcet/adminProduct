@@ -26,8 +26,7 @@ const UserService = {
     },
 
     async CheckToken() {
-        const body = JSON.stringify({});
-        const response = await VerifyTemplate.post(`/checkToken`, body);
+        const response = await QueryTemplate.get(`/token/check`);
         return response.data;
     }
 }

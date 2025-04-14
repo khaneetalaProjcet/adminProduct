@@ -1,3 +1,4 @@
+import { router } from "@/plugins/router";
 import axios from "axios";
 
 const QueryTemplate = axios.create({

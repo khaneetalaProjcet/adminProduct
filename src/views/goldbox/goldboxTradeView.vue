@@ -474,6 +474,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import GoldBoxService from '@/services/goldBox/goldbox';
 import GoldPriceService from '@/services/priceApi/price';
 import jalaaliJs from 'jalaali-js';

@@ -170,6 +170,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import RemiitanceService from '@/services/remittance/remiitance';
 import { onMounted, ref } from 'vue';
 
