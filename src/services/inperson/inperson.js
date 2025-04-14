@@ -23,7 +23,7 @@ const InPersonService = {
             birthDate: item.birthDate,
             id: item.id,
         });
-        const response = await InPersonTemplate.post(`/user/identity`, body);
+        const response = await InPersonTemplate.post(`/inperson/user/identity`, body);
         return response.data
     },
 
