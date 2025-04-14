@@ -26,7 +26,7 @@ const UserService = {
     },
 
     async CheckToken() {
-        const response = await QueryTemplate.get(`/token/check`);
+        const response = await UserTemplate.get(`/token/check`);
         return response.data;
     }
 }
