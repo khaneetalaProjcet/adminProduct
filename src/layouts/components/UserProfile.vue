@@ -1,6 +1,6 @@
 <script setup>
 import { router } from '@/plugins/router';
-import avatar1 from '@images/avatars/avatar-1.png'
+import avatar1 from '@/assets/images/logo-square.jpg'
 
 
 const clearTokenAndLogout = () => {
