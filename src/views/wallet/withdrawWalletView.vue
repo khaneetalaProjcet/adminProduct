@@ -11,6 +11,9 @@
                 <v-card-text>
                     <v-tabs-window v-model="tab">
                         <v-tabs-window-item value="one">
+                            <div class="d-flex justify-end ma-2">
+                                <v-btn icon="ri-file-excel-line" color="#226d3a" @click="exportReport"></v-btn>
+                            </div>
                             <v-card title="برداشت از کیف پول">
                                 <template v-slot:text>
                                     <v-text-field v-model="PendingWithdrawSearch" label="جستجو"
@@ -140,6 +143,7 @@ import { onMounted, ref } from 'vue';
 
 
 const errorMsg = ref('');
+const ExportLoading = ref(false);
 const alertError = ref(false);
 const PendingWithdrawLoading = ref(false);
 const WithdrawSubmitLoading = ref(false);
@@ -313,6 +317,28 @@ const submitWithdraw = async () => {
         }, 10000)
     } finally {
         WithdrawSubmitLoading.value = false;
+    }
+}
+
+const exportReport = async () => {
+    try {
+        ExportLoading.value = true;
+        const response = await WalletService.ExportWithdraw();
+        window.location.href = response[1]
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        console.log(error)
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        ExportLoading.value = false;
     }
 }
 

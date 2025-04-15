@@ -1,3 +1,4 @@
+import ReportTemplate from "../report/api";
 import QueryTemplate from "../template/api";
 import WalletTemplate from "./api";
 
@@ -48,6 +49,22 @@ const WalletService = {
         const response = await WalletTemplate.put(`/deposit/${info.id}`, body);
         return response.data
     },
+
+    async ExportWithdraw() {
+        const body = JSON.stringify({
+            "report": 1,
+            "type": "withdraw",
+            "status": "pending",
+            "nationalCode": "all",
+            "startDate": "all",
+            "endDate": "all",
+            "startTime": "all",
+            "endTime": "all"
+        });
+        console.log(body)
+        const response = await ReportTemplate.post(`/report/analyze/data`, body);
+        return response.data
+    }
 }
 
 
