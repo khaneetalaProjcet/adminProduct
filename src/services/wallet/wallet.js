@@ -52,7 +52,7 @@ const WalletService = {
 
     async ExportWithdraw() {
         const body = JSON.stringify({
-            "report": 1,
+            "report": 5,
             "type": "withdraw",
             "status": "pending",
             "nationalCode": "all",
