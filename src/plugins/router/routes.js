@@ -186,6 +186,12 @@ export const routes = [
         component: () => import('@/views/report/OverviewView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/goldPriceSetting',
+        name: 'goldPriceSetting',
+        component: () => import('@/views/goldprice/goldpriceSettingView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {

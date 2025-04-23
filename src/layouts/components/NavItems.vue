@@ -234,7 +234,7 @@ const hasPermission = (routeName) => {
     heading: 'مدیریت',
   }" />
 
-  <VerticalNavGroup v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity')" :item="{
+  <VerticalNavGroup v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity') || hasPermission('goldPriceSetting')" :item="{
     title: 'مدیریت',
     icon: 'ri-admin-line',
   }">
@@ -249,6 +249,12 @@ const hasPermission = (routeName) => {
       icon: 'ri-user-settings-line',
       href: '#',
       to: '/managmentActivity'
+    }" />
+    <VerticalNavLink v-if="hasPermission('goldPriceSetting')" :item="{
+      title: 'تنظیم قیمت طلا',
+      icon: 'ri-price-tag-3-line',
+      href: '#',
+      to: '/goldPriceSetting'
     }" />
   </VerticalNavGroup>
 
