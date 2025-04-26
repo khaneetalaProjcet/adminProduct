@@ -56,10 +56,10 @@
                                                 size="small"></v-chip>
                                         </div>
                                     </template>
-                                    <!-- <template v-slot:item.action="{ item }">
-                                        <v-icon class="me-2" size="small" icon="ri-refund-2-line" color="#d4af37"
-                                            @click="CompleteGoldBoxBuyInfo(item)"></v-icon>
-                                    </template> -->
+                                    <template v-slot:item.action="{ item }">
+                                        <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
+                                            @click="PayInfo(item)" :loading="DetailPayLoading"></v-icon>
+                                    </template>
                                 </v-data-table>
                             </v-card>
                         </v-tabs-window-item>
@@ -82,10 +82,10 @@
                                                 size="small"></v-chip>
                                         </div>
                                     </template>
-                                    <!-- <template v-slot:item.action="{ item }">
-                                        <v-icon class="me-2" size="small" icon="ri-refund-2-line" color="#d4af37"
-                                            @click="CompleteGoldBoxBuyInfo(item)"></v-icon>
-                                    </template> -->
+                                    <template v-slot:item.action="{ item }">
+                                        <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
+                                            @click="PayInfo(item)" :loading="DetailPayLoading"></v-icon>
+                                    </template>
                                 </v-data-table>
                             </v-card>
                         </v-tabs-window-item>
@@ -106,6 +106,10 @@
                                                 :color="item.status == 'init' ? '#d4af37' : '#d4af37'"
                                                 size="small"></v-chip>
                                         </div>
+                                    </template>
+                                    <template v-slot:item.action="{ item }">
+                                        <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
+                                            @click="PayInfo(item)"></v-icon>
                                     </template>
                                 </v-data-table>
                             </v-card>
@@ -168,6 +172,18 @@
             </v-card>
         </v-dialog>
 
+        <!-- Detail Dialog -->
+        <v-dialog v-model="DetailPayDialog" max-width="600" class="dialog">
+            <v-card class="dialog-card">
+                <div class="k-dialog-title">
+                    <p>اطلاعات پرداخت</p>
+                </div>
+                <div class="d-flex my-6">
+                    <p>{{ payDetail }}</p>
+                </div>
+            </v-card>
+        </v-dialog>
+
 
         <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton"
             closable>
@@ -185,6 +201,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import GoldBoxService from '@/services/goldBox/goldbox';
 import { onMounted, ref } from 'vue';
 
@@ -278,6 +295,10 @@ const CompleteGoldBoxBuyHeader = ref([
         title: 'وضعیت',
         key: 'status'
     },
+    {
+        title: 'فعالیت',
+        key: 'action'
+    }
 ]);
 const FailedGoldBoxBuyHeader = ref([
     {
@@ -316,6 +337,10 @@ const FailedGoldBoxBuyHeader = ref([
         title: 'وضعیت',
         key: 'status'
     },
+    {
+        title: 'فعالیت',
+        key: 'action'
+    }
 ])
 const CompleteGoldBoxBuyData = ref();
 const CompleteGoldBoxBuyLoading = ref();
@@ -360,6 +385,10 @@ const InitGoldBoxBuyHeader = ref([
         title: 'وضعیت',
         key: 'status'
     },
+    {
+        title: 'فعالیت',
+        key: 'action'
+    }
 ]);
 const InitGoldBoxBuyData = ref();
 const InitGoldBoxBuyLoading = ref();
@@ -369,6 +398,9 @@ const GoldBoxBuySubmitDetail = ref({
     authority: '',
     id: '',
 })
+const DetailPayDialog = ref(false);
+const DetailPayLoading = ref(false);
+const payDetail = ref('')
 
 const GetPendingGoldBoxBuyList = async () => {
     try {
@@ -377,6 +409,10 @@ const GetPendingGoldBoxBuyList = async () => {
         PendingGoldBoxBuyData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -394,6 +430,10 @@ const GetCompleteGoldBoxBuyList = async () => {
         CompleteGoldBoxBuyData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -411,6 +451,10 @@ const GetFailedGoldBoxBuyList = async () => {
         FailedGoldBoxBuyData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -428,6 +472,10 @@ const GetInitGoldBoxBuyList = async () => {
         InitGoldBoxBuyData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -466,6 +514,10 @@ const submitGoldBoxBuy = async () => {
         GoldBoxBuyDialog.value = false;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -473,6 +525,28 @@ const submitGoldBoxBuy = async () => {
         }, 10000)
     } finally {
         GoldBoxBuySubmitLoading.value = false;
+    }
+}
+
+const PayInfo = async (item) => {
+    try {
+        DetailPayLoading.value = true;
+        const response = await GoldBoxService.payInfo(item.authority);
+        DetailPayDialog.value = true;
+        payDetail.value = response.data
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        DetailPayLoading.value = false;
     }
 }
 

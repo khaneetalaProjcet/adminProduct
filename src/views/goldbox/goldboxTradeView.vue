@@ -227,7 +227,19 @@
                                                 </v-col>
                                                 <v-col cols="12" md="4">
                                                     <v-text-field v-model="tradeBuyForm.invoiceId" label="شناسه پرداخت"
-                                                        variant="outlined" :rules="validateInvoice"></v-text-field>
+                                                        variant="outlined"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <div class="d-flex justify-start align-center h-100">
+                                                        <v-select v-model="tradeBuyForm.destCardPan"
+                                                            :items="bankAccounts" label="به حساب" variant="outlined"
+                                                            :rules="BankAccountRules" item-title="label"
+                                                            item-value="item"></v-select>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="12" md="3" v-if="tradeBuyForm.destCardPan == 'سایر'">
+                                                    <v-text-field v-model="otherBuyBankAccount" label="به حساب"
+                                                        variant="outlined"></v-text-field>
                                                 </v-col>
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
@@ -281,8 +293,9 @@
                                             </v-row>
                                             <v-row>
                                                 <v-col cols="12" md="3">
-                                                    <v-text-field v-model="tradeSellForm.totalPrice" label="مبلغ (تومان)"
-                                                        variant="outlined" @input="sellGoldpriceConvert"
+                                                    <v-text-field v-model="tradeSellForm.totalPrice"
+                                                        label="مبلغ (تومان)" variant="outlined"
+                                                        @input="sellGoldpriceConvert"
                                                         :disabled="goldPriceForm.sellPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
                                                 <v-col cols="12" md="2">
@@ -297,10 +310,6 @@
                                                         @input="sellGoldweightConvert"
                                                         :disabled="goldPriceForm.sellPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
-                                                <!-- <v-col cols="12" md="4">
-                                                    <v-text-field v-model="tradeSellForm.invoiceId" label="شناسه پرداخت"
-                                                        variant="outlined" :rules="validateInvoice"></v-text-field>
-                                                </v-col> -->
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
                                                         v-model="tradeSellForm.description"></v-textarea>
@@ -398,6 +407,13 @@
                                                 <p>{{ formatNumber(InvoiceForm.totalPrice) }} تومان</p>
                                             </div>
                                         </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>به حساب : </p>
+                                                <p v-if="InvoiceForm.type == 'خرید'">{{ tradeBuyForm.destCardPan }}
+                                                </p>
+                                            </div>
+                                        </v-col>
                                         <v-divider></v-divider>
                                         <v-col cols="12">
                                             <div class="d-flex">
@@ -427,7 +443,7 @@
                             </v-form>
                             <v-card-actions class="btn-box">
                                 <v-btn @click="prevStep" size="large">قبلی</v-btn>
-                                <v-btn @click="submitForm" color="primary" size="large" variant="elevated">
+                                <v-btn @click="nextStep()" color="primary" size="large" variant="elevated">
                                     ثبت
                                 </v-btn>
                             </v-card-actions>
@@ -458,6 +474,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import GoldBoxService from '@/services/goldBox/goldbox';
 import GoldPriceService from '@/services/priceApi/price';
 import jalaaliJs from 'jalaali-js';
@@ -478,6 +495,19 @@ const successMsg = ref('');
 const alertError = ref(false);
 const alertSuccess = ref(false);
 const successModal = ref(false);
+const otherBuyBankAccount = ref('');
+const bankAccounts = ref([
+    { label: "کشاورزی (مطهر معصومی)", value: "0" },
+    { label: "ملی (مطهر معصومی)", value: "1" },
+    { label: "ملت (مطهر معصومی)", value: "2" },
+    { label: "سپه (مطهر معصومی)", value: "3" },
+    { label: "صادرات (مطهر معصومی)", value: "4" },
+    { label: "کشاورزی (محمود معصومی)", value: "5" },
+    { label: "ملی (محمود معصومی)", value: "6" },
+    { label: "ملت (محمود معصومی)", value: "7" },
+    { label: "سایر", value: "8" },
+]);
+
 const InvoiceForm = ref({
     type: '',
     goldPrice: '',
@@ -510,6 +540,7 @@ const tradeBuyForm = ref({
     description: '',
     totalPrice: '',
     invoiceId: '',
+    destCardPan: '',
 });
 
 const tradeSellForm = ref({
@@ -750,6 +781,10 @@ const AuthNumber = async () => {
         userInfo.value.birthDate = response.data.user.birthDate;
         return response
     } catch (error) {
+        // if (error.response.status == 401) {
+        //     localStorage.clear();
+        //     router.replace("/login");
+        // }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -765,6 +800,9 @@ const TradeBuy = async () => {
         stepThreeLoading.value = true;
         tradeBuyForm.value.userId = userInfo.value.id;
         tradeBuyForm.value.goldPrice = goldPriceForm.value.buyPrice;
+        if (tradeBuyForm.value.destCardPan == 'سایر') {
+            tradeBuyForm.value.destCardPan = otherBuyBankAccount.value;
+        }
         const response = await GoldBoxService.CreateInvoiceTradeBuy(tradeBuyForm.value);
         InvoiceForm.value.type = 'خرید';
         InvoiceForm.value.adminId = response.data.invoice.adminId;
@@ -778,11 +816,41 @@ const TradeBuy = async () => {
         InvoiceForm.value.user.fatherName = response.data.invoice.buyer.fatherName;
         InvoiceForm.value.user.nationalCode = response.data.invoice.buyer.nationalCode;
         InvoiceForm.value.user.phoneNumber = response.data.invoice.buyer.phoneNumber;
-        InvoiceForm.value.wallet.balance = response.data.wallet.balance;
-        InvoiceForm.value.wallet.blocked = response.data.wallet.blocked;
-        InvoiceForm.value.wallet.goldWeight = response.data.wallet.goldWeight;
+        InvoiceForm.value.wallet.balance = response.data.invoice.buyer.wallet.balance;
+        InvoiceForm.value.wallet.blocked = response.data.invoice.buyer.wallet.blocked;
+        InvoiceForm.value.wallet.goldWeight = response.data.invoice.buyer.wallet.goldWeight;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        stepThreeLoading.value = false;
+    }
+}
+
+
+
+const SubmitTradeBuy = async () => {
+    try {
+        stepThreeLoading.value = true;
+        if (tradeBuyForm.value.destCardPan == 'سایر') {
+            tradeBuyForm.value.destCardPan = otherBuyBankAccount.value;
+        }
+        const response = await GoldBoxService.SubmitInvoiceTradeBuy(tradeBuyForm.value);
+        submitForm();
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -812,11 +880,39 @@ const TradeSell = async () => {
         InvoiceForm.value.user.fatherName = response.data.invoice.seller.fatherName;
         InvoiceForm.value.user.nationalCode = response.data.invoice.seller.nationalCode;
         InvoiceForm.value.user.phoneNumber = response.data.invoice.seller.phoneNumber;
-        InvoiceForm.value.wallet.balance = response.data.wallet.balance;
-        InvoiceForm.value.wallet.blocked = response.data.wallet.blocked;
-        InvoiceForm.value.wallet.goldWeight = response.data.wallet.goldWeight;
+        InvoiceForm.value.wallet.balance = response.data.invoice.seller.wallet.balance;
+        InvoiceForm.value.wallet.blocked = response.data.invoice.seller.wallet.blocked;
+        InvoiceForm.value.wallet.goldWeight = response.data.invoice.seller.wallet.goldWeight;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        stepThreeLoading.value = false;
+    }
+}
+
+
+const SubmitTradeSell = async () => {
+    try {
+        stepThreeLoading.value = true;
+        tradeSellForm.value.userId = userInfo.value.id;
+        tradeSellForm.value.goldPrice = goldPriceForm.value.buyPrice;
+        const response = await GoldBoxService.SubmitInvoiceTradeSell(tradeSellForm.value);
+        submitForm();
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -839,7 +935,11 @@ const TradeRequest = async (type) => {
             return await TradeSell();
         }
     } else if (step.value === 4) {
-        return true;
+        if (InvoiceForm.value.type == 'خرید') {
+            return await SubmitTradeBuy();
+        } else {
+            return await SubmitTradeSell();
+        }
     }
 }
 
@@ -855,9 +955,14 @@ const identity = async () => {
             userInfo.value.officeName = response.data.officeName;
             userInfo.value.firstName = response.data.firstName;
             userInfo.value.lastName = response.data.lastName;
+            userInfo.value.id = response.data.id;
             userVerificationDetail.value.userVerified = true;
             return response
         } catch (error) {
+            if (error.response.status == 401) {
+                localStorage.clear();
+                router.replace("/login");
+            }
             errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
             alertError.value = true;
             setTimeout(() => {
@@ -877,9 +982,14 @@ const identity = async () => {
             userInfo.value.officeName = response.data.officeName;
             userInfo.value.firstName = response.data.firstName;
             userInfo.value.lastName = response.data.lastName;
+            userInfo.value.id = response.data.id;
             userVerificationDetail.value.userVerified = true;
             return response
         } catch (error) {
+            if (error.response.status == 401) {
+                localStorage.clear();
+                router.replace("/login");
+            }
             errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
             alertError.value = true;
             setTimeout(() => {
@@ -914,7 +1024,11 @@ const nationalCodeRules = [
 
 const validateWeight = [
     (v) => !!v || 'مقدار ورودی نمی‌تواند خالی باشد',
-    (v) => /^\d+(\.\d{1,3})?$/.test(v) || 'فقط عدد مجاز است و حداکثر 3 رقم اعشار',
+    // (v) => /^\d+(\.\d{1,3})?$/.test(v) || 'فقط عدد مجاز است و حداکثر 4 رقم اعشار',
+];
+
+const BankAccountRules = [
+    (v) => !!v || "حساب بانکی را انتخاب کنید!",
 ];
 
 const validateNationalCode = () => {
@@ -994,6 +1108,10 @@ const getGoldPrice = async () => {
         goldPriceForm.value.sellPrice = response.sellPrice;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -1004,44 +1122,106 @@ const getGoldPrice = async () => {
     }
 }
 
-const buyGoldpriceConvert = () => {
-    tradeBuyForm.value.totalPrice = tradeBuyForm.value.totalPrice.replace(/[^0-9]/g, '');
-    tradeBuyForm.value.goldWeight = (tradeBuyForm.value.totalPrice / goldPriceForm.value.buyPrice).toFixed(3);
-}
+const formatNumberWithCommas = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
 
-const sellGoldpriceConvert = () => {
-    tradeSellForm.value.totalPrice = tradeSellForm.value.totalPrice.replace(/[^0-9]/g, '');
-    tradeSellForm.value.goldWeight = (tradeSellForm.value.totalPrice / goldPriceForm.value.sellPrice).toFixed(3);
-}
+const removeCommas = (str) => {
+    return str.replace(/,/g, "");
+};
 
+const buyGoldpriceConvert = (e) => {
+    const cursorPosition = e.target.selectionStart;
+    const originalLength = tradeBuyForm.value.totalPrice.length;
+
+    const rawValue = removeCommas(tradeBuyForm.value.totalPrice).replace(/[^0-9]/g, "");
+    const numericValue = parseInt(rawValue || 0);
+
+    tradeBuyForm.value.goldWeight = (
+        numericValue / goldPriceForm.value.buyPrice
+    ).toFixed(4);
+
+    const formattedValue = formatNumberWithCommas(numericValue);
+
+    tradeBuyForm.value.totalPrice = formattedValue;
+
+    nextTick(() => {
+        const newLength = formattedValue.length;
+        const offset = newLength - originalLength;
+        e.target.setSelectionRange(
+            cursorPosition + offset,
+            cursorPosition + offset
+        );
+    });
+}
 
 
 const buyGoldweightConvert = () => {
-    tradeBuyForm.value.goldWeight = tradeBuyForm.value.goldWeight.replace(/[^0-9.]/g, '');
-    const parts = tradeBuyForm.value.goldWeight.split('.');
+    tradeBuyForm.value.goldWeight = tradeBuyForm.value.goldWeight.replace(/[^0-9.]/g, "");
+    const parts = tradeBuyForm.value.goldWeight.split(".");
     if (parts.length > 1) {
-        tradeBuyForm.value.goldWeight = parts[0] + '.' + parts.slice(1).join('');
+        tradeBuyForm.value.goldWeight = parts[0] + "." + parts.slice(1).join("");
     }
 
     if (parts.length > 1 && parts[1].length > 2) {
-        tradeBuyForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 3);
+        tradeBuyForm.value.goldWeight = parts[0] + "." + parts[1].slice(0, 3);
     }
 
-    tradeBuyForm.value.totalPrice = parseInt(tradeBuyForm.value.goldWeight * goldPriceForm.value.buyPrice);
+    tradeBuyForm.value.totalPrice = parseInt(
+        tradeBuyForm.value.goldWeight * goldPriceForm.value.buyPrice
+    );
+
+    const calculatedPrice = parseInt(
+        tradeBuyForm.value.goldWeight * goldPriceForm.value.buyPrice
+    );
+    tradeBuyForm.value.totalPrice = formatNumberWithCommas(calculatedPrice);
 }
 
+const sellGoldpriceConvert = (e) => {
+    const cursorPosition = e.target.selectionStart;
+    const originalLength = tradeSellForm.value.totalPrice.length;
+
+    const rawValue = removeCommas(tradeSellForm.value.totalPrice).replace(/[^0-9]/g, "");
+    const numericValue = parseInt(rawValue || 0);
+
+    tradeSellForm.value.goldWeight = (
+        numericValue / goldPriceForm.value.sellPrice
+    ).toFixed(4);
+
+    const formattedValue = formatNumberWithCommas(numericValue);
+
+    tradeSellForm.value.totalPrice = formattedValue;
+
+    nextTick(() => {
+        const newLength = formattedValue.length;
+        const offset = newLength - originalLength;
+        e.target.setSelectionRange(
+            cursorPosition + offset,
+            cursorPosition + offset
+        );
+    });
+}
+
+
 const sellGoldweightConvert = () => {
-    tradeSellForm.value.goldWeight = tradeSellForm.value.goldWeight.replace(/[^0-9.]/g, '');
-    const parts = tradeSellForm.value.goldWeight.split('.');
+    tradeSellForm.value.goldWeight = tradeSellForm.value.goldWeight.replace(/[^0-9.]/g, "");
+    const parts = tradeSellForm.value.goldWeight.split(".");
     if (parts.length > 1) {
-        tradeSellForm.value.goldWeight = parts[0] + '.' + parts.slice(1).join('');
+        tradeSellForm.value.goldWeight = parts[0] + "." + parts.slice(1).join("");
     }
 
     if (parts.length > 1 && parts[1].length > 2) {
-        tradeSellForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 3);
+        tradeSellForm.value.goldWeight = parts[0] + "." + parts[1].slice(0, 3);
     }
 
-    tradeSellForm.value.totalPrice = parseInt(tradeSellForm.value.goldWeight * goldPriceForm.value.sellPrice);
+    tradeSellForm.value.totalPrice = parseInt(
+        tradeSellForm.value.goldWeight * goldPriceForm.value.sellPrice
+    );
+
+    const calculatedPrice = parseInt(
+        tradeSellForm.value.goldWeight * goldPriceForm.value.sellPrice
+    );
+    tradeSellForm.value.totalPrice = formatNumberWithCommas(calculatedPrice);
 }
 
 </script>

@@ -115,6 +115,12 @@ export const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: '/recruitmentLanding',
+        name: 'recruitmentLanding',
+        component: () => import('@/views/landing/recruitmentLandingView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: '/serverMonitor',
         name: 'serverMonitor',
         component: () => import('@/views/server/serverMonitorView.vue'),
@@ -160,6 +166,30 @@ export const routes = [
         path: '/inpersonSell',
         name: 'inpersonSell',
         component: () => import('@/views/inperson/inpersonSellView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/inpersonConvertTrade',
+        name: 'inpersonConvertTrade',
+        component: () => import('@/views/inperson/inpersonConvertTradeView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/inpersonCounterTrade',
+        name: 'inpersonCounterTrade',
+        component: () => import('@/views/inperson/inpersonCounterTrade.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/Overview',
+        name: 'Overview',
+        component: () => import('@/views/report/OverviewView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/goldPriceSetting',
+        name: 'goldPriceSetting',
+        component: () => import('@/views/goldprice/goldpriceSettingView.vue'),
         meta: { requiresAuth: true }
       },
     ],

@@ -1,19 +1,21 @@
+import ReportTemplate from "../report/api";
+import QueryTemplate from "../template/api";
 import WalletTemplate from "./api";
 
 
 const WalletService = {
     async AllWallet() {
-        const response = await WalletTemplate.get("/wallet/all");
+        const response = await QueryTemplate.get("/admin/wallet/all");
         return response.data
     },
 
     async PendingWithdraw() {
-        const response = await WalletTemplate.get("/withdraw/pending");
+        const response = await QueryTemplate.get("/admin/withdraw/pending");
         return response.data
     },
 
     async CompleteWithdraw() {
-        const response = await WalletTemplate.get("/withdraw/succeed");
+        const response = await QueryTemplate.get("/admin/withdraw/succeed");
         return response.data
     },
 
@@ -26,17 +28,17 @@ const WalletService = {
     },
 
     async PendingDeposit() {
-        const response = await WalletTemplate.get("/deposit/pending");
+        const response = await QueryTemplate.get("/admin/deposit/pending");
         return response.data
     },
 
     async CompleteDeposit() {
-        const response = await WalletTemplate.get("/deposit/succeed");
+        const response = await QueryTemplate.get("/admin/deposit/succeed");
         return response.data
     },
 
     async FailedDeposit() {
-        const response = await WalletTemplate.get("/deposit/failed");
+        const response = await QueryTemplate.get("/admin/deposit/failed");
         return response.data
     },
 
@@ -47,6 +49,22 @@ const WalletService = {
         const response = await WalletTemplate.put(`/deposit/${info.id}`, body);
         return response.data
     },
+
+    async ExportWithdraw() {
+        const body = JSON.stringify({
+            "report": 5,
+            "type": "withdraw",
+            "status": "pending",
+            "nationalCode": "all",
+            "startDate": "all",
+            "endDate": "all",
+            "startTime": "all",
+            "endTime": "all"
+        });
+        console.log(body)
+        const response = await ReportTemplate.post(`/report/analyze/data`, body);
+        return response.data
+    }
 }
 
 

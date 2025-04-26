@@ -34,6 +34,16 @@ const ManagmentService = {
         const response = await ServerTemplate.get('/logger/user/all');
         return response.data;
     },
+
+    async GetPermission() {
+        const response = await ServerTemplate.get('/main/trade');
+        return response.data;
+    },
+
+    async TradePermission() {
+        const response = await ServerTemplate.post('/main/trade/permision');
+        return response.data;
+    },
 }
 
 

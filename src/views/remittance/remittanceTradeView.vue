@@ -527,6 +527,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import GoldPriceService from '@/services/priceApi/price';
 import RemiitanceService from '@/services/remittance/remiitance';
 import jalaaliJs from 'jalaali-js';
@@ -893,6 +894,10 @@ const remiitanceBuy = async () => {
         InvoiceForm.value.wallet.goldWeight = response?.data?.buyer?.wallet?.goldWeight;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -929,6 +934,10 @@ const remiitanceSell = async () => {
         InvoiceForm.value.wallet.goldWeight = response?.data?.seller?.wallet?.goldWeight;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -958,6 +967,10 @@ const AuthNumber = async () => {
         userInfo.value.birthDate = response.data.user.birthDate;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -983,6 +996,10 @@ const identity = async () => {
         userVerificationDetail.value.userVerified = true;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -1019,6 +1036,10 @@ const getGoldPrice = async () => {
         goldPriceForm.value.sellPrice = response.sellPrice;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -1058,7 +1079,7 @@ const nationalCodeRules = [
 
 const validateWeight = [
     (v) => !!v || 'مقدار ورودی نمی‌تواند خالی باشد',
-    (v) => /^\d+(\.\d{1,3})?$/.test(v) || 'فقط عدد مجاز است و حداکثر 3 رقم اعشار',
+    // (v) => /^\d+(\.\d{1,3})?$/.test(v) || 'فقط عدد مجاز است و حداکثر 3 رقم اعشار',
 ];
 
 const BankAccountRules = [
@@ -1107,45 +1128,108 @@ const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
+const formatNumberWithCommas = (number) => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
 
-const buyGoldpriceConvert = () => {
-    remiitanceBuyForm.value.totalPrice = remiitanceBuyForm.value.totalPrice.replace(/[^0-9]/g, '');
-    remiitanceBuyForm.value.goldWeight = (remiitanceBuyForm.value.totalPrice / goldPriceForm.value.buyPrice).toFixed(3);
+const removeCommas = (str) => {
+    return str.replace(/,/g, "");
+};
+
+
+const buyGoldpriceConvert = (e) => {
+    const cursorPosition = e.target.selectionStart;
+    const originalLength = remiitanceBuyForm.value.totalPrice.length;
+
+    const rawValue = removeCommas(remiitanceBuyForm.value.totalPrice).replace(/[^0-9]/g, "");
+    const numericValue = parseInt(rawValue || 0);
+
+    remiitanceBuyForm.value.goldWeight = (
+        numericValue / goldPriceForm.value.buyPrice
+    ).toFixed(4);
+
+    const formattedValue = formatNumberWithCommas(numericValue);
+
+    remiitanceBuyForm.value.totalPrice = formattedValue;
+
+    nextTick(() => {
+        const newLength = formattedValue.length;
+        const offset = newLength - originalLength;
+        e.target.setSelectionRange(
+            cursorPosition + offset,
+            cursorPosition + offset
+        );
+    });
 }
-
-const sellGoldpriceConvert = () => {
-    remiitanceSellForm.value.totalPrice = remiitanceSellForm.value.totalPrice.replace(/[^0-9]/g, '');
-    remiitanceSellForm.value.goldWeight = (remiitanceSellForm.value.totalPrice / goldPriceForm.value.sellPrice).toFixed(3);
-}
-
 
 
 const buyGoldweightConvert = () => {
-    remiitanceBuyForm.value.goldWeight = remiitanceBuyForm.value.goldWeight.replace(/[^0-9.]/g, '');
-    const parts = remiitanceBuyForm.value.goldWeight.split('.');
+    remiitanceBuyForm.value.goldWeight = remiitanceBuyForm.value.goldWeight.replace(/[^0-9.]/g, "");
+    const parts = remiitanceBuyForm.value.goldWeight.split(".");
     if (parts.length > 1) {
-        remiitanceBuyForm.value.goldWeight = parts[0] + '.' + parts.slice(1).join('');
+        remiitanceBuyForm.value.goldWeight = parts[0] + "." + parts.slice(1).join("");
     }
 
     if (parts.length > 1 && parts[1].length > 2) {
-        remiitanceBuyForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 3);
+        remiitanceBuyForm.value.goldWeight = parts[0] + "." + parts[1].slice(0, 3);
     }
 
-    remiitanceBuyForm.value.totalPrice = parseInt(remiitanceBuyForm.value.goldWeight * goldPriceForm.value.buyPrice);
+    remiitanceBuyForm.value.totalPrice = parseInt(
+        remiitanceBuyForm.value.goldWeight * goldPriceForm.value.buyPrice
+    );
+
+    const calculatedPrice = parseInt(
+        remiitanceBuyForm.value.goldWeight * goldPriceForm.value.buyPrice
+    );
+    remiitanceBuyForm.value.totalPrice = formatNumberWithCommas(calculatedPrice);
+}
+
+
+
+const sellGoldpriceConvert = (e) => {
+    const cursorPosition = e.target.selectionStart;
+    const originalLength = remiitanceSellForm.value.totalPrice.length;
+
+    const rawValue = removeCommas(remiitanceSellForm.value.totalPrice).replace(/[^0-9]/g, "");
+    const numericValue = parseInt(rawValue || 0);
+
+    remiitanceSellForm.value.goldWeight = (
+        numericValue / goldPriceForm.value.sellPrice
+    ).toFixed(4);
+
+    const formattedValue = formatNumberWithCommas(numericValue);
+
+    remiitanceSellForm.value.totalPrice = formattedValue;
+
+    nextTick(() => {
+        const newLength = formattedValue.length;
+        const offset = newLength - originalLength;
+        e.target.setSelectionRange(
+            cursorPosition + offset,
+            cursorPosition + offset
+        );
+    });
 }
 
 const sellGoldweightConvert = () => {
-    remiitanceSellForm.value.goldWeight = remiitanceSellForm.value.goldWeight.replace(/[^0-9.]/g, '');
-    const parts = remiitanceSellForm.value.goldWeight.split('.');
+    remiitanceSellForm.value.goldWeight = remiitanceSellForm.value.goldWeight.replace(/[^0-9.]/g, "");
+    const parts = remiitanceSellForm.value.goldWeight.split(".");
     if (parts.length > 1) {
-        remiitanceSellForm.value.goldWeight = parts[0] + '.' + parts.slice(1).join('');
+        remiitanceSellForm.value.goldWeight = parts[0] + "." + parts.slice(1).join("");
     }
 
     if (parts.length > 1 && parts[1].length > 2) {
-        remiitanceSellForm.value.goldWeight = parts[0] + '.' + parts[1].slice(0, 3);
+        remiitanceSellForm.value.goldWeight = parts[0] + "." + parts[1].slice(0, 3);
     }
 
-    remiitanceSellForm.value.totalPrice = parseInt(remiitanceSellForm.value.goldWeight * goldPriceForm.value.sellPrice);
+    remiitanceSellForm.value.totalPrice = parseInt(
+        remiitanceSellForm.value.goldWeight * goldPriceForm.value.sellPrice
+    );
+
+    const calculatedPrice = parseInt(
+        remiitanceSellForm.value.goldWeight * goldPriceForm.value.sellPrice
+    );
+    remiitanceSellForm.value.totalPrice = formatNumberWithCommas(calculatedPrice);
 }
 
 </script>

@@ -5,11 +5,18 @@ const router = useRouter();
 
 
 const AccountingTemplate = axios.create({
-    baseURL: "https://khaneetala.ir/api/call",
+    // baseURL: "https://khaneetala.ir/api/call",
+    baseURL: "https://gateway.khaneetala.ir/v1/secondmain/call",
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
     },
 })
 

@@ -1,3 +1,4 @@
+import QueryTemplate from "../template/api";
 import InPersonTemplate from "./api";
 
 const InPersonService = {
@@ -11,7 +12,7 @@ const InPersonService = {
 
     async submitOtp(item) {
         const body = JSON.stringify(item);
-        const response = await InPersonTemplate.post(`/otp/verify`, body);
+        const response = await InPersonTemplate.post(`/inperson/otp/verify`, body);
         return response.data
     },
 
@@ -22,31 +23,29 @@ const InPersonService = {
             birthDate: item.birthDate,
             id: item.id,
         });
-        const response = await InPersonTemplate.post(`/user/identity`, body);
+        const response = await InPersonTemplate.post(`/inperson/user/identity`, body);
         return response.data
     },
 
-
     async CreateBuy(item) {
         const body = JSON.stringify(item);
-        const response = await InPersonTemplate.post(`/buy/create`, body);
+        const response = await InPersonTemplate.post(`/inperson/buy/create`, body);
         return response.data;
     },
 
-
     async CreateSell(item) {
         const body = JSON.stringify(item);
-        const response = await InPersonTemplate.post(`/sell/create`, body);
+        const response = await InPersonTemplate.post(`/inperson/sell/create`, body);
         return response.data
     },
 
     async InPersonBuy(item) {
-        const response = await InPersonTemplate.get(`/buy/all/${item}`);
+        const response = await QueryTemplate.get(`/inperson/buy/all/${item}`);
         return response.data
     },
 
     async InPersonSell(item) {
-        const response = await InPersonTemplate.get(`/sell/all/${item}`);
+        const response = await QueryTemplate.get(`/inperson/sell/all/${item}`);
         return response.data
     },
 
@@ -56,7 +55,25 @@ const InPersonService = {
             id: item.id,
             description: item.description
         });
-        const response = await InPersonTemplate.post(`/transaction/changestatus`, body);
+        const response = await InPersonTemplate.post(`/inperson/transaction/changestatus`, body);
+        return response.data
+    },
+
+    async SubmitConvertTrade(detail) {
+        const body = JSON.stringify(detail);
+        const response = await InPersonTemplate.post(`/inperson/convert/create`, body);
+        return response.data
+    },
+
+    async SubmitPayment(paymentForm,id) {
+        const body = JSON.stringify(paymentForm);
+        const response = await InPersonTemplate.post(`/inperson/convert/payment/${id}`, body);
+        return response.data
+    },
+
+    async SubmitCounterPayment(paymentForm) {
+        const body = JSON.stringify(paymentForm);
+        const response = await InPersonTemplate.post(`/inperson/convert/sell`, body);
         return response.data
     },
 

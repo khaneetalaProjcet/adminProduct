@@ -82,6 +82,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import LandingService from '@/services/landing/landing';
 import { onMounted, ref } from 'vue';
 
@@ -135,6 +136,10 @@ const GetInstallmentList = async () => {
         installmentData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {

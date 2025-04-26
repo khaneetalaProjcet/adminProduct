@@ -47,6 +47,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import ManagmentService from '@/services/managment/managment';
 import { onMounted, ref } from 'vue';
 
@@ -107,6 +108,10 @@ const userActivity = async () => {
         userActivityData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -124,6 +129,10 @@ const expertActivity = async () => {
         expertActivityData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {

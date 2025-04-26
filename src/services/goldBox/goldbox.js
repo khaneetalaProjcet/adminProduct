@@ -1,4 +1,5 @@
 import DashboardTemplate from "../dashboard/api";
+import QueryTemplate from "../template/api";
 import VerifyTemplate from "../verify/api";
 import GoldBoxTemplate from "./api";
 
@@ -6,7 +7,7 @@ import GoldBoxTemplate from "./api";
 
 const GoldBoxService = {
     async BuyGoldBox(item) {
-        const response = await GoldBoxTemplate.get(`/transactions/buy?type=${item}`);
+        const response = await QueryTemplate.get(`/admin/transactions/buy?type=${item}`);
         return response.data
     },
 
@@ -19,7 +20,7 @@ const GoldBoxService = {
     },
 
     async SellGoldBox(item) {
-        const response = await GoldBoxTemplate.get(`/transactions/sell?type=${item}`);
+        const response = await QueryTemplate.get(`/admin/transactions/sell?type=${item}`);
         return response.data
     },
 
@@ -53,17 +54,32 @@ const GoldBoxService = {
 
     async CreateInvoiceTradeBuy(item) {
         const body = JSON.stringify(item);
+        const response = await DashboardTemplate.post(`/call/initbuy`, body);
+        return response.data
+    },
+
+    async SubmitInvoiceTradeBuy(item) {
+        const body = JSON.stringify(item);
         const response = await DashboardTemplate.post(`/call/create`, body);
         return response.data
     },
 
     async CreateInvoiceTradeSell(item) {
         const body = JSON.stringify(item);
+        const response = await DashboardTemplate.post(`/call/initsell`, body);
+        return response.data
+    },
+
+    async SubmitInvoiceTradeSell(item) {
+        const body = JSON.stringify(item);
         const response = await DashboardTemplate.post(`/callsell/create`, body);
         return response.data
-    }
+    },
 
-
+    async payInfo(item) {
+        const response = await DashboardTemplate.put(`/admin/transAction/${item}`);
+        return response.data
+    },
 }
 
 

@@ -216,13 +216,25 @@ const hasPermission = (routeName) => {
       href: '#',
       to: '/inPersonTrade'
     }" />
+    <VerticalNavLink v-if="hasPermission('inPersonTrade')" :item="{
+      title: 'تبدیل طلا',
+      icon: 'ri-swap-box-line',
+      href: '#',
+      to: '/inpersonConvertTrade'
+    }" />
+    <VerticalNavLink v-if="hasPermission('inpersonCounterTrade')" :item="{
+      title: 'کانتر فروش',
+      icon: 'ri-store-2-line',
+      href: '#',
+      to: '/inpersonCounterTrade'
+    }" />
   </VerticalNavGroup>
 
   <VerticalNavSectionTitle v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity')" :item="{
     heading: 'مدیریت',
   }" />
 
-  <VerticalNavGroup v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity')" :item="{
+  <VerticalNavGroup v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity') || hasPermission('goldPriceSetting')" :item="{
     title: 'مدیریت',
     icon: 'ri-admin-line',
   }">
@@ -238,13 +250,19 @@ const hasPermission = (routeName) => {
       href: '#',
       to: '/managmentActivity'
     }" />
+    <VerticalNavLink v-if="hasPermission('goldPriceSetting')" :item="{
+      title: 'تنظیم قیمت طلا',
+      icon: 'ri-price-tag-3-line',
+      href: '#',
+      to: '/goldPriceSetting'
+    }" />
   </VerticalNavGroup>
 
   <VerticalNavSectionTitle v-if="hasPermission('installmentLanding')" :item="{
     heading: 'لندینگ',
   }" />
 
-  <VerticalNavGroup v-if="hasPermission('installmentLanding')" :item="{
+  <VerticalNavGroup v-if="hasPermission('installmentLanding') || hasPermission('recruitmentLanding')" :item="{
     title: 'لندینگ ها',
     icon: 'ri-pages-line',
   }">
@@ -253,6 +271,12 @@ const hasPermission = (routeName) => {
       icon: 'ri-funds-line',
       href: '#',
       to: '/installmentLanding'
+    }" />
+    <VerticalNavLink v-if="hasPermission('recruitmentLanding')" :item="{
+      title: 'استخدام',
+      icon: 'ri-user-search-line',
+      href: '#',
+      to: '/recruitmentLanding'
     }" />
   </VerticalNavGroup>
 
@@ -280,7 +304,7 @@ const hasPermission = (routeName) => {
   }" />
 
 
-  <VerticalNavGroup v-if="hasPermission('TotalReport')" :item="{
+  <VerticalNavGroup v-if="hasPermission('TotalReport') || hasPermission('Overview')" :item="{
     title: 'گزارشات',
     icon: 'ri-file-chart-2-line',
   }">
@@ -289,6 +313,12 @@ const hasPermission = (routeName) => {
       icon: 'ri-folder-chart-line',
       href: '#',
       to: '/TotalReport'
+    }" />
+    <VerticalNavLink v-if="hasPermission('Overview')" :item="{
+      title: 'آمار',
+      icon: 'ri-donut-chart-line',
+      href: '#',
+      to: '/Overview'
     }" />
   </VerticalNavGroup>
 

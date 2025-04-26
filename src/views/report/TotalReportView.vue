@@ -76,6 +76,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import ReportService from '@/services/report/report';
 import { ref } from 'vue';
 
@@ -113,8 +114,8 @@ const TransactionType = ref([
 
 const TradeType = ref([
     { value: 'all', label: 'همه' },
-    { value: 'sell', label: 'خرید' },
-    { value: 'buy', label: 'فروش' },
+    { value: 'sell', label: 'فروش' },
+    { value: 'buy', label: 'خرید' },
 ]);
 
 const authType = ref([
@@ -144,6 +145,10 @@ const submitExport = async () => {
         reportData.value.link.push(response[1])
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {

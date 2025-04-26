@@ -136,6 +136,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import GoldBoxService from '@/services/goldBox/goldbox';
 import InPersonService from '@/services/inperson/inperson';
 import { onMounted, ref } from 'vue';
@@ -151,15 +152,15 @@ const CompleteInPersonSellSearch = ref();
 const CompleteInPersonSellHeader = ref([
     {
         title: 'نام',
-        key: 'Seller.firstName',
+        key: 'seller.firstName',
     },
     {
         title: 'نام خانوادگی',
-        key: 'Seller.lastName',
+        key: 'seller.lastName',
     },
     {
         title: 'شماره همراه',
-        key: 'Seller.phoneNumber',
+        key: 'seller.phoneNumber',
     },
     {
         title: 'مبلغ خرید (تومان)',
@@ -244,6 +245,10 @@ const GetCompleteInPersonSellList = async () => {
         CompleteInPersonSellData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -261,6 +266,10 @@ const GetFailedInPersonSellList = async () => {
         FailedInPersonSellData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -290,6 +299,10 @@ const submitInPersonSell = async () => {
         InPersonSellDialog.value = false;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {

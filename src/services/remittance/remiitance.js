@@ -1,3 +1,4 @@
+import QueryTemplate from "../template/api";
 import RemittanceTemplate from "./api";
 
 
@@ -33,12 +34,12 @@ const RemiitanceService = {
     },
 
     async RemiitanceBuy(item) {
-        const response = await RemittanceTemplate.get(`/buy/${item}`);
+        const response = await QueryTemplate.get(`/buy/${item}`);
         return response.data
     },
 
     async RemiitanceSell(item) {
-        const response = await RemittanceTemplate.get(`/sell/${item}`);
+        const response = await QueryTemplate.get(`/sell/${item}`);
         return response.data
     },
 

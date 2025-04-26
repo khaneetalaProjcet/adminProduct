@@ -154,6 +154,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import WalletService from '@/services/wallet/wallet';
 import { onMounted, ref } from 'vue';
 
@@ -297,6 +298,10 @@ const GetPendingDepositList = async () => {
         PendingDepositData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -314,6 +319,10 @@ const GetCompleteDepositList = async () => {
         CompleteDepositData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -331,6 +340,10 @@ const GetFailedDepositList = async () => {
         FailedDepositData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -367,6 +380,10 @@ const submitDeposit = async () => {
         DepositDialog.value = false;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {

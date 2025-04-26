@@ -192,6 +192,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import AccountingService from '@/services/accounting/accounting';
 import WalletService from '@/services/wallet/wallet';
 import { onMounted, ref } from 'vue';
@@ -332,6 +333,10 @@ const GetPendingAccountingReviewList = async () => {
         PendingAccountingReviewData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -349,6 +354,10 @@ const GetCompleteAccountingReviewList = async () => {
         CompleteAccountingReviewData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -366,6 +375,10 @@ const GetRejectAccountingReviewList = async () => {
         rejectAccountingReviewData.value = response.data;
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -397,6 +410,10 @@ const submitAccountingReview = async () => {
         AccountingRevieItemDetail.value.description = '';
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {
@@ -418,6 +435,10 @@ const rejectAccountingReview = async () => {
         AccountingRevieItemDetail.value.description = '';
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {

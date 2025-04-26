@@ -125,6 +125,7 @@
 </template>
 
 <script setup>
+import { router } from '@/plugins/router';
 import WalletService from '@/services/wallet/wallet';
 import { onMounted, ref } from 'vue';
 
@@ -198,6 +199,10 @@ const GetWallet = async () => {
         console.log(walletData.value)
         return response
     } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
         errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
         alertError.value = true;
         setTimeout(() => {

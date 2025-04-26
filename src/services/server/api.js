@@ -5,11 +5,15 @@ const router = useRouter();
 
 
 const ServerTemplate = axios.create({
+    // baseURL: "https://gateway.khaneetala.ir/v1",
     baseURL: "https://gateway.khaneetala.ir/v1",
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
+        "Content-Security-Policy": "default-src 'self'; script-src 'self'; style-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'self'",
+        "X-Content-Type-Options": "nosniff",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
     },
 })
 

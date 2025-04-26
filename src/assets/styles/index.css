@@ -1,12 +1,16 @@
 .alert-animatiton {
-    animation: fade-in-out 5s forwards;
+  animation: fade-in-out 5s forwards;
 }
 
 .my-perian-datepicker {
-    padding: 0.5rem !important;
-    border-radius: 5px 0 0 5px !important;
+  padding: 0.5rem !important;
+  border-radius: 5px 0 0 5px !important;
 }
 
-.vpd-icon-btn{
-    border-radius: 0 5px 5px 0 !important;
+.vpd-icon-btn {
+  border-radius: 0 5px 5px 0 !important;
+}
+
+.v-stepper-window {
+  margin: 0.3rem !important;
 }
