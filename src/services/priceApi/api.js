@@ -6,7 +6,7 @@ const router = useRouter();
 
 const GoldPriceTemplate = axios.create({
     // baseURL: "https://khaneetala.ir/api",
-    baseURL: "https://gateway.khanetala.ir/v1/secondmain",
+    baseURL: "https://gateway.khaneetala.ir/v1/secondmain",
     headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",
