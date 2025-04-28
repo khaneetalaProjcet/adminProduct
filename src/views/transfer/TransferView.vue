@@ -340,7 +340,7 @@ const VerifyTransferOtp = async () => {
         transferDetail.value.sender = null;
         transferDetail.value.reciever = null;
         transferDetail.value.goldWeight = null;
-        successMsg.value = "طلای شما با موفقیت به انتقال داده شد";
+        successMsg.value = response.msg;
         alertSuccess.value = true;
 
         setTimeout(() => {
