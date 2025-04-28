@@ -192,6 +192,12 @@ export const routes = [
         component: () => import('@/views/goldprice/goldpriceSettingView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/transfer',
+        name: 'transfer',
+        component: () => import('@/views/transfer/TransferView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {

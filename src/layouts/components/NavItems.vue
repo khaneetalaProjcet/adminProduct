@@ -230,6 +230,18 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup>
 
+  <VerticalNavGroup v-if="hasPermission('transfer')" :item="{
+    title: 'انتقال',
+    icon: 'ri-user-shared-line',
+  }">
+    <VerticalNavLink v-if="hasPermission('transfer')" :item="{
+      title: 'انتقال طلا',
+      icon: 'ri-user-shared-line',
+      href: '#',
+      to: '/transfer'
+    }" />
+  </VerticalNavGroup>
+
   <VerticalNavSectionTitle v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity')" :item="{
     heading: 'مدیریت',
   }" />
