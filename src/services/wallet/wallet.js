@@ -50,6 +50,34 @@ const WalletService = {
         return response.data
     },
 
+    async QuiryWallet(nationalCode) {
+        const response = await QueryTemplate.get(`/admin/inquiry/${nationalCode}`,);
+        return response.data
+    },
+
+    async CreateTransfer(info) {
+        const body = JSON.stringify(info);
+        const response = await WalletTemplate.post(`/transPort`, body);
+        return response.data;
+    },
+
+    async TransferOtp(id) {
+        const body = JSON.stringify({
+            transPortId: id,
+        });
+        const response = await WalletTemplate.post(`/transPort/otp`, body);
+        return response.data;
+    },
+
+    async VerifyTransferOtp(otp, id) {
+        const body = JSON.stringify({
+          otp: otp,
+          transPortId: id,
+        });
+        const response = await WalletTemplate.post(`/transPort/verifyotp`, body);
+        return response.data;
+      },
+
     async ExportWithdraw() {
         const body = JSON.stringify({
             "report": 5,
