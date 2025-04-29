@@ -7,7 +7,7 @@
                         <v-col class="d-none d-md-flex" md="2"></v-col>
                         <v-col cols="12" md="4">
                             <v-text-field v-model="transferDetail.sender" label="کد ملی انتقال دهنده"
-                                variant="outlined"></v-text-field>
+                                variant="outlined" :rules="nationalCodeRules" @input="validateNationalCodeSender"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="4">
                             <v-btn block color="#d4af37" size="large" @click="inquiryWallet">استعلام موجودی</v-btn>
@@ -57,7 +57,7 @@
                         <v-col class="d-none d-md-flex" md="2"></v-col>
                         <v-col cols="12" md="4">
                             <v-text-field v-model="transferDetail.reciever" label="کد ملی گیرنده"
-                                variant="outlined"></v-text-field>
+                                variant="outlined" :rules="nationalCodeRules" @input="validateNationalCodeReciever"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="4">
                             <v-text-field v-model="transferDetail.goldWeight" label="وزن طلا"
@@ -360,6 +360,29 @@ const VerifyTransferOtp = async () => {
     } finally {
         verifyTransferOtpLoading.value = false;
     }
+};
+
+
+const nationalCodeRules = [
+    (v) => !!v || 'کد ملی الزامی است',
+    (v) => /^\d{10}$/.test(v) || 'کد ملی باید ۱۰ رقم باشد',
+    (v) => {
+        if (!/^\d{10}$/.test(v)) return true;
+
+        const check = +v[9];
+        const sum = v.split('').slice(0, 9).reduce((acc, x, i) => acc + (+x * (10 - i)), 0) % 11;
+        return (sum < 2 && check === sum) || (sum >= 2 && check + sum === 11) || 'کد ملی نامعتبر است';
+    }
+];
+
+const validateNationalCodeSender = () => {
+    transferDetail.value.sender = transferDetail.value.sender.replace(/\D/g, '').slice(0, 10);
+    nationalCodeRules.every(rule => rule(transferDetail.value.sender) === true);
+};
+
+const validateNationalCodeReciever = () => {
+    transferDetail.value.reciever = transferDetail.value.reciever.replace(/\D/g, '').slice(0, 10);
+    nationalCodeRules.every(rule => rule(transferDetail.value.reciever) === true);
 };
 
 </script>
