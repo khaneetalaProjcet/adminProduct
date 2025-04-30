@@ -44,6 +44,28 @@ const ManagmentService = {
         const response = await ServerTemplate.post('/main/trade/permision');
         return response.data;
     },
+
+    async BranchList() {
+        const response = await ServerTemplate.get('/branch/allbyadmin');
+        return response.data;
+    },
+
+    async AddBranch(branchInfo) {
+        const body = JSON.stringify(branchInfo);
+        const response = await ServerTemplate.post('/branch/create', body);
+        return response.data;
+    },
+
+    async SellerList(id) {
+        const response = await ServerTemplate.get(`/branch/seller/all/${id}`);
+        return response.data;
+    },
+
+    async AddSeller(sellerInfo, id) {
+        const body = JSON.stringify(sellerInfo);
+        const response = await ServerTemplate.post(`/branch/seller/create/${id}`, body);
+        return response.data;
+    },
 }
 
 
