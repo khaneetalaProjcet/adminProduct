@@ -115,7 +115,7 @@
                             :rules="phoneRules"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" class="my-4">
-                        <v-text-field v-model="addSellerDetail.nationalcode" label="کد ملی" variant="outlined"
+                        <v-text-field v-model="addSellerDetail.nationalCode" label="کد ملی" variant="outlined"
                             :rules="nationalCodeRules"></v-text-field>
                     </v-col>
                 </v-row>
@@ -184,14 +184,14 @@ const addSellerDetail = ref({
     firstName: null,
     lastName: null,
     phoneNumber: null,
-    nationalcode: null,
+    nationalCode: null,
 })
 const sellerDialog = ref(false);
 const sellerList = ref([]);
 const sellerListHeader = ref([
     {
         title: 'نام',
-        key: 'fristName',
+        key: 'firstName',
     },
     {
         title: 'نام خانوادگی',
@@ -306,6 +306,10 @@ const AddSeller = async () => {
         setTimeout(() => {
             alertSuccess.value = false;
         }, 10000)
+        addSellerDetail.value.firstName = null;
+        addSellerDetail.value.lastName = null;
+        addSellerDetail.value.phoneNumber = null;
+        addSellerDetail.value.nationalcode = null;
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -356,7 +360,7 @@ onMounted(() => {
     left: 40%;
     font-size: 12px;
     padding: 10px !important;
-    z-index: 100000;
+    z-index: 1000000;
 }
 
 .dialog-card {
