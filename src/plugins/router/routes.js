@@ -198,6 +198,12 @@ export const routes = [
         component: () => import('@/views/transfer/TransferView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/branch',
+        name: 'branch',
+        component: () => import('@/views/managment/branchView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {
