@@ -88,7 +88,7 @@
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>شماره کارت: </p>
-                            <p class="mx-2">{{ WithdrawDetail.wallet.user.bankAccounts[0].cardNumber }}</p>
+                            <p class="mx-2">{{ WithdrawDetail.cardPan }}</p>
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>نام بانک: </p>
