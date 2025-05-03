@@ -107,7 +107,7 @@
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>شماره شبا: </p>
-                            <p class="mx-2">{{ WithdrawDetail.wallet.user.bankAccounts[0].shebaNumber }}</p>
+                            <p class="mx-2">{{ WithdrawDetail.shebaNumber }}</p>
                         </div>
                     </div>
                 </div>
