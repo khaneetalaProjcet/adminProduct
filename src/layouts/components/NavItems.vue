@@ -176,6 +176,35 @@ const hasPermission = (routeName) => {
   </VerticalNavGroup>
 
 
+
+  <VerticalNavGroup v-if="hasPermission('AccountingTransfer')" :item="{
+    title: 'انتقال',
+    icon: 'ri-file-transfer-line',
+  }">
+    <VerticalNavLink v-if="hasPermission('AccountingTransfer')" :item="{
+      title: 'انتقال طلا',
+      icon: 'ri-file-transfer-line',
+      href: '#',
+      to: '/AccountingTransfer'
+    }" />
+  </VerticalNavGroup>
+
+  
+  <VerticalNavGroup v-if="hasPermission('AccountingUseGold')" :item="{
+    title: 'استفاده از طلا',
+    icon: 'ri-file-transfer-line',
+  }">
+    <VerticalNavLink v-if="hasPermission('AccountingUseGold')" :item="{
+      title: 'انتقال از صندوق طلا',
+      icon: 'ri-file-transfer-line',
+      href: '#',
+      to: '/AccountingUseGold'
+    }" />
+  </VerticalNavGroup>
+
+
+
+
   <VerticalNavSectionTitle
     v-if="hasPermission('goldboxTrade') || hasPermission('remittanceTrade') || hasPermission('inPersonTrade')" :item="{
       heading: 'ثبت معامله',
@@ -246,10 +275,12 @@ const hasPermission = (routeName) => {
     heading: 'مدیریت',
   }" />
 
-  <VerticalNavGroup v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity') || hasPermission('goldPriceSetting') || hasPermission('branch')" :item="{
-    title: 'مدیریت',
-    icon: 'ri-admin-line',
-  }">
+  <VerticalNavGroup
+    v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity') || hasPermission('goldPriceSetting') || hasPermission('branch')"
+    :item="{
+      title: 'مدیریت',
+      icon: 'ri-admin-line',
+    }">
     <VerticalNavLink v-if="hasPermission('managmentAdmin')" :item="{
       title: 'ادمین',
       icon: 'ri-admin-line',

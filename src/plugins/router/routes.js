@@ -204,6 +204,18 @@ export const routes = [
         component: () => import('@/views/managment/branchView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/AccountingTransfer',
+        name: 'AccountingTransfer',
+        component: () => import('@/views/transfer/AccountingTransferView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/AccountingUseGold',
+        name: 'AccountingUseGold',
+        component: () => import('@/views/usegold/AccountingUseGoldView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {
