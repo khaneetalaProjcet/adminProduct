@@ -12,7 +12,7 @@
                 <v-card-text>
                     <v-tabs-window v-model="tab">
                         <v-tabs-window-item value="one">
-                            <v-card title="انتقال های در انتظار تایید">
+                            <v-card title="انتقال های نامشخص">
                                 <template v-slot:text>
                                     <v-text-field v-model="PendingTransferGoldSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>

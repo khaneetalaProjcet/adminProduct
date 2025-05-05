@@ -1,1 +1,0 @@
-import{_ as t,c as n,a as o,o as s}from"./index-DspVVL0a.js";const c={};function r(a,e){return s(),n("div",null,e[0]||(e[0]=[o("h1",null,"test",-1)]))}const _=t(c,[["render",r]]);export{_ as default};

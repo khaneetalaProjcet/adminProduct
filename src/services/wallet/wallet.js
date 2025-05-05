@@ -1,4 +1,5 @@
 import ReportTemplate from "../report/api";
+import ServerTemplate from "../server/api";
 import QueryTemplate from "../template/api";
 import WalletTemplate from "./api";
 
@@ -97,7 +98,14 @@ const WalletService = {
     async TransferGoldList(status){
         const response = await QueryTemplate.get(`/admin/transport/all?status=${status}`);
         return response.data
-    }
+    },
+
+    async UseGoldList(status){
+        const response = await ServerTemplate.get(`/branch/transaction/all?type=${status}`);
+        return response.data
+    },
+
+
 }
 
 
