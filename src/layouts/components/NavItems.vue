@@ -191,12 +191,12 @@ const hasPermission = (routeName) => {
 
   
   <VerticalNavGroup v-if="hasPermission('AccountingUseGold')" :item="{
-    title: 'استفاده از طلا',
-    icon: 'ri-file-transfer-line',
+    title: 'استفاده',
+    icon: 'ri-diamond-ring-line',
   }">
     <VerticalNavLink v-if="hasPermission('AccountingUseGold')" :item="{
-      title: 'انتقال از صندوق طلا',
-      icon: 'ri-file-transfer-line',
+      title: 'استفاده از طلا',
+      icon: 'ri-diamond-ring-line',
       href: '#',
       to: '/AccountingUseGold'
     }" />

@@ -71,12 +71,12 @@ const WalletService = {
 
     async VerifyTransferOtp(otp, id) {
         const body = JSON.stringify({
-          otp: otp,
-          transPortId: id,
+            otp: otp,
+            transPortId: id,
         });
         const response = await WalletTemplate.post(`/transPort/verifyotp`, body);
         return response.data;
-      },
+    },
 
     async ExportWithdraw() {
         const body = JSON.stringify({
@@ -91,6 +91,11 @@ const WalletService = {
         });
         console.log(body)
         const response = await ReportTemplate.post(`/report/analyze/data`, body);
+        return response.data
+    },
+
+    async TransferGoldList(status){
+        const response = await QueryTemplate.get(`/admin/transport/all?status=${status}`);
         return response.data
     }
 }
