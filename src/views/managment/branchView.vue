@@ -16,6 +16,8 @@
                             <template v-slot:item.action="{ item }">
                                 <v-icon class="me-2" size="small" icon="ri-store-line" color="#d4af37"
                                     @click="BranchInfo(item)"></v-icon>
+                                <v-icon class="me-2" size="small" icon="ri-delete-bin-line" color="#c9190c"
+                                    @click="BranchDelete(item)"></v-icon>
                             </template>
                         </v-data-table>
                     </v-card>
@@ -87,6 +89,10 @@
                     </v-col>
                     <v-col cols="12" class="my-2">
                         <v-data-table :headers="sellerListHeader" :items="sellerList" :loading="BranchSellerLoading">
+                            <template v-slot:item.action="{ item }">
+                                <v-icon class="me-2" size="small" icon="ri-delete-bin-line" color="#c9190c"
+                                    @click="SellerDelete(item)"></v-icon>
+                            </template>
                         </v-data-table>
                     </v-col>
                 </v-row>
@@ -129,6 +135,22 @@
         </v-card>
     </v-dialog>
 
+    <v-dialog v-model="deleteDialog" width="auto">
+        <v-card width="400" prepend-icon="mdi-delete" text="آیا از حذف شعبه مطمئن هستید؟" title="حذف شعبه">
+            <template v-slot:actions>
+                <v-btn class="ms-auto" text="حذف" @click="submitDeleteBranch" :loading="BranchDeleteLoading"></v-btn>
+            </template>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="deleteSellerDialog" width="auto">
+        <v-card width="400" prepend-icon="mdi-delete" text="آیا از حذف کارشناس مطمئن هستید؟" title="حذف کارشناس">
+            <template v-slot:actions>
+                <v-btn class="ms-auto" text="حذف" @click="submitDeleteBranch" :loading="BranchDeleteLoading"></v-btn>
+            </template>
+        </v-card>
+    </v-dialog>
+
     <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
         {{ errorMsg }}
     </v-alert>
@@ -146,6 +168,8 @@ import { onMounted, ref } from 'vue';
 
 
 const AddBranchDialog = ref(false);
+const deleteDialog = ref(false);
+const deleteSellerDialog = ref(false);
 const branchSheet = ref(false);
 const BranchListSearch = ref('');
 const errorMsg = ref('');
@@ -156,8 +180,11 @@ const isFormValid = ref(false);
 const isSellerValid = ref(false);
 const AddBranchLoading = ref(false);
 const AddSellerLoading = ref(false);
+const BranchDeleteLoading = ref(false);
+const SellerDeleteLoading = ref(false);
 const BranchSellerLoading = ref(false);
-const BranchDetail = ref({})
+const BranchDetail = ref({});
+const SellerDetail = ref({});
 const BranchListHeader = ref([
     {
         title: 'id',
@@ -204,6 +231,10 @@ const sellerListHeader = ref([
     {
         title: 'کد ملی',
         key: 'nationalCode',
+    },
+    {
+        title: 'فعالیت',
+        key: 'action',
     },
 
 ]);
@@ -269,6 +300,60 @@ const BranchInfo = async (item) => {
     BranchDetail.value = item;
     branchSheet.value = true;
     GetSellers(BranchDetail.value.id)
+}
+
+const BranchDelete = (item) => {
+    BranchDetail.value = item;
+    deleteDialog.value = true;
+}
+
+const submitDeleteBranch = async () => {
+    try {
+        BranchDeleteLoading.value = true;
+        const response = await ManagmentService.DeleteBranch(BranchDetail.value.id);
+        deleteDialog.value = false;
+        GetBranchList();
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        BranchDeleteLoading.value = false;
+    }
+}
+
+const SellerDelete = (item) => {
+    SellerDetail.value = item;
+    deleteSellerDialog.value = true;
+}
+
+const submitDeleteSeller = async () => {
+    try {
+        SellerDeleteLoading.value = true;
+        const response = await ManagmentService.DeleteSeller(SellerDetail.value.id);
+        sellerDialog.value = false;
+        GetSellers();
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        SellerDeleteLoading.value = false;
+    }
 }
 
 const GetSellers = async (id) => {

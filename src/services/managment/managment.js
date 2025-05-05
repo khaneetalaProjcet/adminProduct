@@ -56,6 +56,16 @@ const ManagmentService = {
         return response.data;
     },
 
+    async DeleteBranch(id) {
+        const response = await ServerTemplate.delete(`/branch/delete/${id}`,);
+        return response.data;
+    },
+    
+    async DeleteSeller(id) {
+        const response = await ServerTemplate.delete(`/branch/delete/${id}`,);
+        return response.data;
+    },
+
     async SellerList(id) {
         const response = await ServerTemplate.get(`/branch/seller/all/${id}`);
         return response.data;
