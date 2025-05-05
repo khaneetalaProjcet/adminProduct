@@ -120,10 +120,6 @@
                         <v-text-field v-model="addSellerDetail.phoneNumber" label="شماره همراه" variant="outlined"
                             :rules="phoneRules"></v-text-field>
                     </v-col>
-                    <v-col cols="12" md="6" class="my-4">
-                        <v-text-field v-model="addSellerDetail.nationalCode" label="کد ملی" variant="outlined"
-                            :rules="nationalCodeRules"></v-text-field>
-                    </v-col>
                 </v-row>
                 <div class="d-flex justify-space-between">
                     <v-btn text="انصراف" @click="sellerDialog = false" size="large" class="m-3"
@@ -146,7 +142,7 @@
     <v-dialog v-model="deleteSellerDialog" width="auto">
         <v-card width="400" prepend-icon="mdi-delete" text="آیا از حذف کارشناس مطمئن هستید؟" title="حذف کارشناس">
             <template v-slot:actions>
-                <v-btn class="ms-auto" text="حذف" @click="submitDeleteBranch" :loading="BranchDeleteLoading"></v-btn>
+                <v-btn class="ms-auto" text="حذف" @click="submitDeleteSeller" :loading="SellerDeleteLoading"></v-btn>
             </template>
         </v-card>
     </v-dialog>
@@ -211,7 +207,6 @@ const addSellerDetail = ref({
     firstName: null,
     lastName: null,
     phoneNumber: null,
-    nationalCode: null,
 })
 const sellerDialog = ref(false);
 const sellerList = ref([]);
@@ -227,10 +222,6 @@ const sellerListHeader = ref([
     {
         title: 'شماره موبایل',
         key: 'phoneNumber',
-    },
-    {
-        title: 'کد ملی',
-        key: 'nationalCode',
     },
     {
         title: 'فعالیت',
@@ -338,8 +329,8 @@ const submitDeleteSeller = async () => {
     try {
         SellerDeleteLoading.value = true;
         const response = await ManagmentService.DeleteSeller(SellerDetail.value.id);
-        sellerDialog.value = false;
-        GetSellers();
+        deleteSellerDialog.value = false;
+        GetSellers(BranchDetail.value.id);
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -394,7 +385,6 @@ const AddSeller = async () => {
         addSellerDetail.value.firstName = null;
         addSellerDetail.value.lastName = null;
         addSellerDetail.value.phoneNumber = null;
-        addSellerDetail.value.nationalcode = null;
         return response
     } catch (error) {
         if (error.response.status == 401) {

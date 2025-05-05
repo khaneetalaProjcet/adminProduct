@@ -62,7 +62,7 @@ const ManagmentService = {
     },
     
     async DeleteSeller(id) {
-        const response = await ServerTemplate.delete(`/branch/delete/${id}`,);
+        const response = await ServerTemplate.delete(`/branch/seller/delete/${id}`,);
         return response.data;
     },
 
