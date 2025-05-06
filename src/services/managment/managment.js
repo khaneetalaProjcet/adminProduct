@@ -67,13 +67,23 @@ const ManagmentService = {
     },
 
     async SellerList(id) {
-        const response = await ServerTemplate.get(`/branch/seller/all/${id}`);
+        const response = await ServerTemplate.get(`/branch/seller/allbyadmin/${id}`);
         return response.data;
     },
 
     async AddSeller(sellerInfo, id) {
         const body = JSON.stringify(sellerInfo);
         const response = await ServerTemplate.post(`/branch/seller/create/${id}`, body);
+        return response.data;
+    },
+
+    async SwitchBranchActivator(id) {
+        const response = await ServerTemplate.post(`/branch/active/${id}`);
+        return response.data;
+    },
+
+    async SwitchBranchSellerActivator(id) {
+        const response = await ServerTemplate.post(`/branch/seller/active/${id}`);
         return response.data;
     },
 }

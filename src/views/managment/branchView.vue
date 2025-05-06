@@ -19,6 +19,10 @@
                                 <v-icon class="me-2" size="small" icon="ri-delete-bin-line" color="#c9190c"
                                     @click="BranchDelete(item)"></v-icon>
                             </template>
+                            <template v-slot:item.status="{ item }">
+                                <v-switch v-model="item.isActive" color="#b08c4d" @input="switchActivateBranch(item)"
+                                :loading="switchLoading"></v-switch>
+                            </template>
                         </v-data-table>
                     </v-card>
                 </v-col>
@@ -92,6 +96,10 @@
                             <template v-slot:item.action="{ item }">
                                 <v-icon class="me-2" size="small" icon="ri-delete-bin-line" color="#c9190c"
                                     @click="SellerDelete(item)"></v-icon>
+                            </template>
+                            <template v-slot:item.status="{ item }">
+                                <v-switch v-model="item.isActive" color="#b08c4d" @input="switchActivateSeller(item)"
+                                :loading="switchLoading"></v-switch>
                             </template>
                         </v-data-table>
                     </v-col>
@@ -202,6 +210,10 @@ const BranchListHeader = ref([
         title: 'اطلاعات',
         key: 'action',
     },
+    {
+        title: 'فعال / غیر فعال',
+        key: 'status',
+    },
 ]);
 const addSellerDetail = ref({
     firstName: null,
@@ -227,6 +239,10 @@ const sellerListHeader = ref([
         title: 'فعالیت',
         key: 'action',
     },
+    {
+        title: 'فعال / غیر فعال',
+        key: 'status',
+    },
 
 ]);
 const BranchListData = ref([]);
@@ -236,7 +252,8 @@ const AddBranchData = ref({
     code: null,
     name: null,
 })
-
+const switchLoading = ref(false);
+const sellerSwitchLoading = ref(false);
 
 
 const GetBranchList = async () => {
@@ -410,18 +427,45 @@ const phoneRules = [
     v => /^09\d{9}$/.test(v) || 'شماره معتبر نیست'
 ];
 
-const nationalCodeRules = [
-    (v) => !!v || 'کد ملی الزامی است',
-    (v) => /^\d{10}$/.test(v) || 'کد ملی باید ۱۰ رقم باشد',
-    (v) => {
-        if (!/^\d{10}$/.test(v)) return true;
-
-        const check = +v[9];
-        const sum = v.split('').slice(0, 9).reduce((acc, x, i) => acc + (+x * (10 - i)), 0) % 11;
-        return (sum < 2 && check === sum) || (sum >= 2 && check + sum === 11) || 'کد ملی نامعتبر است';
+const switchActivateBranch = async (item) => {
+    try {
+        switchLoading.value = true;
+        const response = await ManagmentService.SwitchBranchActivator(item.id);
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        switchLoading.value = false;
     }
-];
+} 
 
+const switchActivateSeller = async (item) => {
+    try {
+        switchLoading.value = true;
+        const response = await ManagmentService.SwitchBranchSellerActivator(item.id);
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        switchLoading.value = false;
+    }
+} 
 
 onMounted(() => {
     GetBranchList()
