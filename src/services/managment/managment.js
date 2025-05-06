@@ -86,6 +86,11 @@ const ManagmentService = {
         const response = await ServerTemplate.post(`/branch/seller/active/${id}`);
         return response.data;
     },
+
+    async SwitchAdminActivator(id) {
+        const response = await ServerTemplate.post(`/admin/active/${id}`);
+        return response.data;
+    },
 }
 
 

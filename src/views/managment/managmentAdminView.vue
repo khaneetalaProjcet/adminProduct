@@ -30,6 +30,10 @@
                             <v-icon class="me-2" size="small" icon="ri-user-settings-line" color="#d4af37"
                                 @click="userInfo(item)"></v-icon>
                         </template>
+                        <template v-slot:item.status="{ item }">
+                            <v-switch v-model="item.isBlocked" color="#b08c4d" @input="switchActivateAdmin(item)"
+                                :loading="SwitchAdminLoading"></v-switch>
+                        </template>
                     </v-data-table>
                 </v-card>
             </v-col>
@@ -160,11 +164,16 @@ const AdminListHeader = ref([
         title: 'فعالیت',
         key: 'action',
     },
+    {
+        title: 'بلاک شده',
+        key: 'status',
+    },
 ]);
 const AdminListData = ref([]);
 const AdminListSearch = ref('');
 const AdminListLoading = ref(false);
 const AddAdminLoading = ref(false);
+const SwitchAdminLoading = ref(false);
 const AccessPointLoading = ref(false);
 const managmentAccessLoading = ref(false);
 const submitAccessPointLoading = ref(false);
@@ -355,6 +364,28 @@ const lastNameRules = [
 //     console.log(AccessPointData.value)
 // }
 
+const switchActivateAdmin = async (item) => {
+    try {
+        SwitchAdminLoading.value = true;
+        console.log('test')
+        const response = await ManagmentService.SwitchAdminActivator(item.id);
+        console.log('test')
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        SwitchAdminLoading.value = false;
+    }
+}
+
 onMounted(() => {
     GetAdminList();
 })
@@ -408,5 +439,4 @@ onMounted(() => {
     justify-content: center;
     align-items: center;
 }
-
 </style>

@@ -449,7 +449,7 @@ const switchActivateBranch = async (item) => {
 
 const switchActivateSeller = async (item) => {
     try {
-        switchLoading.value = true;
+        sellerSwitchLoading.value = true;
         const response = await ManagmentService.SwitchBranchSellerActivator(item.id);
         return response
     } catch (error) {
@@ -463,7 +463,7 @@ const switchActivateSeller = async (item) => {
             alertError.value = false;
         }, 10000)
     } finally {
-        switchLoading.value = false;
+        sellerSwitchLoading.value = false;
     }
 } 
 
