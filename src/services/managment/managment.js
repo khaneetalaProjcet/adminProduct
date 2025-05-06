@@ -91,6 +91,11 @@ const ManagmentService = {
         const response = await ServerTemplate.post(`/admin/active/${id}`);
         return response.data;
     },
+
+    async DeleteAdmin(id) {
+        const response = await ServerTemplate.delete(`/admin/delete/${id}`,);
+        return response.data;
+    },
 }
 
 

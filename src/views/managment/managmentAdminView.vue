@@ -29,6 +29,8 @@
                         <template v-slot:item.action="{ item }">
                             <v-icon class="me-2" size="small" icon="ri-user-settings-line" color="#d4af37"
                                 @click="userInfo(item)"></v-icon>
+                            <v-icon class="me-2" size="small" icon="ri-delete-bin-line" color="#c9190c"
+                                @click="deleteAdmin(item)"></v-icon>
                         </template>
                         <template v-slot:item.status="{ item }">
                             <v-switch v-model="item.isBlocked" color="#b08c4d" @input="switchActivateAdmin(item)"
@@ -127,6 +129,14 @@
         </v-card>
     </v-dialog>
 
+    <v-dialog v-model="deleteDialog" width="auto">
+        <v-card width="400" prepend-icon="mdi-delete" text="آیا از حذف ادمین مطمئن هستید؟" title="حذف ادمین">
+            <template v-slot:actions>
+                <v-btn class="ms-auto" text="حذف" @click="submitDeleteAdmin" :loading="AdminDeleteLoading"></v-btn>
+            </template>
+        </v-card>
+    </v-dialog>
+
     <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
         {{ errorMsg }}
     </v-alert>
@@ -177,6 +187,7 @@ const SwitchAdminLoading = ref(false);
 const AccessPointLoading = ref(false);
 const managmentAccessLoading = ref(false);
 const submitAccessPointLoading = ref(false);
+const AdminDeleteLoading = ref(false);
 const AccessPointData = ref();
 const closeTradePermission = ref(false);
 const AccessPointDialog = ref(false);
@@ -191,6 +202,8 @@ const adminData = ref({
     password: '',
     role: 0
 });
+const deleteDialog = ref(false);
+const AdminDeleteDetail = ref();
 
 const AdminId = ref('');
 
@@ -367,9 +380,7 @@ const lastNameRules = [
 const switchActivateAdmin = async (item) => {
     try {
         SwitchAdminLoading.value = true;
-        console.log('test')
         const response = await ManagmentService.SwitchAdminActivator(item.id);
-        console.log('test')
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -383,6 +394,33 @@ const switchActivateAdmin = async (item) => {
         }, 10000)
     } finally {
         SwitchAdminLoading.value = false;
+    }
+}
+
+const deleteAdmin = (item) => {
+    AdminDeleteDetail.value = item;
+    deleteDialog.value = true;
+}
+
+const submitDeleteAdmin = async () => {
+    try {
+        AdminDeleteLoading.value = true;
+        const response = await ManagmentService.DeleteAdmin(AdminDeleteDetail.value.id);
+        deleteDialog.value = false;
+        GetAdminList();
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        AdminDeleteLoading.value = false;
     }
 }
 
