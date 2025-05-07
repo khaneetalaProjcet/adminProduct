@@ -28,6 +28,11 @@ const UserService = {
     async CheckToken() {
         const response = await UserTemplate.get(`/token/check`);
         return response.data;
+    },
+
+    async transferData(id){
+        const response = await UserTemplate.post(`/admin/oldChecker/${id}`);
+        return response.data;
     }
 }
 

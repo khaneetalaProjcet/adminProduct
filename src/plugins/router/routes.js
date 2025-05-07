@@ -216,6 +216,12 @@ export const routes = [
         component: () => import('@/views/usegold/AccountingUseGoldView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/userReport',
+        name: 'userReport',
+        component: () => import('@/views/users/userReportView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {

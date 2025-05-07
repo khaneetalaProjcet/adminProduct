@@ -105,6 +105,16 @@ const WalletService = {
         return response.data
     },
 
+    async UserFinance(){
+        const response = await QueryTemplate.get(`/user/glance`);
+        return response.data
+    },
+
+    async UserFinanceItem(id){
+        const response = await QueryTemplate.get(`/user/glance/${id}`);
+        return response.data
+    }
+
 
 }
 

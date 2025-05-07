@@ -57,7 +57,7 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup> -->
 
-  <VerticalNavGroup v-if="hasPermission('userView')" :item="{
+  <VerticalNavGroup v-if="hasPermission('userView') || hasPermission('userReport')" :item="{
     title: 'کاربران',
     icon: 'ri-user-line',
   }">
@@ -65,9 +65,15 @@ const hasPermission = (routeName) => {
       title: 'اطلاعات',
       icon: 'ri-id-card-line',
       href: '#',
-      to: '/userView'
+      to: '/userView',
       // badgeContent: 'Pro',
       // badgeClass: 'bg-light-primary text-primary',
+    }" />
+    <VerticalNavLink v-if="hasPermission('userReport')" :item="{
+      title: 'گزارش مالی',
+      icon: 'ri-money-euro-box-line',
+      href: '#',
+      to: '/userReport'
     }" />
   </VerticalNavGroup>
 
