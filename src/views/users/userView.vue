@@ -486,7 +486,6 @@ const Getuser = async () => {
 };
 
 const handleOptionsChange = (options) => {
-  console.log(options)
   currentPage.value = options.page;
   itemsPerPage.value = options.itemsPerPage;
   GetOldUser();
@@ -505,7 +504,6 @@ const GetOldUser = async () => {
     OldUser.value = response.data.users;
     totalPages.value = Math.ceil(totalItems.value / itemsPerPage.value)
   } catch (error) {
-    console.log(error)
     if (error.response.status == 401) {
       localStorage.clear();
       router.replace("/login");

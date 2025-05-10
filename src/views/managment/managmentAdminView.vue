@@ -7,7 +7,7 @@
                         <v-btn @click="AddAdminDialog = true" class="mx-2">افزودن کاربر</v-btn>
                         <v-btn color="error" class="error-btn" :loading="managmentAccessLoading"
                             @click="managmentDialogRequest">
-                            دسترسی های مدیریتی
+                            مدیریت بازار
                         </v-btn>
                     </div>
                     <template v-slot:text>

@@ -105,8 +105,8 @@ const WalletService = {
         return response.data
     },
 
-    async UserFinance(){
-        const response = await QueryTemplate.get(`/user/glance`);
+    async UserFinance(params){
+        const response = await QueryTemplate.get(`/user/glance?page=${params.page}&perPage=${params.perPage}&search=${params.search}`);
         return response.data
     },
 

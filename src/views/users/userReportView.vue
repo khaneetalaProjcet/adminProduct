@@ -8,13 +8,21 @@
                             <v-text-field v-model="financeSearch" label="جستجو"
                                 prepend-inner-icon="ri-search-line"></v-text-field>
                         </template>
-                        <v-data-table :headers="financeHeader" :items="financeData" :loading="financeLoading">
+                        <v-data-table :page="currentPage" :items-per-page="itemsPerPage" :headers="financeHeader"
+                            :items="financeData" :loading="financeLoading" :server-items-length="totalItems"
+                            :items-per-page-options="itemsPerPageOptions" @update:options="handleOptionsChange">
                             <template v-slot:item.action="{ item }">
                                 <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
                                     @click="userFinanceInfo(item)"></v-icon>
                             </template>
                             <template v-slot:item.balance="{ item }">
                                 <p>{{ formatNumber(item.balance) }}</p>
+                            </template>
+                            <template v-slot:bottom>
+                                <div class="text-center pt-2">
+                                    <v-pagination v-model="currentPage" :length="totalPages"
+                                        :total-visible="4"></v-pagination>
+                                </div>
                             </template>
                         </v-data-table>
                     </v-card>
@@ -81,31 +89,29 @@
                                 <v-divider class="my-10"></v-divider>
                                 <v-col cols="12" class="my-2">
                                     <v-data-table :headers="financeTransactionHeader" :items="financeItemData.buys"
-                                        :loading="financeItemLoading"></v-data-table>
-                                    <!-- <v-data-table :headers="financeTransactionHeader" :items="financeItemData.buys"
                                         :loading="financeItemLoading">
-                                        <template v-slot:item.amount="{ item }">
-                                            <p>{{ formatNumber(item.amount) }}</p>
-                                        </template>
-<template v-slot:item.status="{ item }">
+                                        <template v-slot:item.status="{ item }">
                                             <div>
                                                 <v-chip
-                                                    :text="item.status == 'completed' ? 'موفق' : (item.status) == 'pending' ? 'نامشخص' : 'ناموفق'"
+                                                    :text="item.status == 'completed' ? 'موفق' : (item.status) == 'pending' ? 'در انتظار' : 'ناموفق'"
                                                     :color="item.status == 'completed' ? '#00853f' : (item.status) == 'pending' ? '#666666' : '#ff0000'"
                                                     size="small"></v-chip>
                                             </div>
                                         </template>
-<template v-slot:item.type="{ item }">
+
+                                        <template v-slot:item.tradeType="{ item }">
                                             <div>
-                                                <v-chip color="#000" size="small">
-                                                    <v-icon
-                                                        :icon="item.type == 'deposit' ? 'ri-arrow-up-long-line' : 'ri-arrow-down-long-line'"
-                                                        start></v-icon>
-                                                    {{ item.type == 'deposit' ? 'واریز' : 'برداشت' }}
-                                                </v-chip>
+                                                <v-chip
+                                                    :text="item.tradeType == '0' ? 'آنلاین' : (item.tradeType) == '1' ? 'تلفنی' : (item.tradeType) == '2' ? 'حضوری' : (item.tradeType) == '3' ? 'حواله' : (item.tradeType) == '4' ? 'تبدیل حضوری' : 'نامشخص'"
+                                                    color="#666666" size="small"></v-chip>
                                             </div>
                                         </template>
-</v-data-table> -->
+
+                                        <template v-slot:item.action="{ item }">
+                                            <v-icon class="me-2" size="small" icon="ri-info-i" color="#d4af37"
+                                                @click="FinanceInfo(item)"></v-icon>
+                                        </template>
+                                    </v-data-table>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -118,42 +124,129 @@
             {{ errorMsg }}
         </v-alert>
     </div>
+
+    <v-dialog max-width="500" v-model="detailModal">
+        <v-card class="trade-modal">
+            <div class="modal-title">
+                <h3 class="my-4">جزئیات تراکنش</h3>
+            </div>
+            <v-row class="px-3">
+                <v-col cols="6" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>تاریخ : </p>
+                        <p>{{ financeDetail.date }}</p>
+                    </div>
+                </v-col>
+                <v-col cols="6" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>زمان : </p>
+                        <p>{{ financeDetail.time }}</p>
+                    </div>
+                </v-col>
+                <v-col cols="6" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>قیمت لحظه ای طلا : </p>
+                        <p>{{ financeDetail.goldPrice }}</p>
+                    </div>
+                </v-col>
+                <v-col cols="6" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>وزن طلا : </p>
+                        <p>{{ financeDetail.goldWeight }}</p>
+                    </div>
+                </v-col>
+                <v-col cols="6" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>قیمت کل : </p>
+                        <p>{{ financeDetail.totalPrice }}</p>
+                    </div>
+                </v-col>
+                <v-col cols="6" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>شماره فاکتور : </p>
+                        <p>{{ financeDetail.invoiceId }}</p>
+                    </div>
+                </v-col>
+                <v-col cols="6" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>وضعیت فاکتور : </p>
+                        <p v-if="financeDetail.status == 'completed'">موفق</p>
+                        <p v-else-if="financeDetail.status == 'pending'">در انتظار</p>
+                        <p v-else>ناموفق</p>
+                    </div>
+                </v-col>
+                <v-col cols="6" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>نوع معامله : </p>
+                        <p v-if="financeDetail.tradeType == 0">آنلاین</p>
+                        <p v-else-if="financeDetail.tradeType == 1">تلفنی</p>
+                        <p v-else-if="financeDetail.tradeType == 2">حضوری</p>
+                        <p v-else-if="financeDetail.tradeType == 3">حواله</p>
+                        <p v-else-if="financeDetail.tradeType == 4">تبدیل حضوری</p>
+                        <p v-else>ناموفق</p>
+                    </div>
+                </v-col>
+                <v-col cols="6" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>نوع پرداخت : </p>
+                        <p v-if="financeDetail.paymentMethod == 0">درگاه</p>
+                        <p v-else-if="financeDetail.paymentMethod == 1">کارت به کارت</p>
+                        <p v-else-if="financeDetail.paymentMethod == 2">کارتخوان</p>
+                        <p v-else-if="financeDetail.paymentMethod == 3">پول نقد</p>
+                    </div>
+                </v-col>
+                <v-col cols="6" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>ادمین : </p>
+                        <p>{{ financeDetail.adminId }}</p>
+                    </div>
+                </v-col>
+                <v-col cols="6" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>حسابدار : </p>
+                        <p>{{ financeDetail.accounterId }}</p>
+                    </div>
+                </v-col>
+                <v-col cols="12" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>شماره کارت مبدا : </p>
+                        <p>{{ financeDetail.originCardPan }}</p>
+                    </div>
+                </v-col>
+                <v-col cols="12" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>شماره کارت مقصد : </p>
+                        <p>{{ financeDetail.destCardPan }}</p>
+                    </div>
+                </v-col>
+                <v-col cols="12" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>توضیحات حسابدار : </p>
+                        <p>{{ financeDetail.accounterDescription }}</p>
+                    </div>
+                </v-col>
+            </v-row>
+        </v-card>
+    </v-dialog>
 </template>
 
 <script setup>
 import { router } from '@/plugins/router';
 import WalletService from '@/services/wallet/wallet';
-import { onMounted, ref } from 'vue';
+import { ref, watch } from 'vue';
+import { debounce } from 'lodash'
 
-const search = ref('');
 const errorMsg = ref('');
 const alertError = ref(false);
 const financeLoading = ref(false);
 const financeItemLoading = ref(false);
 const financeSheet = ref(false);
-const walletTransactionHeader = ref([
-    {
-        title: 'نوع تراکنش',
-        key: 'type',
-    },
-    {
-        title: 'مبلغ (تومان)',
-        key: 'amount',
-    },
-    {
-        title: 'وضعیت',
-        key: 'status',
-    },
-    {
-        title: 'تاریخ',
-        key: 'date',
-    },
-    {
-        title: 'زمان',
-        key: 'time',
-    },
-])
-const transactionSearch = ref('');
+const itemsPerPage = ref(50);
+const currentPage = ref(1);
+const itemsPerPageOptions = ref([5, 10, 25, 50]);
+const totalItems = ref(0);
+const totalPages = ref(1);
+const detailModal = ref(false);
 const financeHeader = ref([
     {
         title: 'نام',
@@ -186,6 +279,14 @@ const financeHeader = ref([
 ]);
 const financeTransactionHeader = ref([
     {
+        title: 'تاریخ',
+        key: 'date',
+    },
+    {
+        title: 'زمان',
+        key: 'time',
+    },
+    {
         title: 'وزن طلا(گرم)',
         key: 'goldWeight',
     },
@@ -194,13 +295,22 @@ const financeTransactionHeader = ref([
         key: 'goldPrice',
     },
     {
-        title: 'تاریخ',
-        key: 'date',
+        title: 'وضعیت',
+        key: 'status',
     },
     {
-        title: 'زمان',
-        key: 'time',
-    }
+        title: 'نوع پرداخت',
+        key: 'tradeType',
+    },
+    {
+        title: 'شماره فاکتور',
+        key: 'invoiceId',
+    },
+    {
+        title: 'فعالیت',
+        key: 'action',
+    },
+
 ])
 const financeSearch = ref('');
 const financeData = ref();
@@ -218,11 +328,43 @@ const financeItemData = ref({
     }
 });
 
+const financeDetail = ref({
+    date: '-',
+    time: '-',
+    totalPrice: '-',
+    goldPrice: '-',
+    goldWeight: '-',
+    invoiceId: '-',
+    originCardPan: '-',
+    paymentMethod: '-',
+    status: '-',
+    tradeType: '-',
+    destCardPan: '-',
+    description: '-',
+    adminId: '-',
+    accounterId: '-',
+    accounterDescription: '-',
+})
+
+const handleOptionsChange = (options) => {
+    currentPage.value = options.page;
+    itemsPerPage.value = options.itemsPerPage;
+    GetFinance();
+};
+
 const GetFinance = async () => {
     try {
         financeLoading.value = true;
-        const response = await WalletService.UserFinance();
-        financeData.value = response.data;
+        const response = await WalletService.UserFinance(
+            {
+                page: currentPage.value,
+                perPage: itemsPerPage.value,
+                search: financeSearch.value,
+            }
+        );
+        totalItems.value = response.data.totalItem;
+        financeData.value = response.data.users;
+        totalPages.value = Math.ceil(totalItems.value / itemsPerPage.value)
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -246,6 +388,7 @@ const formatNumber = (num) => {
 const userFinanceInfo = async (item) => {
     try {
         financeItemLoading.value = true;
+        financeSheet.value = true;
         const response = await WalletService.UserFinanceItem(item.id);
         financeItemData.value.firstName = response.data.firstName;
         financeItemData.value.lastName = response.data.lastName;
@@ -256,7 +399,6 @@ const userFinanceInfo = async (item) => {
         financeItemData.value.wallet.balance = response.data?.wallet.balance;
         financeItemData.value.wallet.blocked = response.data?.wallet.blocked;
         financeItemData.value.wallet.goldWeight = response.data?.wallet.goldWeight;
-        financeSheet.value = true;
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -273,9 +415,36 @@ const userFinanceInfo = async (item) => {
     }
 }
 
-onMounted(() => {
+const FinanceInfo = async (item) => {
+    detailModal.value = true;
+    financeDetail.value.accounterDescription = item.accounterDescription;
+    financeDetail.value.accounterId = item.accounterId;
+    financeDetail.value.adminId = item.adminId;
+    financeDetail.value.date = item.date;
+    financeDetail.value.description = item.description;
+    financeDetail.value.destCardPan = item.destCardPan;
+    financeDetail.value.goldPrice = item.goldPrice;
+    financeDetail.value.goldWeight = item.goldWeight;
+    financeDetail.value.invoiceId = item.invoiceId;
+    financeDetail.value.originCardPan = item.originCardPan;
+    financeDetail.value.paymentMethod = item.paymentMethod;
+    financeDetail.value.status = item.status;
+    financeDetail.value.time = item.time;
+    financeDetail.value.totalPrice = item.totalPrice;
+    financeDetail.value.tradeType = item.tradeType;
+}
+
+
+watch([currentPage, itemsPerPage], () => {
     GetFinance();
-})
+});
+
+watch(
+    financeSearch,
+    debounce(() => {
+        GetFinance()
+    }, 1000)
+)
 
 
 </script>
@@ -331,5 +500,22 @@ onMounted(() => {
 
 .v-table thead {
     border-radius: 8px 8px 0 0 !important;
+}
+
+.trade-modal {
+    border-radius: 10px !important;
+    padding: 0 1rem;
+}
+
+
+.modal-title {
+    background-color: #d4af37;
+    border-radius: 10px 10px 0 0;
+    margin: 1rem 0;
+}
+
+.modal-title h3 {
+    color: #fff;
+    padding: 0 0.5rem;
 }
 </style>

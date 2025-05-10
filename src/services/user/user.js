@@ -10,7 +10,6 @@ const UserService = {
     },
 
     async oldUser(params) {
-        console.log(params.search, typeof params.search)
         const response = await VerifyTemplate.get(`/old/users/all/${params.page}/${params.perPage}?search=${params.search}`);
         return response.data;
     },
