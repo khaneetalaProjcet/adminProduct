@@ -241,7 +241,7 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavGroup v-if="hasPermission('inPersonTrade')" :item="{
+  <VerticalNavGroup v-if="hasPermission('inPersonTrade') || hasPermission('inpersonConvertTrade') || hasPermission('inpersonCounterTrade')" :item="{
     title: 'معامله حضوری',
     icon: 'ri-store-2-line',
   }">
@@ -251,7 +251,7 @@ const hasPermission = (routeName) => {
       href: '#',
       to: '/inPersonTrade'
     }" />
-    <VerticalNavLink v-if="hasPermission('inPersonTrade')" :item="{
+    <VerticalNavLink v-if="hasPermission('inpersonConvertTrade')" :item="{
       title: 'تبدیل طلا',
       icon: 'ri-swap-box-line',
       href: '#',
@@ -265,7 +265,7 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavGroup v-if="hasPermission('transfer')" :item="{
+  <VerticalNavGroup v-if="hasPermission('transfer') || hasPermission('inquiry')" :item="{
     title: 'انتقال',
     icon: 'ri-user-shared-line',
   }">
@@ -274,6 +274,12 @@ const hasPermission = (routeName) => {
       icon: 'ri-user-shared-line',
       href: '#',
       to: '/transfer'
+    }" />
+    <VerticalNavLink v-if="hasPermission('inquiry')" :item="{
+      title: 'استعلام صندوق طلا',
+      icon: 'ri-menu-search-line',
+      href: '#',
+      to: '/inquiry'
     }" />
   </VerticalNavGroup>
 

@@ -222,6 +222,12 @@ export const routes = [
         component: () => import('@/views/users/userReportView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/inquiry',
+        name: 'inquiry',
+        component: () => import('@/views/transfer/InquiryView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {

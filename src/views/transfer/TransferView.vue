@@ -10,7 +10,7 @@
                                 variant="outlined" :rules="nationalCodeRules" @input="validateNationalCodeSender"></v-text-field>
                         </v-col>
                         <v-col cols="12" md="4">
-                            <v-btn block color="#d4af37" size="large" @click="inquiryWallet">استعلام موجودی</v-btn>
+                            <v-btn block color="#d4af37" size="large" @click="inquiryWallet" :loading="inquiryLoading">استعلام موجودی</v-btn>
                         </v-col>
                         <v-col class="d-none d-md-flex" md="2"></v-col>
                     </v-row>
