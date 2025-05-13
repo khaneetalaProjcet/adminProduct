@@ -31,6 +31,8 @@
                                 @click="userInfo(item)"></v-icon>
                             <v-icon class="me-2" size="small" icon="ri-delete-bin-line" color="#c9190c"
                                 @click="deleteAdmin(item)"></v-icon>
+                            <v-icon class="me-2" size="small" icon="ri-refresh-line" color="#c9190c"
+                                @click="updateAdmin(item)"></v-icon>
                         </template>
                         <template v-slot:item.status="{ item }">
                             <v-switch v-model="item.isBlocked" color="#b08c4d" @input="switchActivateAdmin(item)"
@@ -137,6 +139,46 @@
         </v-card>
     </v-dialog>
 
+    <v-dialog v-model="updateAdminDialog" max-width="600" class="dialog">
+        <v-card class="dialog-card">
+            <div class="k-dialog-title">
+                <p>به روزرسانی ادمین</p>
+            </div>
+
+            <v-form ref="form" @submit.prevent="UpdateAdmin">
+                <v-row class="mt-2">
+                    <v-col cols="12" md="6" class="my-2">
+                        <v-text-field v-model="adminUpdateDetail.firstName" label="نام" variant="outlined"
+                            :rules="nameRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6" class="my-2">
+                        <v-text-field v-model="adminUpdateDetail.lastName" label="نام خانوادگی" variant="outlined"
+                            :rules="lastNameRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6" class="my-2">
+                        <v-text-field v-model="adminUpdateDetail.phoneNumber" label="شماره همراه" variant="outlined"
+                            :rules="phoneRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6" class="my-2">
+                        <v-text-field v-model="adminUpdateDetail.newPassword" label="رمز عبور جدید" variant="outlined"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6" class="my-2">
+                        <v-text-field v-model="adminUpdateDetail.userName" label="نام کاربری"
+                            variant="outlined"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6" class="my-2">
+                            <v-checkbox v-model="adminUpdateDetail.role" false-value="0" :true-value="1" label="مدیر"></v-checkbox>
+                    </v-col>
+                </v-row>
+                <div class="d-flex justify-space-between my-2">
+                    <v-btn text="انصراف" @click="updateAdminDialog = false" size="large" class="m-3"
+                        variant="outlined"></v-btn>
+                    <v-btn type="submit" text="افزودن" size="large" class="m-3" :loading="AdminUpdateLoading"></v-btn>
+                </div>
+            </v-form>
+        </v-card>
+    </v-dialog>
+
     <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
         {{ errorMsg }}
     </v-alert>
@@ -149,6 +191,8 @@ import { router } from '@/plugins/router';
 import ManagmentService from '@/services/managment/managment';
 import { onMounted, ref } from 'vue';
 
+const TrueValue = ref(1);
+const FalseValue = ref(0);
 const AdminListHeader = ref([
     {
         title: 'نام',
@@ -161,6 +205,10 @@ const AdminListHeader = ref([
     {
         title: 'شماره همراه',
         key: 'phoneNumber',
+    },
+    {
+        title: 'نام کاربری',
+        key: 'userName',
     },
     {
         title: 'نقش',
@@ -203,7 +251,17 @@ const adminData = ref({
     role: 0
 });
 const deleteDialog = ref(false);
+const updateAdminDialog = ref(false);
+const AdminUpdateLoading = ref(false);
 const AdminDeleteDetail = ref();
+const adminUpdateDetail = ref({
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    newPassword: '',
+    userName: '',
+    role: '0',
+});
 
 const AdminId = ref('');
 
@@ -354,14 +412,12 @@ const phoneRules = [
 ];
 
 
-const passwordRules = [
-    v => !!v || 'رمز عبور الزامی است',
-    v => (v && v.length >= 8) || 'رمز عبور باید حداقل ۸ کاراکتر باشد',
-    v => /[A-Z]/.test(v) || 'رمز عبور باید حداقل یک حرف بزرگ داشته باشد',
-    v => /[a-z]/.test(v) || 'رمز عبور باید حداقل یک حرف کوچک داشته باشد',
-    v => /[0-9]/.test(v) || 'رمز عبور باید حداقل یک عدد داشته باشد',
-    v => /[^A-Za-z0-9]/.test(v) || 'رمز عبور باید حداقل یک کاراکتر خاص (!@#$%^&*) داشته باشد'
-];
+// const passwordRules = [
+//     v => /[A-Z]/.test(v) || 'رمز عبور باید حداقل یک حرف بزرگ داشته باشد',
+//     v => /[a-z]/.test(v) || 'رمز عبور باید حداقل یک حرف کوچک داشته باشد',
+//     v => /[0-9]/.test(v) || 'رمز عبور باید حداقل یک عدد داشته باشد',
+//     v => /[^A-Za-z0-9]/.test(v) || 'رمز عبور باید حداقل یک کاراکتر خاص (!@#$%^&*) داشته باشد'
+// ];
 
 const nameRules = [
     v => !!v || 'نام الزامی است'
@@ -400,6 +456,38 @@ const switchActivateAdmin = async (item) => {
 const deleteAdmin = (item) => {
     AdminDeleteDetail.value = item;
     deleteDialog.value = true;
+}
+
+const updateAdmin = (item) => {
+    AdminId.value = item.id;
+    adminUpdateDetail.value.firstName = item.firstName;
+    adminUpdateDetail.value.lastName = item.lastName;
+    adminUpdateDetail.value.phoneNumber = item.phoneNumber;
+    adminUpdateDetail.value.role = item.role;
+    adminUpdateDetail.value.userName = item.userName;
+    updateAdminDialog.value = true;
+}
+
+const UpdateAdmin = async () => {
+    try {
+        AdminUpdateLoading.value = true;
+        const response = await ManagmentService.UpdateAdmin(adminUpdateDetail.value, AdminId.value);
+        updateAdminDialog.value = false;
+        GetAdminList();
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        AdminUpdateLoading.value = false;
+    }
 }
 
 const submitDeleteAdmin = async () => {

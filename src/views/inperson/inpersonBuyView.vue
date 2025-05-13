@@ -12,6 +12,72 @@
                 <v-card-text>
                     <v-tabs-window v-model="tab">
                         <v-tabs-window-item value="one">
+                            <v-row class="filter my-3">
+                                <v-col cols="6" md="3">
+                                    <persian-date-picker v-model="filter.fromDate"
+                                        placeholder="از تاریخ"></persian-date-picker>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                        format="HH:mm:ss"></persian-date-picker>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <persian-date-picker v-model="filter.toDate"
+                                        placeholder="تا تاریخ"></persian-date-picker>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                        format="HH:mm:ss"></persian-date-picker>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.firstName" label="نام" density="compact"
+                                        variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.lastName" label="نام خانوادگی" density="compact"
+                                        variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.phoneNumber" label="شماره موبایل" density="compact"
+                                        variant="outlined" :rules="phoneRules"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.nationalCode" label="کد ملی" density="compact"
+                                        variant="outlined" :rules="nationalCodeRules"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.goldPrice" label="قیمت طلا" density="compact"
+                                        variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.goldWeight" label="وزن طلا" density="compact"
+                                        variant="outlined" :rules="validateWeight"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                                        variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                                        variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col md="6" class="d-none d-md-flex">
+                                </v-col>
+                                <v-col cols="12" md="3">
+                                    <div class="w-100 d-flex justify-end">
+                                        <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block>به روز رسانی</v-btn>
+                                    </div>
+                                </v-col>
+                                <v-col cols="12" md="3">
+                                    <div class="w-100 d-flex justify-end">
+                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                    </div>
+                                </v-col>
+                                <!-- <v-col cols="6" md="3">
+                                    <v-select v-model="filter.status" label="وضعیت" :items="statusList"
+                                        variant="outlined" item-title="name" item-value="value"></v-select>
+                                </v-col> -->
+                            </v-row>
                             <v-card title="در انتظار تایید">
                                 <template v-slot:text>
                                     <v-text-field v-model="PendingInPersonBuySearch" label="جستجو"
@@ -277,6 +343,25 @@ const PendingInPersonBuyLoading = ref(false);
 const submitInpersonBuyLoading = ref(false);
 const rejectInpersonBuyLoading = ref(false);
 const tab = ref(null);
+const filter = ref({
+    startDate: '',
+    startTime: '',
+    endDate: '',
+    endTime: '',
+    firstName: '',
+    phoneNumber:'',
+    lastName: '',
+    nationalCode: '',
+    invoiceId: '',
+    goldPrice: '',
+    goldWeight: '',
+    status: '',
+    type: '',
+    admin: '',
+    accounter: '',
+})
+
+const statusList = ref(['موفق','ناموفق','نامشخص','رد شده'])
 const PendingInPersonBuyHeader = ref([
     {
         title: 'نام',
@@ -545,6 +630,26 @@ const rejectInPersonBuy = async (status) => {
         rejectInpersonBuyLoading.value = false;
     }
 }
+
+const nationalCodeRules = [
+    (v) => /^\d{10}$/.test(v) || 'کد ملی باید ۱۰ رقم باشد',
+    (v) => {
+        if (!/^\d{10}$/.test(v)) return true;
+
+        const check = +v[9];
+        const sum = v.split('').slice(0, 9).reduce((acc, x, i) => acc + (+x * (10 - i)), 0) % 11;
+        return (sum < 2 && check === sum) || (sum >= 2 && check + sum === 11) || 'کد ملی نامعتبر است';
+    }
+];
+
+const phoneRules = [
+    v => /^09\d{9}$/.test(v) || 'شماره معتبر نیست'
+];
+
+const validateWeight = [
+    (v) => !!v,
+    (v) => /^\d+(\.\d{1,3})?$/.test(v),
+];
 
 onMounted(() => {
     GetPendingInPersonBuyList();

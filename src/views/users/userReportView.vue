@@ -107,6 +107,15 @@
                                             </div>
                                         </template>
 
+                                        <template v-slot:item.type.title="{ item }">
+                                            <div>
+                                                <v-chip
+                                                    :text="item.type.title == 'sell' ? 'فروش' : 'خرید' "
+                                                    color="#666666" size="small"></v-chip>
+                                                    <!-- <p>{{ item.type.title }}</p> -->
+                                            </div>
+                                        </template>
+
                                         <template v-slot:item.action="{ item }">
                                             <v-icon class="me-2" size="small" icon="ri-info-i" color="#d4af37"
                                                 @click="FinanceInfo(item)"></v-icon>
@@ -193,6 +202,7 @@
                         <p v-else-if="financeDetail.paymentMethod == 1">کارت به کارت</p>
                         <p v-else-if="financeDetail.paymentMethod == 2">کارتخوان</p>
                         <p v-else-if="financeDetail.paymentMethod == 3">پول نقد</p>
+                        <p v-else> - </p>
                     </div>
                 </v-col>
                 <v-col cols="6" class="my-1 pa-1">
@@ -306,6 +316,10 @@ const financeTransactionHeader = ref([
         title: 'شماره فاکتور',
         key: 'invoiceId',
     },
+     {
+        title: 'نوع تراکنش',
+        key: 'type.title',
+    },
     {
         title: 'فعالیت',
         key: 'action',
@@ -322,9 +336,9 @@ const financeItemData = ref({
     bankAccounts: [],
     buys: [],
     wallet: {
-        balance: '',
-        blocked: '',
-        goldWeight: '',
+        balance: '-',
+        blocked: '-',
+        goldWeight: '-',
     }
 });
 
@@ -390,15 +404,18 @@ const userFinanceInfo = async (item) => {
         financeItemLoading.value = true;
         financeSheet.value = true;
         const response = await WalletService.UserFinanceItem(item.id);
-        financeItemData.value.firstName = response.data.firstName;
-        financeItemData.value.lastName = response.data.lastName;
-        financeItemData.value.nationalCode = response.data.nationalCode;
-        financeItemData.value.phoneNumber = response.data.phoneNumber;
+        financeItemData.value.firstName = response.data?.firstName;
+        financeItemData.value.lastName = response.data?.lastName;
+        financeItemData.value.nationalCode = response.data?.nationalCode;
+        financeItemData.value.phoneNumber = response.data?.phoneNumber;
         financeItemData.value.bankAccounts = response.data?.bankAccounts;
         financeItemData.value.buys = response.data?.buys;
         financeItemData.value.wallet.balance = response.data?.wallet.balance;
         financeItemData.value.wallet.blocked = response.data?.wallet.blocked;
         financeItemData.value.wallet.goldWeight = response.data?.wallet.goldWeight;
+        financeItemData.value.buys.map((item)=>{
+            console.log(item.type)
+        })
         return response
     } catch (error) {
         if (error.response.status == 401) {

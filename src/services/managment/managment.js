@@ -60,7 +60,7 @@ const ManagmentService = {
         const response = await ServerTemplate.delete(`/branch/delete/${id}`,);
         return response.data;
     },
-    
+
     async DeleteSeller(id) {
         const response = await ServerTemplate.delete(`/branch/seller/delete/${id}`,);
         return response.data;
@@ -94,6 +94,12 @@ const ManagmentService = {
 
     async DeleteAdmin(id) {
         const response = await ServerTemplate.delete(`/admin/delete/${id}`,);
+        return response.data;
+    },
+
+    async UpdateAdmin(detail , id) {
+        const body = JSON.stringify(detail);
+        const response = await ServerTemplate.post(`/admin/update/${id}`, body);
         return response.data;
     },
 }
