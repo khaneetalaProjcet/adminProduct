@@ -1,4 +1,5 @@
 import ServerTemplate from "../server/api";
+import QueryTemplate from "../template/api";
 import ManagmentTemplate from "./api";
 
 
@@ -36,12 +37,27 @@ const ManagmentService = {
     },
 
     async GetPermission() {
-        const response = await ServerTemplate.get('/main/trade');
+        const response = await QueryTemplate.get('/permisions');
         return response.data;
     },
 
     async TradePermission() {
         const response = await ServerTemplate.post('/main/trade/permision');
+        return response.data;
+    },
+
+    async AuthPermission() {
+        const response = await ServerTemplate.post('/secondmain/permision/register');
+        return response.data;
+    },
+
+    async DepositPermission() {
+        const response = await ServerTemplate.post('/secondmain/permision/deposit');
+        return response.data;
+    },
+
+    async WithdrawPermission() {
+        const response = await ServerTemplate.post('/secondmain/permision/withdraw');
         return response.data;
     },
 

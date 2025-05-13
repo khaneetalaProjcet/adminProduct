@@ -114,10 +114,27 @@
                 <div class="dialog-access-loading" v-if="managmentAccessLoading == true">
                     <p>لطفا منتظر بمانید ... </p>
                 </div>
-                <div class="d-flex justify-space-between align-items-center mx-4 my-2" v-else>
-                    <span>درگاه معاملات</span>
-                    <v-switch v-model="closeTradePermission" color="#b08c4d" @click="SubmitManagmentAccess"
-                        :loading="managmentAccessLoading"></v-switch>
+                <div class="d-flex flex-column" v-else>
+                    <div class="d-flex justify-space-between align-items-center mx-4 my-2">
+                        <span>درگاه معاملات</span>
+                        <v-switch v-model="closeTradePermission" color="#b08c4d" @click="SubmitManagmentAccess"
+                            :loading="managmentAccessLoading"></v-switch>
+                    </div>
+                    <div class="d-flex justify-space-between align-items-center mx-4 my-2">
+                        <span>احراز هویت</span>
+                        <v-switch v-model="AuthData" color="#b08c4d" @click="SubmitAuth"
+                            :loading="managmentAuthLoading"></v-switch>
+                    </div>
+                    <div class="d-flex justify-space-between align-items-center mx-4 my-2">
+                        <span>واریز</span>
+                        <v-switch v-model="DepositData" color="#b08c4d" @click="SubmitDeposit"
+                            :loading="managmentDepositLoading"></v-switch>
+                    </div>
+                    <div class="d-flex justify-space-between align-items-center mx-4 my-2">
+                        <span>برداشت</span>
+                        <v-switch v-model="WithdrawtData" color="#b08c4d" @click="SubmitWithdraw"
+                            :loading="managmentWithdrawLoading"></v-switch>
+                    </div>
                 </div>
             </div>
 
@@ -160,14 +177,16 @@
                             :rules="phoneRules"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" class="my-2">
-                        <v-text-field v-model="adminUpdateDetail.newPassword" label="رمز عبور جدید" variant="outlined"></v-text-field>
+                        <v-text-field v-model="adminUpdateDetail.newPassword" label="رمز عبور جدید"
+                            variant="outlined"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" class="my-2">
                         <v-text-field v-model="adminUpdateDetail.userName" label="نام کاربری"
                             variant="outlined"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" class="my-2">
-                            <v-checkbox v-model="adminUpdateDetail.role" false-value="0" :true-value="1" label="مدیر"></v-checkbox>
+                        <v-checkbox v-model="adminUpdateDetail.role" false-value="0" :true-value="1"
+                            label="مدیر"></v-checkbox>
                     </v-col>
                 </v-row>
                 <div class="d-flex justify-space-between my-2">
@@ -191,8 +210,7 @@ import { router } from '@/plugins/router';
 import ManagmentService from '@/services/managment/managment';
 import { onMounted, ref } from 'vue';
 
-const TrueValue = ref(1);
-const FalseValue = ref(0);
+
 const AdminListHeader = ref([
     {
         title: 'نام',
@@ -236,8 +254,14 @@ const AccessPointLoading = ref(false);
 const managmentAccessLoading = ref(false);
 const submitAccessPointLoading = ref(false);
 const AdminDeleteLoading = ref(false);
+const managmentAuthLoading = ref(false);
+const managmentDepositLoading = ref(false);
+const managmentWithdrawLoading = ref(false);
 const AccessPointData = ref();
-const closeTradePermission = ref(false);
+const AuthData = ref();
+const DepositData = ref();
+const WithdrawtData = ref();
+const closeTradePermission = ref();
 const AccessPointDialog = ref(false);
 const managmentDialog = ref(false);
 const errorMsg = ref('');
@@ -313,11 +337,15 @@ const managmentDialogRequest = async () => {
     try {
         managmentAccessLoading.value = true;
         const response = await ManagmentService.GetPermission();
-        if (response.data == 0) {
-            closeTradePermission.value = false;
-        } else {
-            closeTradePermission.value = true;
-        }
+        // if (response.data == 0) {
+        //     closeTradePermission.value = false;
+        // } else {
+        //     closeTradePermission.value = true;
+        // }
+        AuthData.value = !!response.data.registerPermision;
+        DepositData.value = !!response.data.depositPermision;
+        WithdrawtData.value = !!response.data.withdrawPermision;
+        closeTradePermission.value = !!response.data.tradePermision;
         managmentDialog.value = true;
         return response
     } catch (error) {
@@ -356,6 +384,73 @@ const SubmitManagmentAccess = async () => {
         managmentAccessLoading.value = false;
     }
 };
+
+const SubmitAuth = async () => {
+    try {
+        managmentAuthLoading.value = true;
+        const response = await ManagmentService.AuthPermission();
+        AuthData.value = response.data;
+        managmentDialog.value = false;
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        managmentAuthLoading.value = false;
+    }
+};
+
+const SubmitDeposit = async () => {
+    try {
+        managmentDepositLoading.value = true;
+        const response = await ManagmentService.DepositPermission();
+        DepositData.value = response.data;
+        managmentDialog.value = false;
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        managmentDepositLoading.value = false;
+    }
+};
+
+const SubmitWithdraw = async () => {
+    try {
+        managmentWithdrawLoading.value = true;
+        const response = await ManagmentService.WithdrawPermission();
+        WithdrawtData.value = response.data;
+        managmentDialog.value = false;
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        managmentWithdrawLoading.value = false;
+    }
+};
+
 
 const userInfo = async (item) => {
     AccessPointDialog.value = true;
