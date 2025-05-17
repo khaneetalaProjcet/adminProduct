@@ -184,4 +184,14 @@ onMounted(() => {
 .user-dialog-info {
     font-size: 14px;
 }
+
+.box {
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    background-color: #fff;
+    box-shadow: 0px 5px 5px 0px rgba(106, 106, 106, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
 </style>
