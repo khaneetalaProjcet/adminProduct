@@ -475,7 +475,7 @@ const filter = ref({
     endTime: '',
     invoiceId: '',
     status: '',
-})
+});
 
 const PendingInPersonBuyHeader = ref([
     {
@@ -780,7 +780,6 @@ const changeTabs = () => {
     filter.value.phoneNumber = '';
     filter.value.startTime = '';
     filter.value.startDate = '';
-    console.log('test')
 }
 
 
