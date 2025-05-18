@@ -3,7 +3,8 @@ import axios from "axios";
 
 const QueryTemplate = axios.create({
   // baseURL: "https://khanetala.ir/api",
-  baseURL: "https://gateway.khanetala.ir/v1/query",
+  // baseURL: "https://gateway.khanetala.ir/v1/query",
+  baseURL: import.meta.env.VITE_QUERY_BASE_URL,
   headers: {
     "Content-Type": "application/json",
     "Accept": "application/json",

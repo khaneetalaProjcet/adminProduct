@@ -6,7 +6,7 @@ const router = useRouter();
 
 const DashboardTemplate = axios.create({
     // baseURL: "https://khanetala.ir/api",
-    baseURL: "https://gateway.khanetala.ir/v1/secondmain",
+    baseURL: import.meta.env.VITE_DASHBOARD_BASE_URL,
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",

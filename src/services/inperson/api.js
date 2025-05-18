@@ -6,7 +6,8 @@ const router = useRouter();
 
 const InPersonTemplate = axios.create({
     // baseURL: "https://khanetala.ir/api/inperson",
-    baseURL: "https://gateway.khanetala.ir/v1/secondmain",
+    // baseURL: import.meta.env.VITE_INPERSON_BASE_URL,
+    baseURL: import.meta.env.VITE_INPERSON_BASE_URL,
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",

@@ -6,7 +6,7 @@ const router = useRouter();
 
 const GoldBoxTemplate = axios.create({
     // baseURL: "https://khanetala.ir/api/admin",
-    baseURL: "https://gateway.khanetala.ir/v1/secondmain/admin",
+    baseURL: import.meta.env.VITE_GOLDBOX_BASE_URL,
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",

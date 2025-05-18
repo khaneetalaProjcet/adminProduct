@@ -6,7 +6,8 @@ const router = useRouter();
 
 
 const LandingTemplate = axios.create({
-    baseURL: "https://gateway.khanetala.ir/v1/installment",
+    // baseURL: "https://gateway.khanetala.ir/v1/installment",
+    baseURL:import.meta.env.VITE_LANDING_BASE_URL,
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",

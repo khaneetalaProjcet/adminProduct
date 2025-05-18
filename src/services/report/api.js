@@ -6,7 +6,7 @@ const router = useRouter();
 
 const ReportTemplate = axios.create({
     // baseURL: "https://gateway.khanetala.ir/v1",
-    baseURL: "https://gateway.khanetala.ir/v1",
+    baseURL: import.meta.env.VITE_REPORT_BASE_URL,
     headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",

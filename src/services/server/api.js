@@ -6,7 +6,7 @@ const router = useRouter();
 
 const ServerTemplate = axios.create({
     // baseURL: "https://gateway.khanetala.ir/v1",
-    baseURL: "https://gateway.khanetala.ir/v1",
+    baseURL: import.meta.env.VITE_SERVER_BASE_URL,
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",
