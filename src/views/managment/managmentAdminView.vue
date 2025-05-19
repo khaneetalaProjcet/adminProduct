@@ -7,7 +7,7 @@
                         <v-btn @click="AddAdminDialog = true" class="mx-2">افزودن کاربر</v-btn>
                         <v-btn color="error" class="error-btn" :loading="managmentAccessLoading"
                             @click="managmentDialogRequest">
-                            دسترسی های مدیریتی
+                            مدیریت بازار
                         </v-btn>
                     </div>
                     <template v-slot:text>
@@ -29,6 +29,14 @@
                         <template v-slot:item.action="{ item }">
                             <v-icon class="me-2" size="small" icon="ri-user-settings-line" color="#d4af37"
                                 @click="userInfo(item)"></v-icon>
+                            <v-icon class="me-2" size="small" icon="ri-delete-bin-line" color="#c9190c"
+                                @click="deleteAdmin(item)"></v-icon>
+                            <v-icon class="me-2" size="small" icon="ri-refresh-line" color="#c9190c"
+                                @click="updateAdmin(item)"></v-icon>
+                        </template>
+                        <template v-slot:item.status="{ item }">
+                            <v-switch v-model="item.isBlocked" color="#b08c4d" @input="switchActivateAdmin(item)"
+                                :loading="SwitchAdminLoading"></v-switch>
                         </template>
                     </v-data-table>
                 </v-card>
@@ -106,10 +114,27 @@
                 <div class="dialog-access-loading" v-if="managmentAccessLoading == true">
                     <p>لطفا منتظر بمانید ... </p>
                 </div>
-                <div class="d-flex justify-space-between align-items-center mx-4 my-2" v-else>
-                    <span>درگاه معاملات</span>
-                    <v-switch v-model="closeTradePermission" color="#b08c4d" @click="SubmitManagmentAccess"
-                        :loading="managmentAccessLoading"></v-switch>
+                <div class="d-flex flex-column" v-else>
+                    <div class="d-flex justify-space-between align-items-center mx-4 my-2">
+                        <span>درگاه معاملات</span>
+                        <v-switch v-model="closeTradePermission" color="#b08c4d" @click="SubmitManagmentAccess"
+                            :loading="managmentAccessLoading"></v-switch>
+                    </div>
+                    <div class="d-flex justify-space-between align-items-center mx-4 my-2">
+                        <span>احراز هویت</span>
+                        <v-switch v-model="AuthData" color="#b08c4d" @click="SubmitAuth"
+                            :loading="managmentAuthLoading"></v-switch>
+                    </div>
+                    <div class="d-flex justify-space-between align-items-center mx-4 my-2">
+                        <span>واریز</span>
+                        <v-switch v-model="DepositData" color="#b08c4d" @click="SubmitDeposit"
+                            :loading="managmentDepositLoading"></v-switch>
+                    </div>
+                    <div class="d-flex justify-space-between align-items-center mx-4 my-2">
+                        <span>برداشت</span>
+                        <v-switch v-model="WithdrawtData" color="#b08c4d" @click="SubmitWithdraw"
+                            :loading="managmentWithdrawLoading"></v-switch>
+                    </div>
                 </div>
             </div>
 
@@ -120,6 +145,56 @@
                     :loading="managmentAccessLoading"></v-btn> -->
             </div>
 
+        </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="deleteDialog" width="auto">
+        <v-card width="400" prepend-icon="mdi-delete" text="آیا از حذف ادمین مطمئن هستید؟" title="حذف ادمین">
+            <template v-slot:actions>
+                <v-btn class="ms-auto" text="حذف" @click="submitDeleteAdmin" :loading="AdminDeleteLoading"></v-btn>
+            </template>
+        </v-card>
+    </v-dialog>
+
+    <v-dialog v-model="updateAdminDialog" max-width="600" class="dialog">
+        <v-card class="dialog-card">
+            <div class="k-dialog-title">
+                <p>به روزرسانی ادمین</p>
+            </div>
+
+            <v-form ref="form" @submit.prevent="UpdateAdmin">
+                <v-row class="mt-2">
+                    <v-col cols="12" md="6" class="my-2">
+                        <v-text-field v-model="adminUpdateDetail.firstName" label="نام" variant="outlined"
+                            :rules="nameRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6" class="my-2">
+                        <v-text-field v-model="adminUpdateDetail.lastName" label="نام خانوادگی" variant="outlined"
+                            :rules="lastNameRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6" class="my-2">
+                        <v-text-field v-model="adminUpdateDetail.phoneNumber" label="شماره همراه" variant="outlined"
+                            :rules="phoneRules"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6" class="my-2">
+                        <v-text-field v-model="adminUpdateDetail.newPassword" label="رمز عبور جدید"
+                            variant="outlined"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6" class="my-2">
+                        <v-text-field v-model="adminUpdateDetail.userName" label="نام کاربری"
+                            variant="outlined"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6" class="my-2">
+                        <v-checkbox v-model="adminUpdateDetail.role" false-value="0" :true-value="1"
+                            label="مدیر"></v-checkbox>
+                    </v-col>
+                </v-row>
+                <div class="d-flex justify-space-between my-2">
+                    <v-btn text="انصراف" @click="updateAdminDialog = false" size="large" class="m-3"
+                        variant="outlined"></v-btn>
+                    <v-btn type="submit" text="افزودن" size="large" class="m-3" :loading="AdminUpdateLoading"></v-btn>
+                </div>
+            </v-form>
         </v-card>
     </v-dialog>
 
@@ -135,6 +210,7 @@ import { router } from '@/plugins/router';
 import ManagmentService from '@/services/managment/managment';
 import { onMounted, ref } from 'vue';
 
+
 const AdminListHeader = ref([
     {
         title: 'نام',
@@ -149,6 +225,10 @@ const AdminListHeader = ref([
         key: 'phoneNumber',
     },
     {
+        title: 'نام کاربری',
+        key: 'userName',
+    },
+    {
         title: 'نقش',
         key: 'role',
     },
@@ -160,16 +240,28 @@ const AdminListHeader = ref([
         title: 'فعالیت',
         key: 'action',
     },
+    {
+        title: 'بلاک شده',
+        key: 'status',
+    },
 ]);
 const AdminListData = ref([]);
 const AdminListSearch = ref('');
 const AdminListLoading = ref(false);
 const AddAdminLoading = ref(false);
+const SwitchAdminLoading = ref(false);
 const AccessPointLoading = ref(false);
 const managmentAccessLoading = ref(false);
 const submitAccessPointLoading = ref(false);
+const AdminDeleteLoading = ref(false);
+const managmentAuthLoading = ref(false);
+const managmentDepositLoading = ref(false);
+const managmentWithdrawLoading = ref(false);
 const AccessPointData = ref();
-const closeTradePermission = ref(false);
+const AuthData = ref();
+const DepositData = ref();
+const WithdrawtData = ref();
+const closeTradePermission = ref();
 const AccessPointDialog = ref(false);
 const managmentDialog = ref(false);
 const errorMsg = ref('');
@@ -181,6 +273,18 @@ const adminData = ref({
     phoneNumber: '',
     password: '',
     role: 0
+});
+const deleteDialog = ref(false);
+const updateAdminDialog = ref(false);
+const AdminUpdateLoading = ref(false);
+const AdminDeleteDetail = ref();
+const adminUpdateDetail = ref({
+    firstName: '',
+    lastName: '',
+    phoneNumber: '',
+    newPassword: '',
+    userName: '',
+    role: '0',
 });
 
 const AdminId = ref('');
@@ -233,11 +337,15 @@ const managmentDialogRequest = async () => {
     try {
         managmentAccessLoading.value = true;
         const response = await ManagmentService.GetPermission();
-        if (response.data == 0) {
-            closeTradePermission.value = false;
-        } else {
-            closeTradePermission.value = true;
-        }
+        // if (response.data == 0) {
+        //     closeTradePermission.value = false;
+        // } else {
+        //     closeTradePermission.value = true;
+        // }
+        AuthData.value = !!response.data.registerPermision;
+        DepositData.value = !!response.data.depositPermision;
+        WithdrawtData.value = !!response.data.withdrawPermision;
+        closeTradePermission.value = !!response.data.tradePermision;
         managmentDialog.value = true;
         return response
     } catch (error) {
@@ -276,6 +384,73 @@ const SubmitManagmentAccess = async () => {
         managmentAccessLoading.value = false;
     }
 };
+
+const SubmitAuth = async () => {
+    try {
+        managmentAuthLoading.value = true;
+        const response = await ManagmentService.AuthPermission();
+        AuthData.value = response.data;
+        managmentDialog.value = false;
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        managmentAuthLoading.value = false;
+    }
+};
+
+const SubmitDeposit = async () => {
+    try {
+        managmentDepositLoading.value = true;
+        const response = await ManagmentService.DepositPermission();
+        DepositData.value = response.data;
+        managmentDialog.value = false;
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        managmentDepositLoading.value = false;
+    }
+};
+
+const SubmitWithdraw = async () => {
+    try {
+        managmentWithdrawLoading.value = true;
+        const response = await ManagmentService.WithdrawPermission();
+        WithdrawtData.value = response.data;
+        managmentDialog.value = false;
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        managmentWithdrawLoading.value = false;
+    }
+};
+
 
 const userInfo = async (item) => {
     AccessPointDialog.value = true;
@@ -332,14 +507,12 @@ const phoneRules = [
 ];
 
 
-const passwordRules = [
-    v => !!v || 'رمز عبور الزامی است',
-    v => (v && v.length >= 8) || 'رمز عبور باید حداقل ۸ کاراکتر باشد',
-    v => /[A-Z]/.test(v) || 'رمز عبور باید حداقل یک حرف بزرگ داشته باشد',
-    v => /[a-z]/.test(v) || 'رمز عبور باید حداقل یک حرف کوچک داشته باشد',
-    v => /[0-9]/.test(v) || 'رمز عبور باید حداقل یک عدد داشته باشد',
-    v => /[^A-Za-z0-9]/.test(v) || 'رمز عبور باید حداقل یک کاراکتر خاص (!@#$%^&*) داشته باشد'
-];
+// const passwordRules = [
+//     v => /[A-Z]/.test(v) || 'رمز عبور باید حداقل یک حرف بزرگ داشته باشد',
+//     v => /[a-z]/.test(v) || 'رمز عبور باید حداقل یک حرف کوچک داشته باشد',
+//     v => /[0-9]/.test(v) || 'رمز عبور باید حداقل یک عدد داشته باشد',
+//     v => /[^A-Za-z0-9]/.test(v) || 'رمز عبور باید حداقل یک کاراکتر خاص (!@#$%^&*) داشته باشد'
+// ];
 
 const nameRules = [
     v => !!v || 'نام الزامی است'
@@ -354,6 +527,85 @@ const lastNameRules = [
 //     console.log(item.isAccess)
 //     console.log(AccessPointData.value)
 // }
+
+const switchActivateAdmin = async (item) => {
+    try {
+        SwitchAdminLoading.value = true;
+        const response = await ManagmentService.SwitchAdminActivator(item.id);
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        SwitchAdminLoading.value = false;
+    }
+}
+
+const deleteAdmin = (item) => {
+    AdminDeleteDetail.value = item;
+    deleteDialog.value = true;
+}
+
+const updateAdmin = (item) => {
+    AdminId.value = item.id;
+    adminUpdateDetail.value.firstName = item.firstName;
+    adminUpdateDetail.value.lastName = item.lastName;
+    adminUpdateDetail.value.phoneNumber = item.phoneNumber;
+    adminUpdateDetail.value.role = item.role;
+    adminUpdateDetail.value.userName = item.userName;
+    updateAdminDialog.value = true;
+}
+
+const UpdateAdmin = async () => {
+    try {
+        AdminUpdateLoading.value = true;
+        const response = await ManagmentService.UpdateAdmin(adminUpdateDetail.value, AdminId.value);
+        updateAdminDialog.value = false;
+        GetAdminList();
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        AdminUpdateLoading.value = false;
+    }
+}
+
+const submitDeleteAdmin = async () => {
+    try {
+        AdminDeleteLoading.value = true;
+        const response = await ManagmentService.DeleteAdmin(AdminDeleteDetail.value.id);
+        deleteDialog.value = false;
+        GetAdminList();
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        AdminDeleteLoading.value = false;
+    }
+}
 
 onMounted(() => {
     GetAdminList();
@@ -408,5 +660,4 @@ onMounted(() => {
     justify-content: center;
     align-items: center;
 }
-
 </style>

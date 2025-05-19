@@ -26,9 +26,17 @@
                     <v-icon size="small" icon="ri-check-line" color="#0b8707"
                       v-else-if="item.isHaveBank == true"></v-icon>
                   </template>
+                  <template v-slot:item.oldUserCheck="{ item }">
+                    <v-icon size="small" icon="ri-close-line" color="#c9190c"
+                      v-if="item.oldUserCheck == false"></v-icon>
+                    <v-icon size="small" icon="ri-check-line" color="#0b8707"
+                      v-else-if="item.oldUserCheck == true"></v-icon>
+                  </template>
                   <template v-slot:item.action="{ item }">
                     <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
                       @click="userInfo(item)"></v-icon>
+                    <v-icon class="me-2" size="small" icon="ri-exchange-funds-line" color="#c9190c"
+                      :loading="transferLoading" @click="userTransfer(item)"></v-icon>
                   </template>
                 </v-data-table>
               </v-card>
@@ -178,6 +186,10 @@
     <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
       {{ errorMsg }}
     </v-alert>
+    <v-alert v-if="alertSuccess" color="success" border="bottom" elevation="2" class="k-alert alert-animatiton"
+      closable>
+      {{ successMsg }}
+    </v-alert>
   </div>
 </template>
 
@@ -199,11 +211,14 @@ const OldUser = ref();
 const UserInfoDialog = ref(false);
 const VerifyDialog = ref(false);
 const verifyLoading = ref(false);
+const transferLoading = ref(false);
 const itemsPerPage = ref(50);
 const currentPage = ref(1);
 const itemsPerPageOptions = ref([5, 10, 25, 50]);
 const totalItems = ref(0);
 const totalPages = ref(1);
+const successMsg = ref("");
+const alertSuccess = ref(false);
 const userHeader = ref([
   {
     title: 'نام',
@@ -216,6 +231,10 @@ const userHeader = ref([
   {
     title: 'شماره همراه',
     key: 'phoneNumber',
+  },
+  {
+    title: 'کد ملی',
+    key: 'nationalCode',
   },
   {
     title: 'دارایی طلا (گرم)',
@@ -234,6 +253,10 @@ const userHeader = ref([
     key: 'isHaveBank'
   },
   {
+    title: 'انتقال یافته',
+    key: 'oldUserCheck',
+  },
+  {
     title: 'فعالیت',
     key: 'action'
   }
@@ -250,6 +273,10 @@ const OldUserHeader = ref([
   {
     title: 'شماره همراه',
     key: 'phoneNumber',
+  },
+  {
+    title: 'کد ملی',
+    key: 'nationalCode',
   },
   {
     title: 'دارایی طلا (گرم)',
@@ -459,7 +486,6 @@ const Getuser = async () => {
 };
 
 const handleOptionsChange = (options) => {
-  console.log(options)
   currentPage.value = options.page;
   itemsPerPage.value = options.itemsPerPage;
   GetOldUser();
@@ -478,7 +504,6 @@ const GetOldUser = async () => {
     OldUser.value = response.data.users;
     totalPages.value = Math.ceil(totalItems.value / itemsPerPage.value)
   } catch (error) {
-    console.log(error)
     if (error.response.status == 401) {
       localStorage.clear();
       router.replace("/login");
@@ -514,7 +539,30 @@ watch(
 )
 
 
-
+const userTransfer = async (item) => {
+  try {
+    transferLoading.value = true;
+    const response = await UserService.transferData(item.id);
+    successMsg.value = response.msg;
+    alertSuccess.value = true;
+    setTimeout(() => {
+      alertSuccess.value = false;
+    }, 10000)
+    return response
+  } catch (error) {
+    if (error.response.status == 401) {
+      localStorage.clear();
+      router.replace("/login");
+    }
+    errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+    alertError.value = true;
+    setTimeout(() => {
+      alertError.value = false;
+    }, 10000)
+  } finally {
+    transferLoading.value = false;
+  }
+};
 
 const formatNumber = (num) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');

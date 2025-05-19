@@ -5,8 +5,9 @@ const router = useRouter();
 
 
 const WalletTemplate = axios.create({
-    // baseURL: "https://khaneetala.ir/api/admin",
-    baseURL: "https://gateway.khaneetala.ir/v1/secondmain/admin",
+    // baseURL: "https://khanetala.ir/api/admin",
+    // baseURL: "https://gateway.khanetala.ir/v1/secondmain/admin",
+    baseURL: import.meta.env.VITE_WALLET_BASE_URL,
     // timeout: 10000,
     headers: {
         "Content-Type": "application/json",

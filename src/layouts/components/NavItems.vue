@@ -57,7 +57,7 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup> -->
 
-  <VerticalNavGroup v-if="hasPermission('userView')" :item="{
+  <VerticalNavGroup v-if="hasPermission('userView') || hasPermission('userReport')" :item="{
     title: 'کاربران',
     icon: 'ri-user-line',
   }">
@@ -65,9 +65,15 @@ const hasPermission = (routeName) => {
       title: 'اطلاعات',
       icon: 'ri-id-card-line',
       href: '#',
-      to: '/userView'
+      to: '/userView',
       // badgeContent: 'Pro',
       // badgeClass: 'bg-light-primary text-primary',
+    }" />
+    <VerticalNavLink v-if="hasPermission('userReport')" :item="{
+      title: 'گزارش مالی',
+      icon: 'ri-money-euro-box-line',
+      href: '#',
+      to: '/userReport'
     }" />
   </VerticalNavGroup>
 
@@ -176,6 +182,35 @@ const hasPermission = (routeName) => {
   </VerticalNavGroup>
 
 
+
+  <VerticalNavGroup v-if="hasPermission('AccountingTransfer')" :item="{
+    title: 'انتقال',
+    icon: 'ri-file-transfer-line',
+  }">
+    <VerticalNavLink v-if="hasPermission('AccountingTransfer')" :item="{
+      title: 'انتقال طلا',
+      icon: 'ri-file-transfer-line',
+      href: '#',
+      to: '/AccountingTransfer'
+    }" />
+  </VerticalNavGroup>
+
+  
+  <VerticalNavGroup v-if="hasPermission('AccountingUseGold')" :item="{
+    title: 'استفاده',
+    icon: 'ri-diamond-ring-line',
+  }">
+    <VerticalNavLink v-if="hasPermission('AccountingUseGold')" :item="{
+      title: 'استفاده از طلا',
+      icon: 'ri-diamond-ring-line',
+      href: '#',
+      to: '/AccountingUseGold'
+    }" />
+  </VerticalNavGroup>
+
+
+
+
   <VerticalNavSectionTitle
     v-if="hasPermission('goldboxTrade') || hasPermission('remittanceTrade') || hasPermission('inPersonTrade')" :item="{
       heading: 'ثبت معامله',
@@ -206,7 +241,7 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavGroup v-if="hasPermission('inPersonTrade')" :item="{
+  <VerticalNavGroup v-if="hasPermission('inPersonTrade') || hasPermission('inpersonConvertTrade') || hasPermission('inpersonCounterTrade')" :item="{
     title: 'معامله حضوری',
     icon: 'ri-store-2-line',
   }">
@@ -216,7 +251,7 @@ const hasPermission = (routeName) => {
       href: '#',
       to: '/inPersonTrade'
     }" />
-    <VerticalNavLink v-if="hasPermission('inPersonTrade')" :item="{
+    <VerticalNavLink v-if="hasPermission('inpersonConvertTrade')" :item="{
       title: 'تبدیل طلا',
       icon: 'ri-swap-box-line',
       href: '#',
@@ -230,14 +265,34 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup>
 
+  <VerticalNavGroup v-if="hasPermission('transfer') || hasPermission('inquiry')" :item="{
+    title: 'انتقال',
+    icon: 'ri-user-shared-line',
+  }">
+    <VerticalNavLink v-if="hasPermission('transfer')" :item="{
+      title: 'انتقال طلا',
+      icon: 'ri-user-shared-line',
+      href: '#',
+      to: '/transfer'
+    }" />
+    <VerticalNavLink v-if="hasPermission('inquiry')" :item="{
+      title: 'استعلام صندوق طلا',
+      icon: 'ri-menu-search-line',
+      href: '#',
+      to: '/inquiry'
+    }" />
+  </VerticalNavGroup>
+
   <VerticalNavSectionTitle v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity')" :item="{
     heading: 'مدیریت',
   }" />
 
-  <VerticalNavGroup v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity') || hasPermission('goldPriceSetting')" :item="{
-    title: 'مدیریت',
-    icon: 'ri-admin-line',
-  }">
+  <VerticalNavGroup
+    v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity') || hasPermission('goldPriceSetting') || hasPermission('branch')"
+    :item="{
+      title: 'مدیریت',
+      icon: 'ri-admin-line',
+    }">
     <VerticalNavLink v-if="hasPermission('managmentAdmin')" :item="{
       title: 'ادمین',
       icon: 'ri-admin-line',
@@ -255,6 +310,12 @@ const hasPermission = (routeName) => {
       icon: 'ri-price-tag-3-line',
       href: '#',
       to: '/goldPriceSetting'
+    }" />
+    <VerticalNavLink v-if="hasPermission('branch')" :item="{
+      title: 'شعبه ها',
+      icon: 'ri-store-line',
+      href: '#',
+      to: '/branch'
     }" />
   </VerticalNavGroup>
 

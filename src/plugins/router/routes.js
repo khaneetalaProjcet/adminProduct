@@ -192,6 +192,42 @@ export const routes = [
         component: () => import('@/views/goldprice/goldpriceSettingView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/transfer',
+        name: 'transfer',
+        component: () => import('@/views/transfer/TransferView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/branch',
+        name: 'branch',
+        component: () => import('@/views/managment/branchView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/AccountingTransfer',
+        name: 'AccountingTransfer',
+        component: () => import('@/views/transfer/AccountingTransferView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/AccountingUseGold',
+        name: 'AccountingUseGold',
+        component: () => import('@/views/usegold/AccountingUseGoldView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/userReport',
+        name: 'userReport',
+        component: () => import('@/views/users/userReportView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/inquiry',
+        name: 'inquiry',
+        component: () => import('@/views/transfer/InquiryView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {

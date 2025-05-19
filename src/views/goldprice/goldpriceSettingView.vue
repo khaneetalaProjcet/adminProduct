@@ -37,6 +37,34 @@
                 </div>
             </div>
         </v-col>
+        <v-col cols="12">
+            <div class="box">
+                <div class="d-flex justify-space-between my-3 py-3">
+                    <p class="ma-0">قیمت ملی گلد : </p>
+                    <p class="ma-0">{{ goldPrice.melligold }}</p>
+                </div>
+                <v-divider></v-divider>
+                <div class="d-flex justify-space-between my-3 py-3">
+                    <p class="ma-0">قیمت tala.ir : </p>
+                    <p class="ma-0">{{ goldPrice.talair }}</p>
+                </div>
+                <v-divider></v-divider>
+                <div class="d-flex justify-space-between my-3 py-3">
+                    <p class="ma-0">قیمت میلی گلد : </p>
+                    <p class="ma-0">{{ goldPrice.miligold }}</p>
+                </div>
+                <v-divider></v-divider>
+                <div class="d-flex justify-space-between my-3 py-3">
+                    <p class="ma-0">قیمت سایت تجارت جهانی : </p>
+                    <p class="ma-0">{{ goldPrice.tgju }}</p>
+                </div>
+                <v-divider></v-divider>
+                <div class="d-flex justify-space-between my-3 py-3">
+                    <p class="ma-0">قیمت طلاسی : </p>
+                    <p class="ma-0">{{ goldPrice.talasea }}</p>
+                </div>
+            </div>
+        </v-col>
     </v-row>
     <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
         {{ errorMsg }}
@@ -54,6 +82,13 @@ const switchPriceLoading = ref(false);
 const goldPriceLoading = ref(false);
 const alertError = ref(false);
 const errorMsg = ref('');
+const goldPrice = ref({
+    melligold: '-',
+    talair: '-',
+    tgju: '-',
+    talasea: '-',
+    miligold: '-',
+})
 const priceStatus = ref({
     setManual: false,
     goldPriceManual: null,

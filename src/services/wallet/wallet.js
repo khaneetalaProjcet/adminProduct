@@ -1,4 +1,5 @@
 import ReportTemplate from "../report/api";
+import ServerTemplate from "../server/api";
 import QueryTemplate from "../template/api";
 import WalletTemplate from "./api";
 
@@ -50,6 +51,34 @@ const WalletService = {
         return response.data
     },
 
+    async QuiryWallet(nationalCode) {
+        const response = await QueryTemplate.get(`/admin/inquiry/${nationalCode}`,);
+        return response.data
+    },
+
+    async CreateTransfer(info) {
+        const body = JSON.stringify(info);
+        const response = await WalletTemplate.post(`/transPort`, body);
+        return response.data;
+    },
+
+    async TransferOtp(id) {
+        const body = JSON.stringify({
+            transPortId: id,
+        });
+        const response = await WalletTemplate.post(`/transPort/otp`, body);
+        return response.data;
+    },
+
+    async VerifyTransferOtp(otp, id) {
+        const body = JSON.stringify({
+            otp: otp,
+            transPortId: id,
+        });
+        const response = await WalletTemplate.post(`/transPort/verifyotp`, body);
+        return response.data;
+    },
+
     async ExportWithdraw() {
         const body = JSON.stringify({
             "report": 5,
@@ -64,7 +93,29 @@ const WalletService = {
         console.log(body)
         const response = await ReportTemplate.post(`/report/analyze/data`, body);
         return response.data
+    },
+
+    async TransferGoldList(status){
+        const response = await QueryTemplate.get(`/admin/transport/all?status=${status}`);
+        return response.data
+    },
+
+    async UseGoldList(status){
+        const response = await ServerTemplate.get(`/branch/transaction/all?type=${status}`);
+        return response.data
+    },
+
+    async UserFinance(params){
+        const response = await QueryTemplate.get(`/user/glance?page=${params.page}&perPage=${params.perPage}&search=${params.search}`);
+        return response.data
+    },
+
+    async UserFinanceItem(id){
+        const response = await QueryTemplate.get(`/user/glance/${id}`);
+        return response.data
     }
+
+
 }
 
 

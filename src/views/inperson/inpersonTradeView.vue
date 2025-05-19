@@ -190,7 +190,7 @@
                                                     </div>
                                                 </v-col>
                                             </v-row>
-                                            <v-row class="">
+                                            <v-row>
                                                 <v-col cols="12" md="3">
                                                     <persian-date-picker v-model="goldPriceForm.date"
                                                         placeholder="تاریخ"></persian-date-picker>
@@ -234,6 +234,22 @@
                                                 <v-col cols="12" md="4">
                                                     <v-text-field v-model="tradeBuyForm.invoiceId" label="شناسه پرداخت"
                                                         variant="outlined" :rules="validateInvoice"></v-text-field>
+                                                </v-col>
+                                                <v-col cols="12" md="3">
+                                                    <div class="d-flex justify-start align-center h-100">
+                                                        <v-select v-model="tradeBuyForm.paymentMethod"
+                                                            :items="paymentType" label="نوع پرداخت" variant="outlined"
+                                                            :rules="paymentTypeRule" item-title="label"
+                                                            item-value="value"></v-select>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="12" md="3" v-if="tradeBuyForm.paymentMethod == '1'">
+                                                    <div class="d-flex justify-start align-center h-100">
+                                                        <v-select v-model="tradeBuyForm.destCardPan"
+                                                            :items="bankAccounts" label="شماره کارت" variant="outlined"
+                                                            :rules="paymentTypeRule" item-title="label"
+                                                            item-value="label"></v-select>
+                                                    </div>
                                                 </v-col>
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
@@ -403,6 +419,20 @@
                                                 <p>{{ formatNumber(InvoiceForm.totalPrice) }} تومان</p>
                                             </div>
                                         </v-col>
+                                        <v-col cols="6" md="3">
+                                            <div class="invoice-box">
+                                                <p>نوع پرداخت : </p>
+                                                <p v-if="InvoiceForm.paymentMethod == 1">کارت به کارت</p>
+                                                <p v-else-if="InvoiceForm.paymentMethod == 2">دستگاه پوز</p>
+                                                <p v-else-if="InvoiceForm.paymentMethod == 3">نقدی</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="12" md="6" v-if="InvoiceForm.destCardPan != ''">
+                                            <div class="invoice-box">
+                                                <p>مقصد کارت به کارت: </p>
+                                                <p>{{ InvoiceForm.destCardPan }}</p>
+                                            </div>
+                                        </v-col>
                                         <v-divider></v-divider>
                                         <v-col cols="12">
                                             <div class="d-flex">
@@ -510,6 +540,8 @@ const tradeBuyForm = ref({
     description: '',
     totalPrice: '',
     invoiceId: '',
+    paymentMethod: '',
+    destCardPan: '',
 });
 
 const tradeSellForm = ref({
@@ -537,6 +569,8 @@ const InvoiceForm = ref({
     date: '',
     time: '',
     adminId: '',
+    paymentMethod: '',
+    destCardPan: '',
     wallet: {
         goldWeight: '',
         balance: '',
@@ -550,6 +584,24 @@ const InvoiceForm = ref({
         nationalCode: '',
     }
 })
+
+const paymentType = ref([
+    { label: "کارت به کارت", value: "1" },
+    { label: "دستگاه پوز", value: "2" },
+    { label: "نقدی", value: "3" },
+]);
+
+const bankAccounts = ref([
+    { label: "کشاورزی (مطهر معصومی)" },
+    { label: "ملی (مطهر معصومی)" },
+    { label: "ملت (مطهر معصومی)" },
+    { label: "سپه (مطهر معصومی)" },
+    { label: "صادرات (مطهر معصومی)" },
+    { label: "کشاورزی (محمود معصومی)" },
+    { label: "ملی (محمود معصومی)" },
+    { label: "ملت (محمود معصومی)" },
+    { label: "سایر" },
+]);
 
 const persianDates = ref([
     { name: "1", value: 1 },
@@ -720,8 +772,8 @@ const submitForm = async () => {
     setInterval(() => {
         successModal.value = false;
         otpVerification.value = false;
-        inPersonForm.value.phoneNumber = '';
-        inPersonForm.value.otp = '';
+        inPersonForm.value.phoneNumber = null;
+        inPersonForm.value.otp = null;
         step.value = 1;
     }, 3000)
 };
@@ -885,7 +937,6 @@ const TradeBuy = async () => {
         stepThreeLoading.value = true;
         tradeBuyForm.value.nationalCode = userInfo.value.nationalCode;
         tradeBuyForm.value.goldPrice = goldPriceForm.value.buyPrice;
-        console.log(tradeBuyForm.value)
         const response = await InPersonService.CreateBuy(tradeBuyForm.value);
         InvoiceForm.value.type = 'خرید';
         InvoiceForm.value.adminId = response?.data?.adminId;
@@ -902,6 +953,8 @@ const TradeBuy = async () => {
         InvoiceForm.value.wallet.balance = response?.data?.wallet?.balance;
         InvoiceForm.value.wallet.blocked = response?.data?.wallet?.blocked;
         InvoiceForm.value.wallet.goldWeight = response?.data?.wallet?.goldWeight;
+        InvoiceForm.value.paymentMethod = response?.data?.paymentMethod;
+        InvoiceForm.value.destCardPan = response?.data?.destCardPan;
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -940,7 +993,6 @@ const TradeSell = async () => {
         InvoiceForm.value.wallet.balance = response?.data?.wallet?.balance;
         InvoiceForm.value.wallet.blocked = response?.data?.wallet?.blocked;
         InvoiceForm.value.wallet.goldWeight = response?.data?.wallet?.goldWeight;
-        console.log(InvoiceForm.value)
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -1152,6 +1204,10 @@ const sellGoldweightConvert = () => {
     );
     tradeSellForm.value.totalPrice = formatNumberWithCommas(calculatedPrice);
 }
+
+const paymentTypeRule = [
+    (v) => !!v || "نوع پرداخت را انتخاب کنید!",
+];
 
 </script>
 

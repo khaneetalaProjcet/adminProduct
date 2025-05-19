@@ -6,7 +6,8 @@ const router = useRouter();
 
 
 const RecruitmentTemplate = axios.create({
-    baseURL: "https://gateway.khaneetala.ir/v1/admin",
+    // baseURL: "https://gateway.khanetala.ir/v1/admin",
+    baseURL:import.meta.env.VITE_RECRUITMENT_BASE_URL,
     headers: {
         "Content-Type": "application/json",
         "Accept": "application/json",

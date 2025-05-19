@@ -11,8 +11,10 @@
 
         <v-card class="mx-2 mx-md-auto pa-8" elevation="4" max-width="448" rounded="lg">
             <v-form ref="form" @submit.prevent="submitLogin">
-                <v-text-field v-model="login.phoneNumber" label="شماره همراه" class="my-6 login-input"
-                    :rules="phoneRules" @input="limitInput"></v-text-field>
+                <!-- <v-text-field v-model="login.phoneNumber" label="شماره همراه" class="my-6 login-input"
+                    :rules="phoneRules" @input="limitInput"></v-text-field> -->
+                <v-text-field v-model="login.userName" label="نام کاربری" class="my-6 login-input"></v-text-field>
+
                 <v-text-field v-model="login.password" label="رمز عبور" class="my-6 login-input"
                     :append-inner-icon="visible ? 'ri-eye-line' : 'ri-eye-off-line'"
                     :type="visible ? 'text' : 'password'" @click:append-inner="visible = !visible"></v-text-field>
@@ -33,7 +35,7 @@ import { ref } from 'vue';
 
 const visible = ref(false);
 const login = ref({
-    phoneNumber: '',
+    userName: '',
     password: '',
 });
 const loading = ref(false);

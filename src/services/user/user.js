@@ -10,7 +10,6 @@ const UserService = {
     },
 
     async oldUser(params) {
-        console.log(params.search, typeof params.search)
         const response = await VerifyTemplate.get(`/old/users/all/${params.page}/${params.perPage}?search=${params.search}`);
         return response.data;
     },
@@ -27,6 +26,11 @@ const UserService = {
 
     async CheckToken() {
         const response = await UserTemplate.get(`/token/check`);
+        return response.data;
+    },
+
+    async transferData(id){
+        const response = await UserTemplate.post(`/admin/oldChecker/${id}`);
         return response.data;
     }
 }

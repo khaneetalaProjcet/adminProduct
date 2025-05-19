@@ -1,3 +1,4 @@
+import ReportTemplate from "../report/api";
 import QueryTemplate from "../template/api";
 import InPersonTemplate from "./api";
 
@@ -74,6 +75,12 @@ const InPersonService = {
     async SubmitCounterPayment(paymentForm) {
         const body = JSON.stringify(paymentForm);
         const response = await InPersonTemplate.post(`/inperson/convert/sell`, body);
+        return response.data
+    },
+
+    async SubmitFilterInvoice(InvoiceForm) {
+        const body = JSON.stringify(InvoiceForm);
+        const response = await ReportTemplate.post(`/report/analyze/report/invoice`, body);
         return response.data
     },
 

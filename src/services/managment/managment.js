@@ -1,4 +1,5 @@
 import ServerTemplate from "../server/api";
+import QueryTemplate from "../template/api";
 import ManagmentTemplate from "./api";
 
 
@@ -36,12 +37,85 @@ const ManagmentService = {
     },
 
     async GetPermission() {
-        const response = await ServerTemplate.get('/main/trade');
+        const response = await QueryTemplate.get('/permisions');
         return response.data;
     },
 
     async TradePermission() {
         const response = await ServerTemplate.post('/main/trade/permision');
+        return response.data;
+    },
+
+    async AuthPermission() {
+        const response = await ServerTemplate.post('/secondmain/permision/register');
+        return response.data;
+    },
+
+    async DepositPermission() {
+        const response = await ServerTemplate.post('/secondmain/permision/deposit');
+        return response.data;
+    },
+
+    async WithdrawPermission() {
+        const response = await ServerTemplate.post('/secondmain/permision/withdraw');
+        return response.data;
+    },
+
+    async BranchList() {
+        const response = await ServerTemplate.get('/branch/allbyadmin');
+        return response.data;
+    },
+
+    async AddBranch(branchInfo) {
+        const body = JSON.stringify(branchInfo);
+        const response = await ServerTemplate.post('/branch/create', body);
+        return response.data;
+    },
+
+    async DeleteBranch(id) {
+        const response = await ServerTemplate.delete(`/branch/delete/${id}`,);
+        return response.data;
+    },
+
+    async DeleteSeller(id) {
+        const response = await ServerTemplate.delete(`/branch/seller/delete/${id}`,);
+        return response.data;
+    },
+
+    async SellerList(id) {
+        const response = await ServerTemplate.get(`/branch/seller/allbyadmin/${id}`);
+        return response.data;
+    },
+
+    async AddSeller(sellerInfo, id) {
+        const body = JSON.stringify(sellerInfo);
+        const response = await ServerTemplate.post(`/branch/seller/create/${id}`, body);
+        return response.data;
+    },
+
+    async SwitchBranchActivator(id) {
+        const response = await ServerTemplate.post(`/branch/active/${id}`);
+        return response.data;
+    },
+
+    async SwitchBranchSellerActivator(id) {
+        const response = await ServerTemplate.post(`/branch/seller/active/${id}`);
+        return response.data;
+    },
+
+    async SwitchAdminActivator(id) {
+        const response = await ServerTemplate.post(`/admin/active/${id}`);
+        return response.data;
+    },
+
+    async DeleteAdmin(id) {
+        const response = await ServerTemplate.delete(`/admin/delete/${id}`,);
+        return response.data;
+    },
+
+    async UpdateAdmin(detail , id) {
+        const body = JSON.stringify(detail);
+        const response = await ServerTemplate.post(`/admin/update/${id}`, body);
         return response.data;
     },
 }
