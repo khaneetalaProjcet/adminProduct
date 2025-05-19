@@ -3,13 +3,71 @@
         <v-row>
             <v-col cols="12">
                 <v-card-text>
+                    <v-row class="filter my-3">
+                        <v-col cols="6" md="3">
+                            <persian-date-picker v-model="filter.fromDate" placeholder="از تاریخ"></persian-date-picker>
+                        </v-col>
+                        <v-col cols="6" md="3">
+                            <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                format="HH:mm:ss"></persian-date-picker>
+                        </v-col>
+                        <v-col cols="6" md="3">
+                            <persian-date-picker v-model="filter.toDate" placeholder="تا تاریخ"></persian-date-picker>
+                        </v-col>
+                        <v-col cols="6" md="3">
+                            <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                format="HH:mm:ss"></persian-date-picker>
+                        </v-col>
+                        <v-col cols="6" md="3">
+                            <v-text-field v-model="filter.firstName" label="نام" density="compact"
+                                variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col cols="6" md="3">
+                            <v-text-field v-model="filter.lastName" label="نام خانوادگی" density="compact"
+                                variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col cols="6" md="3">
+                            <v-text-field v-model="filter.phoneNumber" label="شماره موبایل" density="compact"
+                                variant="outlined" :rules="phoneRules" @input="limitNumber"></v-text-field>
+                        </v-col>
+                        <v-col cols="6" md="3">
+                            <v-text-field v-model="filter.nationalCode" label="کد ملی" density="compact"
+                                variant="outlined" :rules="nationalCodeRules"></v-text-field>
+                        </v-col>
+                        <v-col cols="6" md="3">
+                            <v-text-field v-model="filter.goldPrice" label="قیمت طلا" density="compact"
+                                variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col cols="6" md="3">
+                            <v-text-field v-model="filter.goldWeight" label="وزن طلا" density="compact"
+                                variant="outlined" :rules="validateWeight"></v-text-field>
+                        </v-col>
+                        <v-col cols="6" md="3">
+                            <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                                variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col cols="6" md="3">
+                            <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                                variant="outlined"></v-text-field>
+                        </v-col>
+                        <v-col md="6" class="d-none d-md-flex">
+                        </v-col>
+                        <v-col cols="12" md="3">
+                            <div class="w-100 d-flex justify-end">
+                                <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block
+                                    @click="SubmitFilter('complete')">به روز
+                                    رسانی</v-btn>
+                            </div>
+                        </v-col>
+                        <v-col cols="12" md="3">
+                            <div class="w-100 d-flex justify-end">
+                                <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                            </div>
+                        </v-col>
+                    </v-row>
                     <v-card title="فروش صندوق طلا">
-                        <template v-slot:text>
-                            <v-text-field v-model="GoldBoxSellReviewSearch" label="جستجو"
-                                prepend-inner-icon="ri-search-line"></v-text-field>
-                        </template>
                         <v-data-table :headers="GoldBoxSellReviewHeader" :items="GoldBoxSellReviewData"
-                            :search="GoldBoxSellReviewSearch" :loading="GoldBoxSellReviewLoading">
+                            :loading="GoldBoxSellReviewLoading">
                             <template v-slot:item.totalPrice="{ item }">
                                 <p>{{ formatNumber(item.totalPrice) }}</p>
                             </template>
@@ -37,6 +95,7 @@
 <script setup>
 import { router } from '@/plugins/router';
 import AccountingService from '@/services/accounting/accounting';
+import InPersonService from '@/services/inperson/inperson';
 import { onMounted, ref } from 'vue';
 
 
@@ -85,7 +144,25 @@ const GoldBoxSellReviewHeader = ref([
         key: 'status'
     },
 ]);
-const GoldBoxSellReviewSearch = ref();
+
+const filter = ref({
+    firstName: '',
+    lastName: '',
+    nationalCode: '',
+    phoneNumber: '',
+    tradeType: 1,
+    type: 'sell',
+    goldPrice: '',
+    goldWeight: '',
+    admin: '',
+    accounter: '',
+    startDate: '',
+    startTime: '',
+    endDate: '',
+    endTime: '',
+    invoiceId: '',
+    status: '',
+});
 const GoldBoxSellReviewData = ref();
 
 
@@ -110,9 +187,55 @@ const GetGoldboxSellList = async () => {
     }
 };
 
+const SubmitFilter = async (status) => {
+    try {
+        GoldBoxSellReviewLoading.value = true;
+        filter.value.status = status;
+        const response = await InPersonService.SubmitFilterInvoice(filter.value);
+        GoldBoxSellReviewData.value = response.data;
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        GoldBoxSellReviewLoading.value = false;
+    }
+}
+
 const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
+
+const nationalCodeRules = [
+    (v) => /^\d{10}$/.test(v) || 'کد ملی باید ۱۰ رقم باشد',
+    (v) => {
+        if (!/^\d{10}$/.test(v)) return true;
+
+        const check = +v[9];
+        const sum = v.split('').slice(0, 9).reduce((acc, x, i) => acc + (+x * (10 - i)), 0) % 11;
+        return (sum < 2 && check === sum) || (sum >= 2 && check + sum === 11) || 'کد ملی نامعتبر است';
+    }
+];
+
+const limitNumber = () => {
+    filter.value.phoneNumber = filter.value.phoneNumber.replace(/\D/g, '').slice(0, 11);
+}
+
+const phoneRules = [
+    v => /^09\d{9}$/.test(v) || 'شماره معتبر نیست'
+];
+
+const validateWeight = [
+    (v) => !!v,
+    (v) => /^\d+(\.\d{1,3})?$/.test(v),
+];
 
 onMounted(() => {
     GetGoldboxSellList();
