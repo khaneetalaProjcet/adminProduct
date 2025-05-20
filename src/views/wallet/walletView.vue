@@ -3,8 +3,15 @@
         <v-row>
             <v-col cols="12">
                 <v-card-text>
+
                     <v-card title="کیف پول ها">
+
                         <template v-slot:text>
+                                                                  <ul class="listGuide">
+                    <li>
+تمامی فعالیت های مالی کیف پول کاربر در این صفحه قابل مشاهده می باشد.                </li>
+                  </ul>
+
                             <v-text-field v-model="WalletSearch" label="جستجو"
                                 prepend-inner-icon="ri-search-line"></v-text-field>
                         </template>
@@ -280,5 +287,17 @@ onMounted(() => {
 
 .v-table thead {
     border-radius: 8px 8px 0 0 !important;
+}
+
+.listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+
+  margin: 0.2rem;
+  margin-bottom: 2rem;
+margin-right : 1rem;
+margin-left : 1rem
+
 }
 </style>

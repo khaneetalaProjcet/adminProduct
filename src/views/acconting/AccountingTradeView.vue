@@ -77,6 +77,11 @@
                                 </v-col>
                             </v-row>
                             <v-card title="معاملات در انتظار تایید صندوق طلا">
+                             <ul class="listGuide">
+                     <li>معاملاتی که به صورت تلفنی توسط کارشناس ثبت شده اند و در انتظار پرداخت و تایید از سوی حسابداری می
+                      باشند.
+                    </li>
+                  </ul>
                                 <v-data-table :headers="PendingAccountingReviewHeader"
                                     :items="PendingAccountingReviewData" :loading="PendingAccountingReviewLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -162,6 +167,12 @@
                                 </v-col>
                             </v-row>
                             <v-card title="معاملات تایید شده صندوق طلا">
+                     <ul class="listGuide">
+                     <li>
+                                معاملاتی که مبلغ آنها به حساب مشخص شده پرداخت شده و توسط حسابداری تایید شده اند.
+
+                   </li>
+                  </ul>
                                 <v-data-table :headers="CompleteAccountingReviewHeader"
                                     :items="CompleteAccountingReviewData" :loading="CompleteAccountingReviewLoading">
                                     <template v-slot:item.amount="{ item }">
@@ -243,6 +254,12 @@
                                 </v-col>
                             </v-row>
                             <v-card title="معاملات رد شده صندوق طلا">
+                                    <ul class="listGuide ">
+                   <li>
+معاملاتی که مبلغ آنها پرداخت نشده و یا به دلایل دیگر توسط حسابداری رد شده است.
+                   </li>
+
+                  </ul>
                                 <v-data-table :headers="rejectAccountingReviewHeader"
                                     :items="rejectAccountingReviewData" :loading="rejectAccountingReviewLoading">
                                     <template v-slot:item.amount="{ item }">
@@ -767,5 +784,16 @@ onMounted(() => {
 .form-box {
     width: 100%;
     padding: 2rem;
+}
+.listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  padding: 0.5rem;
+  margin: 0.1rem;
+  margin-bottom: 2rem;
+  margin-right : 0.9rem
+
+
 }
 </style>

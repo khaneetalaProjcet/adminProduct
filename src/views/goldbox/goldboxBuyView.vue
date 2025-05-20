@@ -78,6 +78,12 @@
                                 </v-col>
                             </v-row>
                             <v-card title="نامشخص">
+                              <ul class="listGuide ">
+              <li>
+خرید هایی که کاربر تا درگاه بانک پیش رفته اما به دلیل انصراف و یا اختلال در درگاه بانکی موفق نبوده اند.
+                </li>
+
+            </ul>
                                 <v-data-table :headers="PendingGoldBoxBuyHeader" :items="PendingGoldBoxBuyData"
                                     :loading="PendingGoldBoxBuyLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -163,6 +169,11 @@
                                 </v-col>
                             </v-row>
                             <v-card title="موفق">
+                                         <ul class="listGuide">
+                <li>
+خریدهایی که تمام فرایند به درستی انجام شده و مبلغ نیز در درگاه بانکی پرداخت شده است.
+                </li>
+                  </ul>
                                 <v-data-table :headers="CompleteGoldBoxBuyHeader" :items="CompleteGoldBoxBuyData"
                                     :loading="CompleteGoldBoxBuyLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -249,6 +260,11 @@
                                 </v-col>
                             </v-row>
                             <v-card title="ناموفق">
+                                                                       <ul class="listGuide">
+                <li>
+خریدهایی که تمام فرایند به درستی انجام شده اما به دلیل انصراف کاربر و یا دلایل دیگر نهایی نشده اند.
+                </li>
+                  </ul>
                                 <v-data-table :headers="FailedGoldBoxBuyHeader" :items="FailedGoldBoxBuyData"
                                     :loading="CompleteGoldBoxBuyLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -335,6 +351,11 @@
                                 </v-col>
                             </v-row>
                             <v-card title="پرداخت نشده">
+                                                                                                     <ul class="listGuide">
+                <li>
+خریدهایی که تا مرحله فاکتور پیش رفته اما به دلیل لغو و عدم پرداخت نهایی نشده اند.             </li>
+                  </ul>
+
                                 <v-data-table :headers="InitGoldBoxBuyHeader" :items="InitGoldBoxBuyData"
                                     :loading="InitGoldBoxBuyLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -931,5 +952,15 @@ onMounted(() => {
 .form-box {
     width: 100%;
     padding: 0 2rem;
+}
+
+.listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  padding: 0.5rem;
+  margin: 0.1rem;
+  margin-bottom: 2rem;
+  margin-right: 0.9rem
 }
 </style>

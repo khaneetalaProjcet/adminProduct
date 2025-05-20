@@ -76,6 +76,11 @@
                                 </v-col>
                             </v-row>
                             <v-card title="موفق">
+                             <ul class="listGuide">
+                    <li>
+معاملاتی که فروش آنها در بخش حضوری انجام شده و مبلغ آنها توسط حسابداری به حساب ثبت شده  در سایت مرجوع می گردد.
+                    </li>
+                  </ul>
                                 <v-data-table :headers="CompleteInPersonSellHeader" :items="CompleteInPersonSellData"
                                     :loading="CompleteInPersonSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -162,6 +167,11 @@
                                 </v-col>
                             </v-row>
                             <v-card title="ناموفق">
+                                                                   <ul class="listGuide">
+                    <li>
+معاملاتی که فروش آنها به دلیل صرف نظر مشتری و یا دلایل دیگر توسط حسابداری رد شده اند.
+                    </li>
+                  </ul>
                                 <v-data-table :headers="FailedInPersonSellHeader" :items="FailedInPersonSellData"
                                     :loading="CompleteInPersonSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -561,5 +571,15 @@ onMounted(() => {
 .form-box {
     width: 100%;
     padding: 0 2rem;
+}
+
+.listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  padding: 0.5rem;
+  margin: 0.2rem;
+  margin-bottom: 2rem;
+margin-right : 1rem
 }
 </style>

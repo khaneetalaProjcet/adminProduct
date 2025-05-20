@@ -14,6 +14,12 @@
                         <v-tabs-window-item value="one">
                             <v-card title="نامشخص">
                                 <template v-slot:text>
+
+          <ul class="listGuide">
+                    <li>
+درخواست برداشت مبلغ کیف پول از سوی کاربر ثبت شده و در انتظار بررسی از سوی حسابداری می باشد.
+                    </li>
+                  </ul>
                                     <v-text-field v-model="PendingDepositSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
@@ -38,7 +44,13 @@
                         </v-tabs-window-item>
                         <v-tabs-window-item value="two">
                             <v-card title="موفق">
+
                                 <template v-slot:text>
+          <ul class="listGuide">
+                    <li>
+                              درخواست برداشت مبلغ کیف پول از سوی کاربر ثبت شده و واریزی به حساب مشخص شده انجام شده است.
+                    </li>
+                  </ul>
                                     <v-text-field v-model="CompleteDepositSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
@@ -65,6 +77,10 @@
                         <v-tabs-window-item value="three">
                             <v-card title="ناموفق">
                                 <template v-slot:text>
+                         <ul class="listGuide">
+                    <li>
+درخواست برداشت از کیف پول توسط کاربر لغو شده و یا به دلایل دیگر از سوی حسابداری رد شده است .                    </li>
+                  </ul>
                                     <v-text-field v-model="FailedDepositSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
@@ -436,5 +452,15 @@ onMounted(() => {
 .form-box {
     width: 100%;
     padding: 0 2rem;
+}
+
+ .listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  padding: 0.5rem;
+  margin: 0.2rem;
+  margin-bottom: 2rem;
+
 }
 </style>

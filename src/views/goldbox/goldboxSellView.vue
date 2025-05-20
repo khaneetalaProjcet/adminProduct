@@ -76,6 +76,12 @@
                                 </v-col>
                             </v-row>
                             <v-card title="فروش موفق">
+                                         <ul class="listGuide">
+                <li>
+                       معاملاتی که فرایند فروش آن توسط کاربران در سایت و اپلیکیشن انجام شده  و مبلغ توسط حسابداری به حساب انتخاب شده کاربر عودت داده شده  است.
+
+                </li>
+                  </ul>
                                 <v-data-table :headers="CompleteGoldBoxSellHeader" :items="CompleteGoldBoxSellData"
                                     :loading="CompleteGoldBoxSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -160,6 +166,12 @@
                                 </v-col>
                             </v-row>
                             <v-card title="فروش ناموفق">
+                                                            <ul class="listGuide">
+                <li>
+                معاملاتی که فرایند فروش آن توسط کاربران در سایت و اپلیکیشن انجام  شده اما به دلیل انصراف کاربر و یا دلایل دیگر رد شده است.
+
+                </li>
+                  </ul>
                                 <v-data-table :headers="FailedGoldBoxSellHeader" :items="FailedGoldBoxSellData"
                                     :search="FailedGoldBoxSellSearch" :loading="CompleteGoldBoxSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -462,5 +474,14 @@ onMounted(() => {
 .form-box {
     width: 100%;
     padding: 0 2rem;
+}
+.listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  padding: 0.5rem;
+  margin: 0.1rem;
+  margin-bottom: 2rem;
+  margin-right: 0.9rem
 }
 </style>
