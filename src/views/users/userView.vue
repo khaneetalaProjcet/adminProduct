@@ -12,7 +12,14 @@
           <v-tabs-window v-model="tab">
             <v-tabs-window-item value="one">
               <v-card title="کاربران احراز هویت شده">
+
                 <template v-slot:text>
+                  <ul class="listGuide">
+                    <li>
+                      کاربرانی که روند ثبت نام آنها تکمیل شده و هویت آنها با اطلاعات وارد شده تطابق دارد.
+                    </li>
+
+                  </ul>
                   <v-text-field v-model="search" label="جستجو" prepend-inner-icon="ri-search-line"
                     @input="onSearchInput"></v-text-field>
                 </template>
@@ -45,6 +52,15 @@
             <v-tabs-window-item value="two">
               <v-card title="کاربران در انتظار احراز">
                 <template v-slot:text>
+               
+       <ul class="listGuide">
+                    <li>
+                      کاربرانی که روند ثبت نام آنها تکمیل نشده و فرایند احراز هویت به درستی انجام نشده است.
+                    </li>
+
+                  </ul>
+
+
                   <v-text-field v-model="OldSearch" label="جستجو" prepend-inner-icon="ri-search-line"></v-text-field>
                 </template>
                 <v-data-table :page="currentPage" :items-per-page="itemsPerPage" :headers="OldUserHeader"
@@ -698,5 +714,15 @@ onMounted(() => {
 
 .user-dialog-info {
   font-size: 14px;
+}
+
+.listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  padding: 0.5rem;
+  margin: 0.2rem;
+  margin-bottom: 2rem;
+
 }
 </style>
