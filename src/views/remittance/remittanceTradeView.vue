@@ -474,9 +474,9 @@
                                         <v-col cols="6" md="3">
                                             <div class="invoice-box">
                                                 <p>از حساب : </p>
-                                                <p v-if="InvoiceForm.type == 'خرید'">{{ remiitanceBuyForm.destCardPan }}
+                                                <p>{{ remiitanceBuyForm.destCardPan }}
                                                 </p>
-                                                <p v-else>{{ remiitanceSellForm.destCardPan }}</p>
+                                                <!-- <p v-else>{{ remiitanceSellForm.destCardPan }}</p> -->
                                             </div>
                                         </v-col>
                                         <v-divider></v-divider>
