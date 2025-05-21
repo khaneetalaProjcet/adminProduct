@@ -5,6 +5,13 @@
                 <v-card-text>
                     <v-card title="اطلاعات مالی کاربران">
                         <template v-slot:text>
+                             <ul class="listGuide">
+                    <li>
+                       در این صفحه تمامی فعالیت های مالی کاربر و موجودی ها قابل بررسی می باشند.
+                    </li>
+
+                  </ul>
+
                             <v-text-field v-model="financeSearch" label="جستجو"
                                 prepend-inner-icon="ri-search-line"></v-text-field>
                         </template>
@@ -534,5 +541,14 @@ watch(
 .modal-title h3 {
     color: #fff;
     padding: 0 0.5rem;
+}
+.listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  padding: 0.5rem;
+  margin: 0.2rem;
+  margin-bottom: 2rem;
+
 }
 </style>

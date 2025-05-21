@@ -77,6 +77,11 @@
                                 </v-col>
                             </v-row>
                             <v-card title="در انتظار تایید">
+                                     <ul class="listGuide">
+                    <li>
+                      معاملاتی که توسط کارشناس بخش حضوری ثبت شده و در انتظار تاییدیه پرداخت می باشد
+                    </li>
+                  </ul>
 
                                 <v-data-table :headers="PendingInPersonBuyHeader" :items="PendingInPersonBuyData"
                                     :loading="PendingInPersonBuyLoading">
@@ -163,6 +168,11 @@
                                 </v-col>
                             </v-row>
                             <v-card title="موفق">
+                                          <ul class="listGuide">
+                    <li>
+                      خرید حضوری که پرداخت آن با موفقیت انجام شده و از سوی حسابداری تایید شده است.
+                    </li>
+                  </ul>
                                 <v-data-table :headers="CompleteInPersonBuyHeader" :items="CompleteInPersonBuyData"
                                     :loading="CompleteInPersonBuyLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -249,6 +259,11 @@
                                 </v-col>
                             </v-row>
                             <v-card title="ناموفق">
+                                         <ul class="listGuide">
+                    <li>
+                      خرید حضوری که به دلیل ناموفق بودن پرداخت و یا دلایل دیگر توسط کارشناس بخش حضوری لغو شده است.
+                    </li>
+                  </ul>
                                 <v-data-table :headers="FailedInPersonBuyHeader" :items="FailedInPersonBuyData"
                                     :loading="FailedInPersonBuyLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -864,5 +879,15 @@ onMounted(() => {
 .form-box {
     width: 100%;
     padding: 0 2rem;
+}
+
+.listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  padding: 0.5rem;
+  margin: 0.1rem;
+  margin-bottom: 2rem;
+  margin-right: 0.9rem
 }
 </style>

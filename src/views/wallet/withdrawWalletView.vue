@@ -11,11 +11,19 @@
                 <v-card-text>
                     <v-tabs-window v-model="tab">
                         <v-tabs-window-item value="one">
+
                             <div class="d-flex justify-end ma-2">
+
                                 <v-btn icon="ri-file-excel-line" color="#226d3a" @click="exportReport"></v-btn>
                             </div>
                             <v-card title="برداشت از کیف پول">
+
                                 <template v-slot:text>
+                                                                <ul class="listGuide">
+                    <li>
+                      معاملاتی که به صورت مستقیم از موجودی کیف پول پرداخت شده اند و در صف تایید می باشند.
+                    </li>
+                  </ul>
                                     <v-text-field v-model="PendingWithdrawSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
@@ -39,8 +47,14 @@
                             </v-card>
                         </v-tabs-window-item>
                         <v-tabs-window-item value="two">
+
                             <v-card title="برداشت از کیف پول">
                                 <template v-slot:text>
+                                                 <ul class="listGuide">
+                    <li>
+                      معاملاتی که از کیف پول کاربران برداشت شده و با موفقیت به اتمام رسیده اند.
+                    </li>
+                  </ul>
                                     <v-text-field v-model="CompleteWithdrawSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
@@ -383,5 +397,14 @@ onMounted(() => {
 .form-box {
     width: 100%;
     padding: 2rem;
+}
+.listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  padding: 0.5rem;
+  margin: 0.1rem;
+  margin-bottom: 1rem;
+  margin-right: 0.9rem
 }
 </style>
