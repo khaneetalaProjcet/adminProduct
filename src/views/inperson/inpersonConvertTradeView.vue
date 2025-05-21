@@ -878,7 +878,6 @@ const nextStep = async (type) => {
     }
 };
 
-
 const TradeRequest = async () => {
     if (step.value === 1) {
         return await AuthUser();

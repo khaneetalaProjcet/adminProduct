@@ -73,48 +73,72 @@
         </div>
         <v-row class="my-4">
           <v-col cols="12" md="3" class="my-2">
-            <persian-date-picker v-model="filter.fromDate" placeholder="از تاریخ"
+            <persian-date-picker v-model="filter.startDate" placeholder="از تاریخ"
               class="custom-datepicker"></persian-date-picker>
           </v-col>
           <v-col cols="12" md="3" class="my-2">
-            <persian-date-picker v-model="filter.toDate" placeholder="تا تاریخ"
+            <persian-date-picker v-model="filter.endDate" placeholder="تا تاریخ"
               class="custom-datepicker"></persian-date-picker>
           </v-col>
           <v-col cols="12" md="3" class="my-2">
-            <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان" format="HH:mm:ss"
+            <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان" format="HH:mm:ss"
               class="custom-datepicker"></persian-date-picker>
           </v-col>
           <v-col cols="12" md="3" class="my-2">
-            <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان" format="HH:mm:ss"
+            <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان" format="HH:mm:ss"
               class="custom-datepicker"></persian-date-picker>
           </v-col>
           <v-col cols="12" md="6" class="my-2">
             <div class="d-flex justify-space-between">
               <p>طلای فروخته شده:</p>
-              <p>{{ filterStatistics.sellGoldWeight }}</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ filterStatistics.sold }} گرم</p>
             </div>
           </v-col>
           <v-col cols="12" md="6" class="my-2">
             <div class="d-flex justify-space-between">
               <p>طلای خریداری شده:</p>
-              <p>{{ filterStatistics.buyGoldWeight }}</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ filterStatistics.bought }} گرم</p>
             </div>
           </v-col>
           <v-col cols="12" md="6" class="my-2">
             <div class="d-flex justify-space-between">
+              <p> مجموع موجودی های ریالی:</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ formatNumber(filterStatistics.allBalance) }} تومان</p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6" class="my-2">
+            <div class="d-flex justify-space-between">
+              <p>برداشت های تایید شده:</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ formatNumber(filterStatistics.succeedWithdraw) }} تومان</p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6" class="my-2">
+            <div class="d-flex justify-space-between stat-bold">
               <p>مجموع واریزی ها:</p>
-              <p>{{ filterStatistics.depositAmount }}</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ formatNumber(filterStatistics.deposit) }} تومان</p>
             </div>
           </v-col>
           <v-col cols="12" md="6" class="my-2">
-            <div class="d-flex justify-space-between">
-              <p>مجموع برداشت ها:</p>
-              <p>{{ filterStatistics.withdrawAmount }}</p>
+            <div class="d-flex justify-space-between stat-bold">
+              <p>خالص طلای معامله شده:</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ filterStatistics.all }} گرم</p>
             </div>
           </v-col>
           <v-col cols="12">
             <div class="d-flex justify-end">
-              <v-btn class="px-8" color="#b08c4d">محاسبه</v-btn>
+              <v-btn class="px-8" color="#b08c4d" @click="reportWithHour">محاسبه</v-btn>
             </div>
           </v-col>
         </v-row>
@@ -145,10 +169,12 @@
 <script setup>
 import { router } from '@/plugins/router';
 import DashboardService from '@/services/dashboard/dashboard';
+import ReportService from '@/services/report/report';
 import { onMounted, ref } from 'vue';
 
 
 const DahboardLoading = ref(false);
+const statisticLoading = ref(false);
 const Statistics = ref({
   successUsers: '-',
   failedUsers: '-',
@@ -170,10 +196,12 @@ const filter = ref({
   endTime: '',
 })
 const filterStatistics = ref({
-  sellGoldWeight: '-',
-  buyGoldWeight: '-',
-  depositAmount: '-',
-  withdrawAmount: '-',
+  all: '-',
+  sold: '-',
+  bought: '-',
+  allBalance: '-',
+  succeedWithdraw: '-',
+  deposit: '-',
 })
 const errorMsg = ref('');
 const alertError = ref(false);
@@ -256,6 +284,9 @@ const UserchartOptions = ref({
 
 const Userseries = ref([]);
 
+const formatNumber = (num) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
 
 const GetStatistics = async () => {
   try {
@@ -330,6 +361,32 @@ const GetStatistics = async () => {
   }
 }
 
+const reportWithHour = async () => {
+  try {
+    statisticLoading.value = true;
+    const response = await ReportService.ReportHour(filter.value);
+    filterStatistics.value.all = response.data.all;
+    filterStatistics.value.bought = response.data.bought;
+    filterStatistics.value.deposit = response.data.deposit;
+    filterStatistics.value.allBalance = response.data.allBalance;
+    filterStatistics.value.sold = response.data.sold;
+    filterStatistics.value.succeedWithdraw = response.data.succeedWithdraw;
+    return response
+  } catch (error) {
+    if (error.response.status == 401) {
+      localStorage.clear();
+      router.replace("/login");
+    }
+    errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+    alertError.value = true;
+    setTimeout(() => {
+      alertError.value = false;
+    }, 10000)
+  } finally {
+    statisticLoading.value = false;
+  }
+}
+
 
 
 
@@ -376,5 +433,9 @@ onMounted(() => {
   right: 10px;
   font-size: 12px;
   padding: 2px !important;
+}
+
+.stat-bold{
+  font-weight: bold;
 }
 </style>
