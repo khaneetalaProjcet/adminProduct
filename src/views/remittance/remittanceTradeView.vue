@@ -289,7 +289,7 @@
                                                     </div>
                                                 </v-col>
                                             </v-row>
-                                            <v-row class="">
+                                            <v-row>
                                                 <v-col cols="12" md="3">
                                                     <persian-date-picker v-model="goldPriceForm.date"
                                                         placeholder="تاریخ"></persian-date-picker>
@@ -334,8 +334,8 @@
                                                         label="شناسه پرداخت" variant="outlined"></v-text-field>
                                                 </v-col> -->
 
-                                                <v-divider class="my-9"></v-divider>
-                                                <v-col cols="12" md="3">
+                                                <!-- <v-divider class="my-9"></v-divider> -->
+                                                <!-- <v-col cols="12" md="3">
                                                     <div class="d-flex justify-start align-center h-100">
                                                         <p class="ma-0">اطلاعات حساب بانکی : </p>
                                                     </div>
@@ -351,7 +351,7 @@
                                                 <v-col cols="12" md="3" v-if="remiitanceSellForm.destCardPan == 'سایر'">
                                                     <v-text-field v-model="otherSellBankAccount" label="از حساب"
                                                         variant="outlined"></v-text-field>
-                                                </v-col>
+                                                </v-col> -->
                                                 <v-divider class="my-9"></v-divider>
                                                 <v-col cols="12" md="3">
                                                     <div class="d-flex justify-start align-center h-100">
@@ -652,7 +652,7 @@ const remiitanceSellForm = ref({
     invoiceId: '',
     phoneNumber: '',
     originCardPan: '',
-    destCardPan: '',
+    // destCardPan: '',
     date: '',
     time: '',
 });
@@ -907,7 +907,6 @@ const nextStep = async (type) => {
     }
 };
 
-
 const TradeRequest = async (type) => {
     if (step.value === 1) {
         return await AuthNumber();
@@ -970,9 +969,9 @@ const remiitanceSell = async () => {
         remiitanceSellForm.value.userId = userInfo.value.id;
         remiitanceSellForm.value.goldPrice = goldPriceForm.value.buyPrice;
         remiitanceSellForm.value.phoneNumber = userInfo.value.phoneNumber;
-        if (remiitanceSellForm.value.destCardPan == 'سایر') {
-            remiitanceSellForm.value.destCardPan = otherSellBankAccount.value;
-        }
+        // if (remiitanceSellForm.value.destCardPan == 'سایر') {
+        //     remiitanceSellForm.value.destCardPan = otherSellBankAccount.value;
+        // }
         const response = await RemiitanceService.CreateRemiitanceSell(remiitanceSellForm.value);
         InvoiceForm.value.type = 'فروش';
         InvoiceForm.value.adminId = response?.data?.adminId;
@@ -1003,7 +1002,6 @@ const remiitanceSell = async () => {
         stepThreeLoading.value = false;
     }
 }
-
 
 const AuthNumber = async () => {
     try {
@@ -1036,7 +1034,6 @@ const AuthNumber = async () => {
         stepOneLoading.value = false;
     }
 };
-
 
 const identity = async () => {
     try {
