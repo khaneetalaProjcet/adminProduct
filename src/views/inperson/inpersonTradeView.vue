@@ -190,7 +190,7 @@
                                                     </div>
                                                 </v-col>
                                             </v-row>
-                                            <v-row>
+                                            <v-row class="mb-4">
                                                 <v-col cols="12" md="3">
                                                     <persian-date-picker v-model="goldPriceForm.date"
                                                         placeholder="تاریخ"></persian-date-picker>
@@ -213,7 +213,7 @@
                                                     </v-btn>
                                                 </v-col>
                                             </v-row>
-                                            <v-row>
+                                            <v-row class="my-4">
                                                 <v-col cols="12" md="3">
                                                     <v-text-field v-model="tradeBuyForm.totalPrice" label="مبلغ (تومان)"
                                                         variant="outlined" @input="buyGoldpriceConvert"
@@ -231,11 +231,11 @@
                                                         @input="buyGoldweightConvert"
                                                         :disabled="goldPriceForm.buyPrice == '' ? true : false"></v-text-field>
                                                 </v-col>
-                                                <v-col cols="12" md="4">
+                                                <!-- <v-col cols="12" md="4">
                                                     <v-text-field v-model="tradeBuyForm.invoiceId" label="شناسه پرداخت"
-                                                        variant="outlined" :rules="validateInvoice"></v-text-field>
-                                                </v-col>
-                                                <v-col cols="12" md="3">
+                                                        variant="outlined" :rules="validateRule"></v-text-field>
+                                                </v-col> -->
+                                                <!-- <v-col cols="12" md="3">
                                                     <div class="d-flex justify-start align-center h-100">
                                                         <v-select v-model="tradeBuyForm.paymentMethod"
                                                             :items="paymentType" label="نوع پرداخت" variant="outlined"
@@ -250,7 +250,47 @@
                                                             :rules="paymentTypeRule" item-title="label"
                                                             item-value="label"></v-select>
                                                     </div>
+                                                </v-col>  -->
+
+                                            </v-row>
+                                            <v-divider class="my-4"></v-divider>
+                                            <v-row class="my-4">
+                                                <v-col cols="6" md="4" class="my-2">
+                                                    <div class="d-flex flex-column">
+                                                        <MoneyInput v-model="paymentDetail.cash"
+                                                            label="مبلغ نقد (تومان)" variant="outlined" class="my-2"
+                                                            :rules="[totalRule]" />
+                                                        <v-text-field v-model="paymentDetail.cashId" label="شناسه"
+                                                            variant="outlined" class="my-2"></v-text-field>
+                                                    </div>
                                                 </v-col>
+                                                <v-col cols="6" md="4" class="my-2">
+                                                    <div class="d-flex flex-column">
+                                                        <MoneyInput v-model="paymentDetail.creditCard"
+                                                            label="دستگاه پوز (تومان)" variant="outlined"
+                                                            :rules="[totalRule]" class="my-2" />
+                                                        <v-text-field v-model="paymentDetail.creditCardId" label="شناسه"
+                                                            variant="outlined" class="my-2"></v-text-field>
+                                                    </div>
+                                                </v-col>
+                                                <v-col cols="6" md="4" class="my-2">
+                                                    <div class="d-flex flex-column">
+                                                        <MoneyInput v-model="paymentDetail.cardToCard"
+                                                            label="کارت به کارت(تومان)" variant="outlined"
+                                                            :rules="[totalRule]" class="my-2" />
+                                                        <!-- <v-text-field v-model="paymentDetail.cardToCardId" label="شناسه"
+                                                            variant="outlined" class="my-2"></v-text-field> -->
+                                                        <div class="d-flex justify-start align-center h-100">
+                                                            <v-select v-model="paymentDetail.cardToCardId"
+                                                                :items="bankAccounts" label="شماره کارت"
+                                                                variant="outlined" item-title="label" item-value="label"
+                                                                class="my-2"></v-select>
+                                                        </div>
+                                                    </div>
+                                                </v-col>
+                                            </v-row>
+                                            <v-divider class="my-4"></v-divider>
+                                            <v-row class="mt-4">
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
                                                         v-model="tradeBuyForm.description"></v-textarea>
@@ -322,7 +362,7 @@
                                                 </v-col>
                                                 <!-- <v-col cols="12" md="4">
                                                     <v-text-field v-model="tradeSellForm.invoiceId" label="شناسه پرداخت"
-                                                        variant="outlined" :rules="validateInvoice"></v-text-field>
+                                                        variant="outlined" :rules="validateRule"></v-text-field>
                                                 </v-col> -->
                                                 <v-col cols="12">
                                                     <v-textarea label="توضیحات (اختیاری)" variant="outlined"
@@ -487,11 +527,12 @@
 </template>
 
 <script setup>
+import MoneyInput from '@/components/MoneyInput.vue';
 import { router } from '@/plugins/router';
 import InPersonService from '@/services/inperson/inperson';
 import GoldPriceService from '@/services/priceApi/price';
 import jalaaliJs from 'jalaali-js';
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 
 const steps = ref([1, 2, 3, 4]);
 const step = ref(1);
@@ -583,6 +624,15 @@ const InvoiceForm = ref({
         phoneNumber: '',
         nationalCode: '',
     }
+});
+
+const paymentDetail = ref({
+    cash: null,
+    cashId: '',
+    creditCard: null,
+    creditCardId: '',
+    cardToCard: null,
+    cardToCardId: '',
 })
 
 const paymentType = ref([
@@ -789,14 +839,35 @@ const prevStep = () => {
     inPersonForm.value.phoneNumber = '';
 };
 
-
 const isFormValid = computed(() => {
     if (!formRefs.value[step.value]) return false;
     if (otpVerification.value && inPersonForm.value.otp?.length !== 4) {
         return false;
     }
+
+    if (step.value === 3 && totalEnteredAmount.value !== tradeBuyForm.value.totalPrice) {
+        return false;
+    }
+
     return formRefs.value[step.value].isValid;
 });
+
+const totalEnteredAmount = computed(() => {
+    return (
+        (paymentDetail.value.cash || 0) +
+        (paymentDetail.value.creditCard || 0) +
+        (paymentDetail.value.cardToCard || 0)
+    )
+})
+
+
+const totalRule = () => {
+    if (!value && totalEnteredAmount.value === 0) return true
+
+    return totalEnteredAmount.value === tradeBuyForm.value.totalPrice
+        ? true
+        : `مجموع پرداخت‌ها باید برابر ${tradeBuyForm.value.totalPrice.toLocaleString()} تومان باشد`
+}
 
 const nextStep = async (type) => {
     const form = formRefs.value[step.value];
@@ -1009,7 +1080,6 @@ const TradeSell = async () => {
     }
 }
 
-
 const convertDate = () => {
     const [year, month, day] = goldPriceForm.value.date.split('/').map(Number);
     const [hour, minute] = goldPriceForm.value.time.split(':').map(Number);
@@ -1026,8 +1096,6 @@ const convertDate = () => {
 
     goldPriceForm.value.milliseconds = date.getTime();
 }
-
-
 
 const limitNumber = () => {
     inPersonForm.value.phoneNumber = inPersonForm.value.phoneNumber.replace(/\D/g, '').slice(0, 11);
@@ -1060,8 +1128,8 @@ const validateWeight = [
     // (v) => /^\d+(\.\d{1,3})?$/.test(v) || 'فقط عدد مجاز است و حداکثر 3 رقم اعشار',
 ];
 
-const validateInvoice = [
-    v => !!v || 'شناسه پرداخت الزامی است',
+const validateRule = [
+    v => !!v || 'این فیلد الزامی است',
 ]
 
 
@@ -1206,7 +1274,7 @@ const sellGoldweightConvert = () => {
 }
 
 const paymentTypeRule = [
-    (v) => !!v || "نوع پرداخت را انتخاب کنید!",
+    (v) => !!v || "کارت را انتخاب کنید!",
 ];
 
 </script>
