@@ -13,6 +13,12 @@
                     <v-tabs-window v-model="tab">
                         <v-tabs-window-item value="one">
                             <v-card title="در انتظار تایید">
+                              <ul class="listGuide ">
+              <li>
+درخواست خرید حواله که از سوی کاربر ثبت شده و در انتطار بررسی از سوی حسابداری می باشد.
+              </li>
+
+            </ul>
                                 <template v-slot:text>
                                     <v-text-field v-model="PendingRemiitanceBuySearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
@@ -38,6 +44,13 @@
                         </v-tabs-window-item>
                         <v-tabs-window-item value="two">
                             <v-card title="موفق">
+                              <ul class="listGuide ">
+              <li>
+
+درخواست خرید حواله که از سوی حسابداری تایید شده و با موفقیت انجام شده است.
+              </li>
+
+            </ul>
                                 <template v-slot:text>
                                     <v-text-field v-model="CompleteRemiitanceBuySearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
@@ -64,6 +77,13 @@
                         </v-tabs-window-item>
                         <v-tabs-window-item value="three">
                             <v-card title="ناموفق">
+
+                              <ul class="listGuide ">
+              <li>
+
+درخواست خرید حواله که از سوی حسابداری تایید نشده و یا کاربر از خرید صرف نظر کرده است.              </li>
+
+            </ul>
                                 <template v-slot:text>
                                     <v-text-field v-model="FailedRemiitanceBuySearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
@@ -515,5 +535,16 @@ onMounted(() => {
 .form-box {
     width: 100%;
     padding: 0 2rem;
+}
+
+
+.listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  padding: 0.5rem;
+  margin: 0.1rem;
+  margin-bottom: 2rem;
+  margin-right: 0.9rem
 }
 </style>

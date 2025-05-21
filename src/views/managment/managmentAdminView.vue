@@ -1,9 +1,13 @@
 <template>
     <v-container>
         <v-row>
+
             <v-col cols="12">
+
                 <v-card title="سطح دسترسی ها">
+
                     <div class="px-5 py-3 d-flex justify-end">
+
                         <v-btn @click="AddAdminDialog = true" class="mx-2">افزودن کاربر</v-btn>
                         <v-btn color="error" class="error-btn" :loading="managmentAccessLoading"
                             @click="managmentDialogRequest">
@@ -11,6 +15,11 @@
                         </v-btn>
                     </div>
                     <template v-slot:text>
+                                                                    <ul class="listGuide">
+<li>
+قابلیت اضافه کردن کاربر و تعیین مجوزهای مورد نیاز برای هر کاربر وجود دارد.
+</li>
+                                              </ul>
                         <v-text-field v-model="AdminListSearch" label="جستجو"
                             prepend-inner-icon="ri-search-line"></v-text-field>
                     </template>
@@ -659,5 +668,15 @@ onMounted(() => {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  margin: 0.2rem;
+  margin-bottom: 2rem;
+  margin-right: 0.7rem;
+  margin-left: 1rem;
 }
 </style>

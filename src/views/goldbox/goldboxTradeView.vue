@@ -12,7 +12,8 @@
                     <!-- مرحله ۱ -->
                     <v-stepper-window-item :value="1">
                         <v-card class="step-card">
-                            <v-form :ref="(el) => setFormRef(el, 1)">
+                            <v-form :ref="(el) => setFormRef(el, 1) "  >
+
                                 <v-container>
                                     <v-row>
                                         <v-col cols="12">
@@ -31,7 +32,7 @@
                                 </v-container>
                             </v-form>
                             <v-card-actions class="btn-box first-step">
-                                <v-btn @click="nextStep" color="primary" size="large" variant="elevated"
+                                <v-btn @click="nextStep" @keyup.enter="nextStep"  color="primary" size="large" variant="elevated"
                                     :loading="stepOneLoading" :disabled="!isFormValid">
                                     بعدی
                                 </v-btn>
@@ -181,6 +182,9 @@
                                                 <v-col cols="12">
                                                     <div class="w-100 d-flex justify-space-between align-items-center">
                                                         <h3 class="trade-step-title">ثبت خرید</h3>
+                                                                                                                                                               <div class="d-flex justify-end my-1">
+                <v-btn color="#930506" size="small" class="info-btn" @click="guideinperson">راهنما</v-btn>
+                </div>
                                                     </div>
                                                 </v-col>
                                             </v-row>
@@ -265,6 +269,9 @@
                                                 <v-col cols="12">
                                                     <div class="w-100 d-flex justify-space-between align-items-center">
                                                         <h3 class="trade-step-title">ثبت فروش</h3>
+                                                                                                                                                                                                                 <div class="d-flex justify-end my-1">
+                <v-btn color="#930506" size="small" class="info-btn" @click="guideinpersonSell">راهنما</v-btn>
+                </div>
                                                     </div>
                                                 </v-col>
                                             </v-row>
@@ -471,6 +478,50 @@
             </h4>
         </v-card>
     </v-dialog>
+
+
+
+        <v-dialog max-width="500" v-model="guideBuy">
+      <v-card class="guideSectionStyle">
+        <h2 class="guideSection-title">راهنما ثبت معامله تلفنی</h2>
+        <ul>
+          <li>
+در ابتدا لازم است دو بخش مربوط به تاریخ و زمان را ثبت کنید تا امکان فعال‌سازی کادر استعلام قیمت طلا فراهم شود.
+
+          </li>
+
+         <li>
+مبلغی که کاربر پرداخت می‌کند، باید حتماً به همان حسابی که هنگام ثبت سفارش مشخص شده است واریز شود.
+          </li>
+
+          <li>
+زمان ثبت معامله باید حتماً در همان لحظه انجام شود.
+          </li>
+        </ul>
+
+      </v-card>
+    </v-dialog>
+        <v-dialog max-width="500" v-model="guideSell">
+      <v-card class="guideSectionStyle">
+        <h2 class="guideSection-title">راهنما ثبت فروش معامله تلفنی</h2>
+        <ul>
+          <li>
+در ابتدا لازم است دو بخش مربوط به تاریخ و زمان را ثبت کنید تا امکان فعال‌سازی کادر استعلام قیمت طلا فراهم شود.
+
+          </li>
+
+          <li>
+            قیمت فروش طلا با یک درصد کارمزد نمایش داده می شود.
+          </li>
+
+          <li>
+زمان ثبت معامله باید حتماً در همان لحظه انجام شود.
+          </li>
+        </ul>
+
+      </v-card>
+    </v-dialog>
+
 </template>
 
 <script setup>
@@ -483,6 +534,8 @@ import { ref, computed } from 'vue';
 const tab = ref(null);
 const step = ref(1);
 const steps = [1, 2, 3, 4];
+const guideSell = ref(false);
+const guideBuy = ref(false);
 const stepOneLoading = ref(false);
 const stepTwoLoading = ref(false);
 const stepThreeLoading = ref(false);
@@ -1224,6 +1277,13 @@ const sellGoldweightConvert = () => {
     tradeSellForm.value.totalPrice = formatNumberWithCommas(calculatedPrice);
 }
 
+const guideinperson = () => {
+  guideBuy.value = true ;
+}
+const guideinpersonSell = () => {
+  guideSell.value = true ;
+}
+
 </script>
 
 <style scoped>
@@ -1304,4 +1364,24 @@ const sellGoldweightConvert = () => {
     width: 80px;
     height: 80px;
 }
+
+
+.guideSectionStyle {
+  min-height: 14rem;
+  padding: 0.9rem;
+
+}
+
+.guideSectionStyle li {
+  margin: 1rem;
+  font-weight: bold;
+}
+
+
+ .guideSection-title {
+  margin: 0.8rem 0.5rem;
+  color: #d4af37;
+  font-weight: 400;
+}
+
 </style>

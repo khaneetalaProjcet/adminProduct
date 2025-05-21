@@ -79,6 +79,14 @@
                                 </v-col>
                             </v-row>
                             <v-card title="در انتظار تایید">
+        <ul class="listGuide ">
+              <li>
+
+درخواست فروش حواله که در انتظار تایید و بررسی حسابداری می باشد.
+              </li>
+
+            </ul>
+
                                 <v-data-table :headers="PendingRemiitanceSellHeader" :items="PendingRemiitanceSellData"
                                     :loading="PendingRemiitanceSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -164,6 +172,13 @@
                                 </v-col>
                             </v-row>
                             <v-card title="موفق">
+        <ul class="listGuide ">
+              <li>
+
+درخواست فروش حواله که از سوی حسابداری بررسی شده و با فرایند آن با موفقیت انجام شده است.
+              </li>
+
+            </ul>
                                 <v-data-table :headers="CompleteRemiitanceSellHeader"
                                     :items="CompleteRemiitanceSellData" :loading="CompleteRemiitanceSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -250,6 +265,13 @@
                                 </v-col>
                             </v-row>
                             <v-card title="ناموفق">
+        <ul class="listGuide ">
+              <li>
+
+درخواست فروش حواله که به دلیل انصراف مشتری و یا دلایل دیگر لغو شده  اند.
+              </li>
+
+            </ul>
                                 <v-data-table :headers="FailedRemiitanceSellHeader" :items="FailedRemiitanceSellData"
                                     :loading="FailedRemiitanceSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -802,4 +824,16 @@ onMounted(() => {
     width: 100%;
     padding: 0 2rem;
 }
+
+
+.listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  padding: 0.5rem;
+  margin: 0.1rem;
+  margin-bottom: 2rem;
+  margin-right: 0.9rem
+}
+
 </style>

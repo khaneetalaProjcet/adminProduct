@@ -12,8 +12,15 @@
                 <v-card-text>
                     <v-tabs-window v-model="tab">
                         <v-tabs-window-item value="one">
+
                             <v-card title="تراکنش های استفاده نامشخص">
+
                                 <template v-slot:text>
+                                     <ul  class="listGuide">
+                                <li>
+                        استفاده از صندوق طلا که ثبت نهایی نشده و در حالت تعلیق قرار دارد.
+                                </li>
+                              </ul>
                                     <v-text-field v-model="PendingUseGoldSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
@@ -36,6 +43,10 @@
                         <v-tabs-window-item value="two">
                             <v-card title="تراکنش های استفاده تایید شده">
                                 <template v-slot:text>
+                                              <ul class="listGuide">
+                                <li>
+استفاده از صندوق طلا که موفق بوده و مراحل آن به درستی سپری شده است.                                </li>
+                              </ul>
                                     <v-text-field v-model="CompleteUseGoldSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
@@ -57,7 +68,12 @@
                         </v-tabs-window-item>
                         <v-tabs-window-item value="three">
                             <v-card title="تراکنش های استفاده رد شده">
+
                                 <template v-slot:text>
+                                                                        <ul class="listGuide">
+                                <li>
+استفاده از صندوق طلا که به علت منصرف شدن کاربر و یا دلایل دیگر لغو شده است.                                </li>
+                              </ul>
                                     <v-text-field v-model="failedUseGoldSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
@@ -420,5 +436,15 @@ onMounted(() => {
 .form-box {
     width: 100%;
     padding: 2rem;
+}
+
+ .listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  padding: 0.2em;
+  margin: 0.2rem;
+  margin-bottom: 2rem;
+ margin-left:1rem
 }
 </style>

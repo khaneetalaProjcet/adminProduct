@@ -16,10 +16,10 @@
                             <v-card title="انتقال های نامشخص">
 
                                 <template v-slot:text>
-                                         <ul class="listGuide">
-                <li>
-                  انتقال تا 
-                </li>
+<ul class="listGuide">
+  <li>
+    درخواست انتقال طلا که تا مرحله پایانی پیش رفته  و از سوی کاربر صرف نطر شده است.
+  </li>
               </ul>
 
                                     <v-text-field v-model="PendingTransferGoldSearch" label="جستجو"
@@ -42,8 +42,13 @@
                             </v-card>
                         </v-tabs-window-item>
                         <v-tabs-window-item value="two">
-                            <v-card title="انتقال های تایید شده">
+                            <v-card title="انتقال های موفق">
+
                                 <template v-slot:text>
+                                                  <ul class="listGuide">
+  <li>
+درخواست انتقال طلا که تمامی مراحل آن با موفقیت انجام شده است.  </li>
+              </ul>
                                     <v-text-field v-model="CompleteTransferGoldSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
@@ -64,8 +69,14 @@
                             </v-card>
                         </v-tabs-window-item>
                         <v-tabs-window-item value="three">
-                            <v-card title="انتقال های رد شده">
+                            <v-card title="انتقال های ناموفق">
+
                                 <template v-slot:text>
+                                                                                <ul class="listGuide">
+<li>
+درخواست انتقال طلا که تا مراحل پایانی پیش رفته، اما به دلایل مختلف به نتیجه نرسیده است.
+</li>
+                                              </ul>
                                     <v-text-field v-model="failedTransferGoldSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
@@ -454,6 +465,7 @@ onMounted(() => {
     width: 100%;
     padding: 2rem;
 }
+
 .listGuide {
   font-size: 12px;
   color: #2c3e50;
@@ -461,7 +473,7 @@ onMounted(() => {
 
   margin: 0.2rem;
   margin-bottom: 2rem;
-  margin-right: 1rem;
+  margin-right: 1.5rem;
   margin-left: 1rem
 }
 </style>

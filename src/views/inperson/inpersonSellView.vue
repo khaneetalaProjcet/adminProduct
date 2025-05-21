@@ -78,7 +78,7 @@
                             <v-card title="موفق">
                              <ul class="listGuide">
                     <li>
-معاملاتی که فروش آنها در بخش حضوری انجام شده و مبلغ آنها توسط حسابداری به حساب ثبت شده  در سایت مرجوع می گردد.
+معاملاتی که فروش آن‌ها به‌صورت حضوری انجام شده و مبلغ آن‌ها از طریق حسابداری به حساب ثبت‌ شده در سایت بازگردانده می‌شود.
                     </li>
                   </ul>
                                 <v-data-table :headers="CompleteInPersonSellHeader" :items="CompleteInPersonSellData"
@@ -169,7 +169,7 @@
                             <v-card title="ناموفق">
                                                                    <ul class="listGuide">
                     <li>
-معاملاتی که فروش آنها به دلیل صرف نظر مشتری و یا دلایل دیگر توسط حسابداری رد شده اند.
+معاملاتی که توسط کاربر از فروش آنها صرف نظر شده یا به دلایل مختلف لغو شده‌اند
                     </li>
                   </ul>
                                 <v-data-table :headers="FailedInPersonSellHeader" :items="FailedInPersonSellData"

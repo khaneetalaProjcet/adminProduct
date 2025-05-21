@@ -187,6 +187,10 @@
                                                 <v-col cols="12">
                                                     <div class="w-100 d-flex justify-space-between align-items-center">
                                                         <h3 class="trade-step-title">ثبت خرید</h3>
+                                                                   <div class="d-flex justify-end my-1">
+                              <v-btn color="#930506" size="small" class="info-btn"
+                                @click="Guidebuy">راهنما</v-btn>
+                            </div>
                                                     </div>
                                                 </v-col>
                                             </v-row>
@@ -275,6 +279,10 @@
                                                 <v-col cols="12">
                                                     <div class="w-100 d-flex justify-space-between align-items-center">
                                                         <h3 class="trade-step-title">ثبت فروش</h3>
+
+                                                                                                                                                        <div class="d-flex justify-end my-1">
+                <v-btn color="#930506" size="small" class="info-btn" @click="guideSellinperson">راهنما</v-btn>
+                </div>
                                                     </div>
                                                 </v-col>
                                             </v-row>
@@ -484,6 +492,47 @@
             </h4>
         </v-card>
     </v-dialog>
+        <v-dialog max-width="500" v-model="guidebuyinperson">
+      <v-card class="guideSectionStyle">
+        <h2 class="guideSection-title">راهنما ثبت معامله حضوری</h2>
+        <ul>
+          <li>
+در ابتدا لازم است دو بخش مربوط به تاریخ و زمان را ثبت کنید تا امکان فعال‌سازی کادر استعلام قیمت طلا فراهم شود.
+
+          </li>
+
+          <li>
+            قیمت فروش طلا با یک درصد کارمزد نمایش داده می شود.
+          </li>
+
+          <li>
+زمان ثبت معامله باید حتماً در همان لحظه انجام شود.
+          </li>
+        </ul>
+
+      </v-card>
+    </v-dialog>
+        <v-dialog max-width="500" v-model="guideSells">
+      <v-card class="guideSectionStyle">
+        <h2 class="guideSection-title"> راهنما ثبت فروش حضوری</h2>
+        <ul>
+          <li>
+در ابتدا لازم است دو بخش مربوط به تاریخ و زمان را ثبت کنید تا امکان فعال‌سازی کادر استعلام قیمت طلا فراهم شود.
+
+          </li>
+
+          <li>
+            قیمت فروش طلا با یک درصد کارمزد نمایش داده می شود.
+          </li>
+
+          <li>
+زمان ثبت معامله باید حتماً در همان لحظه انجام شود.
+          </li>
+        </ul>
+
+      </v-card>
+    </v-dialog>
+
 </template>
 
 <script setup>
@@ -497,6 +546,8 @@ const steps = ref([1, 2, 3, 4]);
 const step = ref(1);
 const tab = ref(null);
 const formRefs = ref({});
+const  guideSells = ref(false);
+const  guidebuyinperson = ref(false);
 const stepOneLoading = ref(false);
 const stepTwoLoading = ref(false);
 const stepThreeLoading = ref(false);
@@ -1209,6 +1260,13 @@ const paymentTypeRule = [
     (v) => !!v || "نوع پرداخت را انتخاب کنید!",
 ];
 
+
+const Guidebuy = () => {
+ guidebuyinperson.value = true ;
+}
+const guideSellinperson = () => {
+ guideSells.value = true ;
+}
 </script>
 
 <style scoped>
@@ -1284,5 +1342,23 @@ const paymentTypeRule = [
     display: flex;
     justify-content: flex-start;
     align-items: center;
+}
+
+.guideSectionStyle {
+  min-height: 14rem;
+  padding: 0.9rem;
+
+}
+
+.guideSectionStyle li {
+  margin: 1rem;
+  font-weight: bold;
+}
+
+
+ .guideSection-title {
+  margin: 0.8rem 0.5rem;
+  color: #d4af37;
+  font-weight: 400;
 }
 </style>

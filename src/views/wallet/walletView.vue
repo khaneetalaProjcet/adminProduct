@@ -9,7 +9,8 @@
             <template v-slot:text>
               <ul class="listGuide">
                 <li>
-                  تمامی فعالیت های مالی کیف پول کاربر در این صفحه قابل مشاهده می باشد. </li>
+تمام فعالیت‌های مالی کیف پول کاربر در این صفحه نمایش داده می‌شود.
+                </li>
               </ul>
 
               <v-text-field v-model="WalletSearch" label="جستجو" prepend-inner-icon="ri-search-line"></v-text-field>

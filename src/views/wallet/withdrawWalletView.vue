@@ -21,7 +21,7 @@
                                 <template v-slot:text>
                                                                 <ul class="listGuide">
                     <li>
-                      معاملاتی که به صورت مستقیم از موجودی کیف پول پرداخت شده اند و در صف تایید می باشند.
+معاملاتی که به‌طور مستقیم از موجودی کیف پول انجام شده و در انتظار تأیید هستند.
                     </li>
                   </ul>
                                     <v-text-field v-model="PendingWithdrawSearch" label="جستجو"
@@ -52,7 +52,7 @@
                                 <template v-slot:text>
                                                  <ul class="listGuide">
                     <li>
-                      معاملاتی که از کیف پول کاربران برداشت شده و با موفقیت به اتمام رسیده اند.
+تراکنش‌ هایی که از کیف پول کاربران کسر شده و با موفقیت انجام شده‌اند.
                     </li>
                   </ul>
                                     <v-text-field v-model="CompleteWithdrawSearch" label="جستجو"
@@ -405,6 +405,6 @@ onMounted(() => {
   padding: 0.5rem;
   margin: 0.1rem;
   margin-bottom: 1rem;
-  margin-right: 0.9rem
+  margin-right: 0.5rem
 }
 </style>

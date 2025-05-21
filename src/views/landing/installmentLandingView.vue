@@ -1,12 +1,26 @@
 <template>
     <div>
         <v-row>
+
             <v-col cols="12">
+
+
                 <v-card-text>
+
                     <v-card title="اطلاعات افراد متقاضی خرید قسطی">
+
                         <template v-slot:text>
+
+                          <ul class="listGuide">
+                            <li>
+                             تمامی  اطلاعات درخواست های اقساط کاربران قابل  مشاهده می باشد.
+
+                            </li>
+                          </ul>
                             <v-text-field v-model="search" label="جستجو"
+
                                 prepend-inner-icon="ri-search-line"></v-text-field>
+
                         </template>
 
                         <v-data-table :headers="installmentHeader" :items="installmentData" :search="search"
@@ -16,6 +30,7 @@
                                     @click="userInfo(item)"></v-icon>
                             </template>
                         </v-data-table>
+
                     </v-card>
                 </v-card-text>
             </v-col>
@@ -79,6 +94,7 @@
             {{ errorMsg }}
         </v-alert>
     </div>
+
 </template>
 
 <script setup>
@@ -200,5 +216,15 @@ onMounted(() => {
 
 .user-dialog-info {
     font-size: 14px;
+}
+
+ .listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+  padding: 0.2rem;
+  margin: 0.2rem;
+  margin-bottom: 2rem;
+
 }
 </style>

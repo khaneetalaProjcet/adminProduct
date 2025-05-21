@@ -175,6 +175,9 @@
                                                 <v-col cols="12">
                                                     <div class="w-100 d-flex justify-space-between align-items-center">
                                                         <h3 class="trade-step-title">ثبت حواله خرید</h3>
+                                                                  <div class="d-flex justify-end my-1">
+                <v-btn color="#930506" size="small" class="info-btn" @click="guideremitance">راهنما</v-btn>
+                </div>
                                                     </div>
                                                 </v-col>
                                             </v-row>
@@ -280,6 +283,9 @@
                                                 <v-col cols="12">
                                                     <div class="w-100 d-flex justify-space-between align-items-center">
                                                         <h3 class="trade-step-title">ثبت حواله فروش</h3>
+                                                                                                                      <div class="d-flex justify-end my-1">
+                <v-btn color="#930506" size="small" class="info-btn" @click="guideremitancesell">راهنما</v-btn>
+                </div>
                                                     </div>
                                                 </v-col>
                                             </v-row>
@@ -524,6 +530,54 @@
             </h4>
         </v-card>
     </v-dialog>
+    <v-dialog max-width="500" v-model="guidebuy">
+      <v-card class="guideSectionStyle">
+        <h2 class="guideSection-title">راهنما ثبت حواله خرید</h2>
+        <ul>
+          <li>
+در ابتدا لازم است دو بخش مربوط به تاریخ و زمان را ثبت کنید تا امکان فعال‌سازی کادر استعلام قیمت طلا فراهم شود.
+
+          </li>
+
+          <li>
+برای وارد کردن شناسه پرداخت، لازم است تنها از اعداد استفاده کنید.
+
+          </li>
+
+          <li>
+مبلغی که کاربر پرداخت می‌کند، باید حتماً به همان حسابی که هنگام ثبت سفارش مشخص شده است واریز شود.
+          </li>
+
+          <li>
+زمان ثبت معامله باید حتماً در همان لحظه انجام شود.
+          </li>
+        </ul>
+
+      </v-card>
+    </v-dialog>
+    <v-dialog max-width="500" v-model="guidsell">
+      <v-card class="guideSectionStyle">
+        <h2 class="guideSection-title">راهنما ثبت حواله خرید</h2>
+        <ul>
+          <li>
+در ابتدا لازم است دو بخش مربوط به تاریخ و زمان را ثبت کنید تا امکان فعال‌سازی کادر استعلام قیمت طلا فراهم شود.
+
+          </li>
+
+          <li>
+            قیمت فروش طلا با یک درصد کارمزد نمایش داده می شود.
+          </li>
+
+          <li>
+زمان ثبت معامله باید حتماً در همان لحظه انجام شود.
+          </li>
+        </ul>
+
+      </v-card>
+    </v-dialog>
+
+
+
 </template>
 
 <script setup>
@@ -537,6 +591,8 @@ const steps = ref([1, 2, 3, 4]);
 const step = ref(1);
 const formRefs = ref({});
 const tab = ref(null);
+const guidebuy = ref(false);
+const guidsell= ref(false);
 const stepOneLoading = ref(false);
 const stepTwoLoading = ref(false);
 const stepThreeLoading = ref(false);
@@ -1232,6 +1288,13 @@ const sellGoldweightConvert = () => {
     remiitanceSellForm.value.totalPrice = formatNumberWithCommas(calculatedPrice);
 }
 
+const guideremitance = () => {
+  guidebuy.value = true ;
+}
+const guideremitancesell = () => {
+  guidsell.value = true ;
+}
+
 </script>
 
 <style scoped>
@@ -1289,4 +1352,23 @@ const sellGoldweightConvert = () => {
     justify-content: flex-start;
     align-items: center;
 }
+
+.guideSectionStyle {
+  min-height: 14rem;
+  padding: 0.9rem;
+
+}
+
+.guideSectionStyle li {
+  margin: 1rem;
+  font-weight: bold;
+}
+
+
+ .guideSection-title {
+  margin: 0.8rem 0.5rem;
+  color: #d4af37;
+  font-weight: 400;
+}
+
 </style>

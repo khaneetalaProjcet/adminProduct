@@ -17,7 +17,7 @@
 
           <ul class="listGuide">
                     <li>
-درخواست برداشت مبلغ کیف پول از سوی کاربر ثبت شده و در انتظار بررسی از سوی حسابداری می باشد.
+درخواست برداشت مبلغ از کیف پول توسط کاربر ثبت شده و در حال بررسی توسط واحد حسابداری است.
                     </li>
                   </ul>
                                     <v-text-field v-model="PendingDepositSearch" label="جستجو"
@@ -48,7 +48,7 @@
                                 <template v-slot:text>
           <ul class="listGuide">
                     <li>
-                              درخواست برداشت مبلغ کیف پول از سوی کاربر ثبت شده و واریزی به حساب مشخص شده انجام شده است.
+درخواست برداشت وجه از کیف پول توسط کاربر ثبت و مبلغ به حساب اعلام‌شده واریز شده است.
                     </li>
                   </ul>
                                     <v-text-field v-model="CompleteDepositSearch" label="جستجو"
@@ -79,7 +79,8 @@
                                 <template v-slot:text>
                          <ul class="listGuide">
                     <li>
-درخواست برداشت از کیف پول توسط کاربر لغو شده و یا به دلایل دیگر از سوی حسابداری رد شده است .                    </li>
+درخواست برداشت از کیف پول توسط کاربر لغو شده یا به دلایلی از سوی بخش حسابداری رد شده است.
+                    </li>
                   </ul>
                                     <v-text-field v-model="FailedDepositSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
