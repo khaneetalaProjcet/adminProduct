@@ -12,8 +12,16 @@
                 <v-card-text>
                     <v-tabs-window v-model="tab">
                         <v-tabs-window-item value="one">
+
                             <v-card title="انتقال های نامشخص">
+
                                 <template v-slot:text>
+                                         <ul class="listGuide">
+                <li>
+                  انتقال تا 
+                </li>
+              </ul>
+
                                     <v-text-field v-model="PendingTransferGoldSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
@@ -445,5 +453,15 @@ onMounted(() => {
 .form-box {
     width: 100%;
     padding: 2rem;
+}
+.listGuide {
+  font-size: 12px;
+  color: #2c3e50;
+  font-weight: 500px;
+
+  margin: 0.2rem;
+  margin-bottom: 2rem;
+  margin-right: 1rem;
+  margin-left: 1rem
 }
 </style>
