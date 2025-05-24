@@ -9,7 +9,7 @@
                 </v-stepper-header>
                 <v-stepper-window>
                     <v-stepper-window-item :value="1">
-                        <v-card class="step-card">
+                        <v-card class="step-card" >
                             <v-form :ref="(el) => setFormRef(el, 1)">
                                 <v-container>
                                     <v-row>
@@ -37,11 +37,11 @@
                                 </v-container>
                             </v-form>
                             <v-card-actions class="btn-box first-step">
-                                <v-btn @click="sendOtp" color="primary" size="large" variant="elevated"
+                                <v-btn @click="sendOtp"  color="primary" size="large" variant="elevated"
                                     :disabled="!isFormValid" v-if="otpVerification == false" :loading="otpLoading">
                                     ارسال کد تایید
                                 </v-btn>
-                                <v-btn @click="nextStep" color="primary" size="large" variant="elevated"
+                                <v-btn @click="nextStep"  color="primary" size="large" @keyup.enter="sendOtp" variant="elevated"
                                     :loading="stepOneLoading" :disabled="!isFormValid" v-else>
                                     بعدی
                                 </v-btn>

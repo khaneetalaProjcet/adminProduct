@@ -7,7 +7,6 @@
                         :value="s" :icon="isCompleted(s) ? 'ri-check-line' : 'ri-close-line'"
                         :color="isCompleted(s) ? '#0b8707' : '#c7c3c3'" class="custom-stepper-icon" />
                 </v-stepper-header>
-
                 <v-stepper-window>
                     <!-- مرحله ۱ -->
                     <v-stepper-window-item :value="1">
@@ -32,7 +31,7 @@
                                 </v-container>
                             </v-form>
                             <v-card-actions class="btn-box first-step">
-                                <v-btn @click="nextStep" @keyup.enter="nextStep"  color="primary" size="large" variant="elevated"
+                                <v-btn @click="nextStep" color="primary" size="large" variant="elevated"
                                     :loading="stepOneLoading" :disabled="!isFormValid">
                                     بعدی
                                 </v-btn>
