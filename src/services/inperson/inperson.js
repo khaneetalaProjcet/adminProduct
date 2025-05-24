@@ -81,7 +81,7 @@ const InPersonService = {
 
     async SubmitCounterWithdraw(paymentForm) {
         const body = JSON.stringify(paymentForm);
-        const response = await InPersonTemplate.post(`/`, body);
+        const response = await InPersonTemplate.post(`/inperson/withdraw`, body);
         return response.data
     },
 

@@ -155,6 +155,12 @@
                                                 <p class="mb-0">{{ userInfo.wallet.goldWeight }}</p>
                                             </div>
                                         </v-col>
+                                        <v-col cols="12" md="3" class="my-3">
+                                            <div class="d-flex">
+                                                <p class="mb-0">موجودی کیف پول : </p>
+                                                <p class="mb-0">{{ formatNumber(userInfo.wallet.balance) }} تومان</p>
+                                            </div>
+                                        </v-col>
                                     </v-row>
                                 </v-container>
                             </v-form>
@@ -183,9 +189,12 @@
                                             </div>
                                         </v-col>
                                         <v-col md="4" class="d-none d-md-flex my-2"></v-col>
-                                        <v-col cols="12" md="4" class="d-none d-md-flex my-2"><v-text-field
-                                                v-model="invoiceForm.goldWeight" label="طلا (گرم)"
-                                                variant="outlined"></v-text-field></v-col>
+                                        <v-col cols="12" md="4" class="d-none d-md-flex my-2">
+                                            <!-- <v-text-field v-model="invoiceForm.amount" label="مبلغ (تومان)"
+                                                variant="outlined"></v-text-field> -->
+                                            <MoneyInput v-model="invoiceForm.amount" label="مبلغ (تومان)"
+                                                variant="outlined" />
+                                        </v-col>
                                         <v-col md="4" class="d-none d-md-flex my-2"></v-col>
                                         <v-col md="4" class="d-none d-md-flex my-2"></v-col>
                                     </v-row>
@@ -255,23 +264,24 @@
                                         </v-col>
                                         <v-col cols="12">
                                             <v-row class="product-row">
-                                                <v-col cols="6" md="3">
+                                                <v-col cols="6" md="4">
                                                     <div class="d-flex">
-                                                        <p>موجودی صندوق طلا : </p>
-                                                        <p>{{ userInfo.wallet.goldWeight }} گرم</p>
+                                                        <p>موجودی کیف پول : </p>
+                                                        <p>{{ formatNumber(userInfo.wallet.balance) }} تومان</p>
                                                     </div>
                                                 </v-col>
-                                                <v-col cols="6" md="3">
+                                                <v-col cols="6" md="4">
                                                     <div class="d-flex">
-                                                        <p>مبلغ کم شده از صندوق طلا: </p>
-                                                        <p>{{ invoiceForm.goldWeight }} گرم</p>
+                                                        <p>مبلغ کم شده از کیف پول: </p>
+                                                        <p>{{ formatNumber(invoiceForm.amount) }} تومان</p>
                                                     </div>
                                                 </v-col>
-                                                <v-col cols="6" md="3">
+                                                <v-col cols="6" md="4">
                                                     <div class="d-flex">
-                                                        <p>موجودی جدید صندوق طلا : </p>
-                                                        <p>{{ +userInfo.wallet.goldWeight - +invoiceForm.goldWeight }}
-                                                            گرم</p>
+                                                        <p>موجودی جدید کیف پول : </p>
+                                                        <p>{{ formatNumber(+userInfo.wallet.balance -
+                                                            +invoiceForm.amount) }}
+                                                            تومان</p>
                                                     </div>
                                                 </v-col>
                                             </v-row>
@@ -301,12 +311,13 @@
     <v-dialog v-model="successModal" max-width="500" persistent>
         <v-card title="تایید فاکتور" class="modal-card">
             <v-icon class="mt-3 mb-6" icon="ri-checkbox-circle-fill" color="#0b8707"></v-icon>
-            <h4>
+            <h3>
                 <!-- گرم از صندوق طلای با موفقیت کم شد {{ confirmConvert.seller.firstName }} {{ confirmConvert.seller.lastName }} {{ confirmConvert.goldWeight }} -->
-                {{ confirmConvert.balance }} تومان از کیف پول {{ confirmConvert.seller.firstName }}
-                {{ confirmConvert.seller.lastName }} با موفقیت کم شد
-            </h4>
-            <p>کارشناس : {{ confirmConvert.adminId }}</p>
+                {{ formatNumber(+confirmConvert.amount) }} تومان از کیف پول {{ confirmConvert.wallet.user.firstName }}
+                {{ confirmConvert.wallet.user.lastName }} با موفقیت کم شد
+            </h3>
+            <h4 class="my-3">موجودی فعلی : {{ formatNumber(+confirmConvert.wallet.balance) }} تومان</h4>
+            <p>کارشناس : {{ confirmConvert.admin }}</p>
         </v-card>
     </v-dialog>
 </template>
@@ -360,8 +371,8 @@ const confirmConvert = ref({});
 const invoiceDetail = ref();
 
 const invoiceForm = ref({
-    goldWeight: '',
-    nationalCode: '',
+    amount: '',
+    userId: '',
 })
 
 const persianDates = ref([
@@ -669,7 +680,7 @@ const IdentityUser = async () => {
 const SubmitCounterPayment = async () => {
     try {
         stepFourLoading.value = true;
-        invoiceForm.value.nationalCode = userInfo.value.nationalCode;
+        invoiceForm.value.userId = userInfo.value.id;
         const response = await InPersonService.SubmitCounterWithdraw(invoiceForm.value);
         confirmConvert.value = response.data
         submitForm()
@@ -756,7 +767,7 @@ const submitForm = async () => {
         inPersonForm.value.phoneNumber = '';
         inPersonForm.value.otp = '';
         step.value = 1;
-    }, 3000)
+    }, 10000)
 };
 
 
