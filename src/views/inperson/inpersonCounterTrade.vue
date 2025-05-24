@@ -634,8 +634,22 @@ const AuthUser = async () => {
 const IdentityUser = async () => {
     try {
         stepTwoLoading.value = true;
+        userInfo.value.phoneNumber = inPersonForm.value.phoneNumber;
         const response = await InPersonService.identityUser(userInfo.value);
         userInfo.value.isVerified = response.data.isVerified;
+        userInfo.value.id = response?.data?.id;
+        userInfo.value.firstName = response?.data?.firstName;
+        userInfo.value.lastName = response?.data?.lastName;
+        userInfo.value.fatherName = response?.data?.fatherName;
+        userInfo.value.gender = response?.data?.gender;
+        userInfo.value.isHaveBank = response?.data?.isHaveBank;
+        userInfo.value.nationalCode = response?.data?.nationalCode;
+        userInfo.value.birthDate = response?.data?.birthDate;
+        userInfo.value.officeName = response?.data?.officeName;
+        userInfo.value.phoneNumber = response?.data?.phoneNumber;
+        userInfo.value.wallet.balance = response?.data?.wallet?.balance;
+        userInfo.value.wallet.goldWeight = response?.data?.wallet?.goldWeight;
+        userInfo.value.wallet.id = response?.data?.wallet?.id;
         return response
     } catch (error) {
         if (error.response.status == 401) {

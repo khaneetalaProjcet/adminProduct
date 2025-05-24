@@ -261,31 +261,33 @@
                                             <v-row class="my-4">
                                                 <v-col cols="6" md="4" class="my-2">
                                                     <div class="d-flex flex-column">
-                                                        <MoneyInput v-model="paymentDetail.cash"
+                                                        <MoneyInput v-model="tradeBuyForm.paymentDetail.cash"
                                                             label="مبلغ نقد (تومان)" variant="outlined" class="my-2"
                                                             :rules="[totalRule]" />
-                                                        <v-text-field v-model="paymentDetail.cashId" label="شناسه"
-                                                            variant="outlined" class="my-2"></v-text-field>
+                                                        <v-text-field v-model="tradeBuyForm.paymentDetail.cashId"
+                                                            label="شناسه" variant="outlined"
+                                                            class="my-2"></v-text-field>
                                                     </div>
                                                 </v-col>
                                                 <v-col cols="6" md="4" class="my-2">
                                                     <div class="d-flex flex-column">
-                                                        <MoneyInput v-model="paymentDetail.creditCard"
+                                                        <MoneyInput v-model="tradeBuyForm.paymentDetail.credit"
                                                             label="دستگاه پوز (تومان)" variant="outlined"
                                                             :rules="[totalRule]" class="my-2" />
-                                                        <v-text-field v-model="paymentDetail.creditCardId" label="شناسه"
-                                                            variant="outlined" class="my-2"></v-text-field>
+                                                        <v-text-field v-model="tradeBuyForm.paymentDetail.creditId"
+                                                            label="شناسه" variant="outlined"
+                                                            class="my-2"></v-text-field>
                                                     </div>
                                                 </v-col>
                                                 <v-col cols="6" md="4" class="my-2">
                                                     <div class="d-flex flex-column">
-                                                        <MoneyInput v-model="paymentDetail.cardToCard"
+                                                        <MoneyInput v-model="tradeBuyForm.paymentDetail.transport"
                                                             label="کارت به کارت(تومان)" variant="outlined"
                                                             :rules="[totalRule]" class="my-2" />
-                                                        <!-- <v-text-field v-model="paymentDetail.cardToCardId" label="شناسه"
+                                                        <!-- <v-text-field v-model="paymentDetail.transportId" label="شناسه"
                                                             variant="outlined" class="my-2"></v-text-field> -->
                                                         <div class="d-flex justify-start align-center h-100">
-                                                            <v-select v-model="paymentDetail.cardToCardId"
+                                                            <v-select v-model="tradeBuyForm.paymentDetail.transportId"
                                                                 :items="bankAccounts" label="شماره کارت"
                                                                 variant="outlined" item-title="label" item-value="label"
                                                                 class="my-2"></v-select>
@@ -467,18 +469,40 @@
                                                 <p>{{ formatNumber(InvoiceForm.totalPrice) }} تومان</p>
                                             </div>
                                         </v-col>
-                                        <v-col cols="6" md="3">
+                                        <v-col cols="6" md="3" v-if="InvoiceForm.type == 'خرید'">
                                             <div class="invoice-box">
-                                                <p>نوع پرداخت : </p>
-                                                <p v-if="InvoiceForm.paymentMethod == 1">کارت به کارت</p>
-                                                <p v-else-if="InvoiceForm.paymentMethod == 2">دستگاه پوز</p>
-                                                <p v-else-if="InvoiceForm.paymentMethod == 3">نقدی</p>
+                                                <p>مبلغ کارت به کارت : </p>
+                                                <p>{{ formatNumber(InvoiceForm.paymentDetail.transport) }} تومان</p>
                                             </div>
                                         </v-col>
-                                        <v-col cols="12" md="6" v-if="InvoiceForm.destCardPan != ''">
+                                        <v-col cols="6" v-if="InvoiceForm.type == 'خرید'">
                                             <div class="invoice-box">
-                                                <p>مقصد کارت به کارت: </p>
-                                                <p>{{ InvoiceForm.destCardPan }}</p>
+                                                <p>شناسه کارت یه کارت : </p>
+                                                <p>{{ InvoiceForm.paymentDetail.transportId }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3" v-if="InvoiceForm.type == 'خرید'">
+                                            <div class="invoice-box">
+                                                <p>مبلغ نقد : </p>
+                                                <p>{{ formatNumber(InvoiceForm.paymentDetail.cash) }} تومان</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3" v-if="InvoiceForm.type == 'خرید'">
+                                            <div class="invoice-box">
+                                                <p>شناسه نقد : </p>
+                                                <p>{{ InvoiceForm.paymentDetail.cashId }}</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3" v-if="InvoiceForm.type == 'خرید'">
+                                            <div class="invoice-box">
+                                                <p>مبلغ پوز : </p>
+                                                <p>{{ formatNumber(InvoiceForm.paymentDetail.credit) }} تومان</p>
+                                            </div>
+                                        </v-col>
+                                        <v-col cols="6" md="3" v-if="InvoiceForm.type == 'خرید'">
+                                            <div class="invoice-box">
+                                                <p>شناسه پوز : </p>
+                                                <p>{{ InvoiceForm.paymentDetail.cashId }}</p>
                                             </div>
                                         </v-col>
                                         <v-divider></v-divider>
@@ -632,8 +656,14 @@ const tradeBuyForm = ref({
     description: '',
     totalPrice: '',
     invoiceId: '',
-    paymentMethod: '',
-    destCardPan: '',
+    paymentDetail: {
+        cash: 0,
+        cashId: '',
+        credit: 0,
+        creditId: '',
+        transport: 0,
+        transportId: '',
+    }
 });
 
 const tradeSellForm = ref({
@@ -674,23 +704,16 @@ const InvoiceForm = ref({
         fatherName: '',
         phoneNumber: '',
         nationalCode: '',
+    },
+    paymentDetail: {
+        cash: 0,
+        cashId: '',
+        credit: 0,
+        creditId: '',
+        transport: 0,
+        transportId: '',
     }
 });
-
-const paymentDetail = ref({
-    cash: null,
-    cashId: '',
-    creditCard: null,
-    creditCardId: '',
-    cardToCard: null,
-    cardToCardId: '',
-})
-
-const paymentType = ref([
-    { label: "کارت به کارت", value: "1" },
-    { label: "دستگاه پوز", value: "2" },
-    { label: "نقدی", value: "3" },
-]);
 
 const bankAccounts = ref([
     { label: "کشاورزی (مطهر معصومی)" },
@@ -896,7 +919,11 @@ const isFormValid = computed(() => {
         return false;
     }
 
-    if (step.value === 3 && totalEnteredAmount.value !== tradeBuyForm.value.totalPrice) {
+    if (
+        step.value === 3 &&
+        tab.value === 'one' &&
+        totalEnteredAmount.value !== Number(removeCommas(tradeBuyForm.value.totalPrice) || 0)
+    ) {
         return false;
     }
 
@@ -905,19 +932,25 @@ const isFormValid = computed(() => {
 
 const totalEnteredAmount = computed(() => {
     return (
-        (paymentDetail.value.cash || 0) +
-        (paymentDetail.value.creditCard || 0) +
-        (paymentDetail.value.cardToCard || 0)
-    )
+        (Number(tradeBuyForm.value.paymentDetail.cash) || 0) +
+        (Number(tradeBuyForm.value.paymentDetail.credit) || 0) +
+        (Number(tradeBuyForm.value.paymentDetail.transport) || 0)
+    );
 })
 
 
 const totalRule = () => {
-    if (!value && totalEnteredAmount.value === 0) return true
+    if (
+        !tradeBuyForm.value.paymentDetail.cash ||
+        !tradeBuyForm.value.paymentDetail.credit ||
+        !tradeBuyForm.value.paymentDetail.transport
+    ) return true;
 
-    return totalEnteredAmount.value === tradeBuyForm.value.totalPrice
+    const totalPrice = Number(removeCommas(tradeBuyForm.value.totalPrice) || 0);
+
+    return totalEnteredAmount.value === totalPrice
         ? true
-        : `مجموع پرداخت‌ها باید برابر ${tradeBuyForm.value.totalPrice.toLocaleString()} تومان باشد`
+        : `مجموع پرداخت‌ها باید برابر ${tradeBuyForm.value.totalPrice} تومان باشد`;
 }
 
 const nextStep = async (type) => {
@@ -1011,8 +1044,22 @@ const AuthUser = async () => {
 const IdentityUser = async () => {
     try {
         stepTwoLoading.value = true;
+        userInfo.value.phoneNumber = inPersonForm.value.phoneNumber;
         const response = await InPersonService.identityUser(userInfo.value);
         userInfo.value.isVerified = response.data.isVerified;
+        userInfo.value.id = response?.data?.id;
+        userInfo.value.firstName = response?.data?.firstName;
+        userInfo.value.lastName = response?.data?.lastName;
+        userInfo.value.fatherName = response?.data?.fatherName;
+        userInfo.value.gender = response?.data?.gender;
+        userInfo.value.isHaveBank = response?.data?.isHaveBank;
+        userInfo.value.nationalCode = response?.data?.nationalCode;
+        userInfo.value.birthDate = response?.data?.birthDate;
+        userInfo.value.officeName = response?.data?.officeName;
+        userInfo.value.phoneNumber = response?.data?.phoneNumber;
+        userInfo.value.wallet.balance = response?.data?.wallet?.balance;
+        userInfo.value.wallet.goldWeight = response?.data?.wallet?.goldWeight;
+        userInfo.value.wallet.id = response?.data?.wallet?.id;
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -1077,6 +1124,12 @@ const TradeBuy = async () => {
         InvoiceForm.value.wallet.goldWeight = response?.data?.wallet?.goldWeight;
         InvoiceForm.value.paymentMethod = response?.data?.paymentMethod;
         InvoiceForm.value.destCardPan = response?.data?.destCardPan;
+        InvoiceForm.value.paymentDetail.cash = response?.data?.paymentDetail?.cash;
+        InvoiceForm.value.paymentDetail.cashId = response?.data?.paymentDetail?.cashId;
+        InvoiceForm.value.paymentDetail.credit = response?.data?.paymentDetail?.credit;
+        InvoiceForm.value.paymentDetail.creditId = response?.data?.paymentDetail?.creditId;
+        InvoiceForm.value.paymentDetail.transport = response?.data?.paymentDetail?.transport;
+        InvoiceForm.value.paymentDetail.transportId = response?.data?.paymentDetail?.transportId;
         return response
     } catch (error) {
         if (error.response.status == 401) {

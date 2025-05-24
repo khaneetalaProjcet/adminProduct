@@ -18,6 +18,7 @@ const InPersonService = {
     },
 
     async identityUser(item) {
+        console.log(item)
         const body = JSON.stringify({
             phoneNumber: item.phoneNumber,
             nationalCode: item.nationalCode,
@@ -75,6 +76,12 @@ const InPersonService = {
     async SubmitCounterPayment(paymentForm) {
         const body = JSON.stringify(paymentForm);
         const response = await InPersonTemplate.post(`/inperson/convert/sell`, body);
+        return response.data
+    },
+
+    async SubmitCounterWithdraw(paymentForm) {
+        const body = JSON.stringify(paymentForm);
+        const response = await InPersonTemplate.post(`/inperson/withdraw`, body);
         return response.data
     },
 
