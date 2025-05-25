@@ -2,7 +2,7 @@
   <div>
     <v-row>
       <v-col>
-        <v-tabs v-model="tab" align-tabs="center"  @update:modelValue= "changeTabs">
+        <v-tabs v-model="tab" align-tabs="center" @update:modelValue="changeTabs">
           <v-tab value="one">کاربران احراز شده</v-tab>
           <v-tab value="two">کاربران درانتظار احراز</v-tab>
         </v-tabs>
@@ -11,71 +11,68 @@
         <v-card-text>
           <v-tabs-window v-model="tab">
             <v-tabs-window-item value="one">
-
-                            <v-row class="filter my-3">
-                                <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="searchFilter.fromDate"
-                                        placeholder="از تاریخ"></persian-date-picker>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="searchFilter.fromTime" placeholder="از زمان"
-                                        format="HH:mm:ss"></persian-date-picker>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="searchFilter.toDate"
-                                        placeholder="تا تاریخ"></persian-date-picker>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="searchFilter.toTime" placeholder="تا زمان"
-                                        format="HH:mm:ss"></persian-date-picker>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.firstName" label="نام" density="compact"
-                                        variant="outlined"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.lastName" label="نام خانوادگی" density="compact"
-                                        variant="outlined"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.phoneNumber" label="شماره موبایل" density="compact"
-                                        variant="outlined" :rules="phoneRules" @input="limitNumber"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.nationalCode" label="کد ملی" density="compact"
-                                        variant="outlined" :rules="nationalCodeRules"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.goldPrice" label="قیمت طلا" density="compact"
-                                        variant="outlined"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.goldWeight" label="وزن طلا" density="compact"
-                                        variant="outlined" :rules="validateWeight"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.admin" label="ادمین" density="compact"
-                                        variant="outlined"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.accounter" label="حسابدار" density="compact"
-                                        variant="outlined"></v-text-field>
-                                </v-col>
-                                <v-col md="6" class="d-none d-md-flex">
-                                </v-col>
-                                <v-col cols="12" md="3">
-                                    <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block
-                                            @click="SubmitFilter('pending')">به روز
-                                            رسانی</v-btn>
-                                    </div>
-                                </v-col>
-                                <v-col cols="12" md="3">
-                                    <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
-                                    </div>
-                                </v-col>
-                            </v-row>
+              <v-row class="filter my-3">
+                <v-col cols="6" md="3">
+                  <persian-date-picker v-model="searchFilter.fromDate" placeholder="از تاریخ"></persian-date-picker>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <persian-date-picker type="time" v-model="searchFilter.fromTime" placeholder="از زمان"
+                    format="HH:mm:ss"></persian-date-picker>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <persian-date-picker v-model="searchFilter.toDate" placeholder="تا تاریخ"></persian-date-picker>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <persian-date-picker type="time" v-model="searchFilter.toTime" placeholder="تا زمان"
+                    format="HH:mm:ss"></persian-date-picker>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.firstName" label="نام" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.lastName" label="نام خانوادگی" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.phoneNumber" label="شماره موبایل" density="compact"
+                    variant="outlined" :rules="phoneRules" @input="limitNumber"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.nationalCode" label="کد ملی" density="compact" variant="outlined"
+                    :rules="nationalCodeRules"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.goldPrice" label="قیمت طلا" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.goldWeight" label="وزن طلا" density="compact" variant="outlined"
+                    :rules="validateWeight"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.admin" label="ادمین" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.accounter" label="حسابدار" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col md="6" class="d-none d-md-flex">
+                </v-col>
+                <v-col cols="12" md="3">
+                  <div class="w-100 d-flex justify-end">
+                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('pending')">به
+                      روز
+                      رسانی</v-btn>
+                  </div>
+                </v-col>
+                <v-col cols="12" md="3">
+                  <div class="w-100 d-flex justify-end">
+                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                  </div>
+                </v-col>
+              </v-row>
               <v-card title="کاربران احراز هویت شده">
 
                 <template v-slot:text>
@@ -117,69 +114,67 @@
             <v-tabs-window-item value="two">
 
               <v-row class="filter my-3">
-                                <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="searchFilter.fromDate"
-                                        placeholder="از تاریخ"></persian-date-picker>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="searchFilter.fromTime" placeholder="از زمان"
-                                        format="HH:mm:ss"></persian-date-picker>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="searchFilter.toDate"
-                                        placeholder="تا تاریخ"></persian-date-picker>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="searchFilter.toTime" placeholder="تا زمان"
-                                        format="HH:mm:ss"></persian-date-picker>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.firstName" label="نام" density="compact"
-                                        variant="outlined"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.lastName" label="نام خانوادگی" density="compact"
-                                        variant="outlined"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.phoneNumber" label="شماره موبایل" density="compact"
-                                        variant="outlined" :rules="phoneRules" @input="limitNumber"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.nationalCode" label="کد ملی" density="compact"
-                                        variant="outlined" :rules="nationalCodeRules"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.goldPrice" label="قیمت طلا" density="compact"
-                                        variant="outlined"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.goldWeight" label="وزن طلا" density="compact"
-                                        variant="outlined" :rules="validateWeight"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.admin" label="ادمین" density="compact"
-                                        variant="outlined"></v-text-field>
-                                </v-col>
-                                <v-col cols="6" md="3">
-                                    <v-text-field v-model="searchFilter.accounter" label="حسابدار" density="compact"
-                                        variant="outlined"></v-text-field>
-                                </v-col>
-                                <v-col md="6" class="d-none d-md-flex">
-                                </v-col>
-                                <v-col cols="12" md="3">
-                                    <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block
-                                            @click="SubmitFilter('pending')">به روز
-                                            رسانی</v-btn>
-                                    </div>
-                                </v-col>
-                                <v-col cols="12" md="3">
-                                    <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
-                                    </div>
-                                </v-col>
-                            </v-row>
+                <v-col cols="6" md="3">
+                  <persian-date-picker v-model="searchFilter.fromDate" placeholder="از تاریخ"></persian-date-picker>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <persian-date-picker type="time" v-model="searchFilter.fromTime" placeholder="از زمان"
+                    format="HH:mm:ss"></persian-date-picker>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <persian-date-picker v-model="searchFilter.toDate" placeholder="تا تاریخ"></persian-date-picker>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <persian-date-picker type="time" v-model="searchFilter.toTime" placeholder="تا زمان"
+                    format="HH:mm:ss"></persian-date-picker>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.firstName" label="نام" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.lastName" label="نام خانوادگی" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.phoneNumber" label="شماره موبایل" density="compact"
+                    variant="outlined" :rules="phoneRules" @input="limitNumber"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.nationalCode" label="کد ملی" density="compact" variant="outlined"
+                    :rules="nationalCodeRules"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.goldPrice" label="قیمت طلا" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.goldWeight" label="وزن طلا" density="compact" variant="outlined"
+                    :rules="validateWeight"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.admin" label="ادمین" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="searchFilter.accounter" label="حسابدار" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col md="6" class="d-none d-md-flex">
+                </v-col>
+                <v-col cols="12" md="3">
+                  <div class="w-100 d-flex justify-end">
+                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('pending')">به
+                      روز
+                      رسانی</v-btn>
+                  </div>
+                </v-col>
+                <v-col cols="12" md="3">
+                  <div class="w-100 d-flex justify-end">
+                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                  </div>
+                </v-col>
+              </v-row>
               <v-card title="کاربران در انتظار احراز">
                 <template v-slot:text>
 
@@ -342,7 +337,7 @@
 <script setup>
 import UserService from '@/services/user/user';
 import { onMounted, ref, watch } from 'vue';
-import { debounce, filter } from 'lodash'
+import { debounce } from 'lodash'
 import { router } from '@/plugins/router';
 
 const userLoading = ref(false);
@@ -439,22 +434,22 @@ const OldUserHeader = ref([
 ]);
 
 const searchFilter = ref({
-    firstName: '',
-    lastName: '',
-    nationalCode: '',
-    phoneNumber: '',
-    tradeType: 1,
-    type: 'buy',
-    goldPrice: '',
-    goldWeight: '',
-    admin: '',
-    accounter: '',
-    startDate: '',
-    startTime: '',
-    endDate: '',
-    endTime: '',
-    invoiceId: '',
-    status: '',
+  firstName: '',
+  lastName: '',
+  nationalCode: '',
+  phoneNumber: '',
+  tradeType: 1,
+  type: 'buy',
+  goldPrice: '',
+  goldWeight: '',
+  admin: '',
+  accounter: '',
+  startDate: '',
+  startTime: '',
+  endDate: '',
+  endTime: '',
+  invoiceId: '',
+  status: '',
 });
 
 
@@ -806,44 +801,44 @@ const updateBirthDate = () => {
 };
 
 const limitNumber = () => {
-    searchFilter.value.phoneNumber = searchFilter.value.phoneNumber.replace(/\D/g, '').slice(0, 11);
+  searchFilter.value.phoneNumber = searchFilter.value.phoneNumber.replace(/\D/g, '').slice(0, 11);
 }
 
 const SubmitFilter = async (status) => {
   console.log(status)
-    // try {
-    //     if (status == 'pending') {
-    //         PendingAccountingReviewLoading.value = true;
-    //     } else if (status == 'completed') {
-    //         CompleteAccountingReviewLoading.value = true;
-    //     } else if (status == 'failed') {
-    //         rejectAccountingReviewLoading.value = true;
-    //     }
-    //     filter.value.status = status;
-    //     const response = await InPersonService.SubmitFilterInvoice(filter.value);
-    //     if (status == 'pending') {
-    //         PendingAccountingReviewData.value = response.data;
-    //     } else if (status == 'completed') {
-    //         CompleteAccountingReviewData.value = response.data;
-    //     } else if (status == 'failed') {
-    //         rejectAccountingReviewData.value = response.data;
-    //     }
-    //     return response
-    // } catch (error) {
-    //     if (error.response.status == 401) {
-    //         localStorage.clear();
-    //         router.replace("/login");
-    //     }
-    //     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-    //     alertError.value = true;
-    //     setTimeout(() => {
-    //         alertError.value = false;
-    //     }, 10000)
-    // } finally {
-    //     PendingAccountingReviewLoading.value = false;
-    //     CompleteAccountingReviewLoading.value = false;
-    //     rejectAccountingReviewLoading.value = false;
-    // }
+  // try {
+  //     if (status == 'pending') {
+  //         PendingAccountingReviewLoading.value = true;
+  //     } else if (status == 'completed') {
+  //         CompleteAccountingReviewLoading.value = true;
+  //     } else if (status == 'failed') {
+  //         rejectAccountingReviewLoading.value = true;
+  //     }
+  //     filter.value.status = status;
+  //     const response = await InPersonService.SubmitFilterInvoice(filter.value);
+  //     if (status == 'pending') {
+  //         PendingAccountingReviewData.value = response.data;
+  //     } else if (status == 'completed') {
+  //         CompleteAccountingReviewData.value = response.data;
+  //     } else if (status == 'failed') {
+  //         rejectAccountingReviewData.value = response.data;
+  //     }
+  //     return response
+  // } catch (error) {
+  //     if (error.response.status == 401) {
+  //         localStorage.clear();
+  //         router.replace("/login");
+  //     }
+  //     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+  //     alertError.value = true;
+  //     setTimeout(() => {
+  //         alertError.value = false;
+  //     }, 10000)
+  // } finally {
+  //     PendingAccountingReviewLoading.value = false;
+  //     CompleteAccountingReviewLoading.value = false;
+  //     rejectAccountingReviewLoading.value = false;
+  // }
 }
 
 
@@ -866,24 +861,24 @@ const nationalCodeRules = [
 ];
 
 const validateWeight = [
-    (v) => !!v,
-    (v) => /^\d+(\.\d{1,3})?$/.test(v),
+  (v) => !!v,
+  (v) => /^\d+(\.\d{1,3})?$/.test(v),
 ];
 
 const changeTabs = () => {
-    searchFilter.value.firstName = '';
-    searchFilter.value.lastName = '';
-    searchFilter.value.accounter = '';
-    searchFilter.value.admin = '';
-    searchFilter.value.toDate = '';
-    searchFilter.value.toTime = '';
-    searchFilter.value.goldPrice = '';
-    searchFilter.value.goldWeight = '';
-    searchFilter.value.invoiceId = '';
-    searchFilter.value.nationalCode = '';
-    searchFilter.value.phoneNumber = '';
-    searchFilter.value.fromTime = '';
-    searchFilter.value.fromDate = '';
+  searchFilter.value.firstName = '';
+  searchFilter.value.lastName = '';
+  searchFilter.value.accounter = '';
+  searchFilter.value.admin = '';
+  searchFilter.value.toDate = '';
+  searchFilter.value.toTime = '';
+  searchFilter.value.goldPrice = '';
+  searchFilter.value.goldWeight = '';
+  searchFilter.value.invoiceId = '';
+  searchFilter.value.nationalCode = '';
+  searchFilter.value.phoneNumber = '';
+  searchFilter.value.fromTime = '';
+  searchFilter.value.fromDate = '';
 }
 
 
