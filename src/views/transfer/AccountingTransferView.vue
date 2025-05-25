@@ -625,39 +625,39 @@ const failedTransferGoldInfo = (item) => {
 const SubmitFilter = async (status) => {
   console.log(status);
 
-    // try {
-    //     if (status == 'pending') {
-    //         PendingAccountingReviewLoading.value = true;
-    //     } else if (status == 'completed') {
-    //         CompleteAccountingReviewLoading.value = true;
-    //     } else if (status == 'failed') {
-    //         rejectAccountingReviewLoading.value = true;
-    //     }
-    //     filter.value.status = status;
-    //     const response = await InPersonService.SubmitFilterInvoice(filter.value);
-    //     if (status == 'pending') {
-    //         PendingAccountingReviewData.value = response.data;
-    //     } else if (status == 'completed') {
-    //         CompleteAccountingReviewData.value = response.data;
-    //     } else if (status == 'failed') {
-    //         rejectAccountingReviewData.value = response.data;
-    //     }
-    //     return response
-    // } catch (error) {
-    //     if (error.response.status == 401) {
-    //         localStorage.clear();
-    //         router.replace("/login");
-    //     }
-    //     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-    //     alertError.value = true;
-    //     setTimeout(() => {
-    //         alertError.value = false;
-    //     }, 10000)
-    // } finally {
-    //     PendingAccountingReviewLoading.value = false;
-    //     CompleteAccountingReviewLoading.value = false;
-    //     rejectAccountingReviewLoading.value = false;
-    // }
+  // try {
+  //     if (status == 'pending') {
+  //         PendingAccountingReviewLoading.value = true;
+  //     } else if (status == 'completed') {
+  //         CompleteAccountingReviewLoading.value = true;
+  //     } else if (status == 'failed') {
+  //         rejectAccountingReviewLoading.value = true;
+  //     }
+  //     filter.value.status = status;
+  //     const response = await InPersonService.SubmitFilterInvoice(filter.value);
+  //     if (status == 'pending') {
+  //         PendingAccountingReviewData.value = response.data;
+  //     } else if (status == 'completed') {
+  //         CompleteAccountingReviewData.value = response.data;
+  //     } else if (status == 'failed') {
+  //         rejectAccountingReviewData.value = response.data;
+  //     }
+  //     return response
+  // } catch (error) {
+  //     if (error.response.status == 401) {
+  //         localStorage.clear();
+  //         router.replace("/login");
+  //     }
+  //     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+  //     alertError.value = true;
+  //     setTimeout(() => {
+  //         alertError.value = false;
+  //     }, 10000)
+  // } finally {
+  //     PendingAccountingReviewLoading.value = false;
+  //     CompleteAccountingReviewLoading.value = false;
+  //     rejectAccountingReviewLoading.value = false;
+  // }
 }
 
 
@@ -714,7 +714,7 @@ onMounted(() => {
 
 <style scoped>
 .k-alert {
-  position: absolute;
+  position: fixed;
   top: 10px;
   left: 40%;
   font-size: 12px;
