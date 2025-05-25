@@ -875,15 +875,15 @@ const changeTabs = () => {
     searchFilter.value.lastName = '';
     searchFilter.value.accounter = '';
     searchFilter.value.admin = '';
-    searchFilter.value.endDate = '';
-    searchFilter.value.endTime = '';
+    searchFilter.value.toDate = '';
+    searchFilter.value.toTime = '';
     searchFilter.value.goldPrice = '';
     searchFilter.value.goldWeight = '';
     searchFilter.value.invoiceId = '';
     searchFilter.value.nationalCode = '';
     searchFilter.value.phoneNumber = '';
-    searchFilter.value.startTime = '';
-    searchFilter.value.startDate = '';
+    searchFilter.value.fromTime = '';
+    searchFilter.value.fromDate = '';
 }
 
 

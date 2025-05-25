@@ -1,8 +1,74 @@
 <template>
     <div>
         <v-row>
+
             <v-col cols="12">
+
                 <v-card-text>
+<v-row class="filter my-3">
+                <v-col cols="6" md="3">
+                  <persian-date-picker v-model="filter.fromDate" placeholder="از تاریخ"></persian-date-picker>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                    format="HH:mm:ss"></persian-date-picker>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <persian-date-picker v-model="filter.toDate" placeholder="تا تاریخ"></persian-date-picker>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                    format="HH:mm:ss"></persian-date-picker>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.firstName" label="نام" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.lastName" label="نام خانوادگی" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.phoneNumber" label="شماره موبایل" density="compact" variant="outlined"
+                    :rules="phoneRules" @input="limitNumber"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.nationalCode" label="کد ملی" density="compact" variant="outlined"
+                    :rules="nationalCodeRules"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.goldPrice" label="قیمت طلا" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.goldWeight" label="وزن طلا" density="compact" variant="outlined"
+                    :rules="validateWeight"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.admin" label="ادمین" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col md="6" class="d-none d-md-flex">
+                </v-col>
+                <v-col cols="12" md="3">
+                  <div class="w-100 d-flex justify-end">
+                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('pending')">به
+                      روز
+                      رسانی</v-btn>
+                  </div>
+                </v-col>
+                <v-col cols="12" md="3">
+                  <div class="w-100 d-flex justify-end">
+                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                  </div>
+                </v-col>
+              </v-row>
+
+    
                     <v-card title="اطلاعات مالی کاربران">
                         <template v-slot:text>
                              <ul class="listGuide">
@@ -367,6 +433,25 @@ const financeDetail = ref({
     accounterDescription: '-',
 })
 
+
+const filter = ref({
+    firstName: '',
+    lastName: '',
+    nationalCode: '',
+    phoneNumber: '',
+    tradeType: 1,
+    type: 'buy',
+    goldPrice: '',
+    goldWeight: '',
+    admin: '',
+    accounter: '',
+    startDate: '',
+    startTime: '',
+    endDate: '',
+    endTime: '',
+    invoiceId: '',
+    status: '',
+});
 const handleOptionsChange = (options) => {
     currentPage.value = options.page;
     itemsPerPage.value = options.itemsPerPage;
@@ -457,6 +542,74 @@ const FinanceInfo = async (item) => {
     financeDetail.value.totalPrice = item.totalPrice;
     financeDetail.value.tradeType = item.tradeType;
 }
+
+
+const limitNumber = () => {
+    searchFilter.value.phoneNumber = searchFilter.value.phoneNumber.replace(/\D/g, '').slice(0, 11);
+}
+
+const SubmitFilter = async (status) => {
+  console.log(status)
+    // try {
+    //     if (status == 'pending') {
+    //         PendingAccountingReviewLoading.value = true;
+    //     } else if (status == 'completed') {
+    //         CompleteAccountingReviewLoading.value = true;
+    //     } else if (status == 'failed') {
+    //         rejectAccountingReviewLoading.value = true;
+    //     }
+    //     filter.value.status = status;
+    //     const response = await InPersonService.SubmitFilterInvoice(filter.value);
+    //     if (status == 'pending') {
+    //         PendingAccountingReviewData.value = response.data;
+    //     } else if (status == 'completed') {
+    //         CompleteAccountingReviewData.value = response.data;
+    //     } else if (status == 'failed') {
+    //         rejectAccountingReviewData.value = response.data;
+    //     }
+    //     return response
+    // } catch (error) {
+    //     if (error.response.status == 401) {
+    //         localStorage.clear();
+    //         router.replace("/login");
+    //     }
+    //     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+    //     alertError.value = true;
+    //     setTimeout(() => {
+    //         alertError.value = false;
+    //     }, 10000)
+    // } finally {
+    //     PendingAccountingReviewLoading.value = false;
+    //     CompleteAccountingReviewLoading.value = false;
+    //     rejectAccountingReviewLoading.value = false;
+    // }
+}
+
+
+const phoneRules = [
+  (v) => !!v || 'شماره همراه نمی‌تواند خالی باشد',
+  (v) => /^\d{11}$/.test(v) || 'شماره همراه باید 11 رقم باشد',
+  (v) => v.startsWith('09') || 'شماره همراه باید با 09 شروع شود',
+];
+
+const nationalCodeRules = [
+  (v) => !!v || 'کد ملی الزامی است',
+  (v) => /^\d{10}$/.test(v) || 'کد ملی باید ۱۰ رقم باشد',
+  (v) => {
+    if (!/^\d{10}$/.test(v)) return true;
+
+    const check = +v[9];
+    const sum = v.split('').slice(0, 9).reduce((acc, x, i) => acc + (+x * (10 - i)), 0) % 11;
+    return (sum < 2 && check === sum) || (sum >= 2 && check + sum === 11) || 'کد ملی نامعتبر است';
+  }
+];
+
+const validateWeight = [
+    (v) => !!v,
+    (v) => /^\d+(\.\d{1,3})?$/.test(v),
+];
+
+
 
 
 watch([currentPage, itemsPerPage], () => {
