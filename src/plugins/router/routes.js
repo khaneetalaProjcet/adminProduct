@@ -229,6 +229,12 @@ export const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: '/addUser',
+        name: 'addUser',
+        component: () => import('@/views/users/addUserView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: '/inquiry',
         name: 'inquiry',
         component: () => import('@/views/transfer/InquiryView.vue'),

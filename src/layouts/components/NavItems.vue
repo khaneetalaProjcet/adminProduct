@@ -57,7 +57,7 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup> -->
 
-  <VerticalNavGroup v-if="hasPermission('userView') || hasPermission('userReport')" :item="{
+  <VerticalNavGroup v-if="hasPermission('userView') || hasPermission('userReport') || hasPermission('addUser')" :item="{
     title: 'کاربران',
     icon: 'ri-user-line',
   }">
@@ -74,6 +74,12 @@ const hasPermission = (routeName) => {
       icon: 'ri-money-euro-box-line',
       href: '#',
       to: '/userReport'
+    }" />
+    <VerticalNavLink v-if="hasPermission('addUser')" :item="{
+      title: 'افزودن کاربر',
+      icon: 'ri-user-add-line',
+      href: '#',
+      to: '/addUser'
     }" />
   </VerticalNavGroup>
 
@@ -195,7 +201,7 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup>
 
-  
+
   <VerticalNavGroup v-if="hasPermission('AccountingUseGold')" :item="{
     title: 'استفاده',
     icon: 'ri-diamond-ring-line',
@@ -241,10 +247,12 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavGroup v-if="hasPermission('inPersonTrade') || hasPermission('inpersonConvertTrade') || hasPermission('inpersonCounterTrade')" :item="{
-    title: 'معامله حضوری',
-    icon: 'ri-store-2-line',
-  }">
+  <VerticalNavGroup
+    v-if="hasPermission('inPersonTrade') || hasPermission('inpersonConvertTrade') || hasPermission('inpersonCounterTrade')"
+    :item="{
+      title: 'معامله حضوری',
+      icon: 'ri-store-2-line',
+    }">
     <VerticalNavLink v-if="hasPermission('inPersonTrade')" :item="{
       title: 'ثبت سفارش',
       icon: 'ri-shopping-bag-4-line',
