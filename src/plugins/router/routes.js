@@ -181,6 +181,12 @@ export const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: '/inpersonWithdraw',
+        name: 'inpersonWithdraw',
+        component: () => import('@/views/inperson/inpersonWithdrawView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: '/Overview',
         name: 'Overview',
         component: () => import('@/views/report/OverviewView.vue'),

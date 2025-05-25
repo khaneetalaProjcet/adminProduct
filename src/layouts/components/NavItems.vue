@@ -263,6 +263,12 @@ const hasPermission = (routeName) => {
       href: '#',
       to: '/inpersonCounterTrade'
     }" />
+    <VerticalNavLink v-if="hasPermission('inpersonWithdraw')" :item="{
+      title: 'برداشت کیف پول',
+      icon: 'ri-repeat-line',
+      href: '#',
+      to: '/inpersonWithdraw'
+    }" />
   </VerticalNavGroup>
 
   <VerticalNavGroup v-if="hasPermission('transfer') || hasPermission('inquiry')" :item="{
