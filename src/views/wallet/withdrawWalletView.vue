@@ -11,19 +11,104 @@
                 <v-card-text>
                     <v-tabs-window v-model="tab">
                         <v-tabs-window-item value="one">
-
+                            <v-row class="filter my-3">
+                                <v-col cols="6" md="3">
+                                    <persian-date-picker v-model="filter.startDate"
+                                        placeholder="از تاریخ"></persian-date-picker>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
+                                        format="HH:mm:ss"></persian-date-picker>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <persian-date-picker v-model="filter.endDate"
+                                        placeholder="تا تاریخ"></persian-date-picker>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
+                                        format="HH:mm:ss"></persian-date-picker>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.firstName" label="نام" density="compact"
+                                        variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.lastName" label="نام خانوادگی" density="compact"
+                                        variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.phoneNumber" label="شماره موبایل" density="compact"
+                                        variant="outlined" :rules="phoneRules" @input="limitNumber"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.nationalCode" label="کد ملی" density="compact"
+                                        variant="outlined" :rules="nationalCodeRules"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.goldPrice" label="قیمت طلا" density="compact"
+                                        variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.goldWeight" label="وزن طلا" density="compact"
+                                        variant="outlined" :rules="validateWeight"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.admin" label="ادمین" density="compact"
+                                        variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.accounter
+                                        " label="حسابدار" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.invoiceId
+                                        " label="شماره فاکتور" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.shebaNumber
+                                        " label="شماره شبا" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.cardPan
+                                        " label="شماره کارت" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.amount
+                                        " label="مبلغ" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.withdrawalId
+                                        " label="شناسه برداشت" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.description
+                                        " label="توضیحات" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="3">
+                                    <div class="w-100 d-flex justify-end">
+                                        <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block
+                                            @click="SubmitFilter('pending')">به
+                                            روز
+                                            رسانی</v-btn>
+                                    </div>
+                                </v-col>
+                                <v-col cols="12" md="3">
+                                    <div class="w-100 d-flex justify-end">
+                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                    </div>
+                                </v-col>
+                            </v-row>
                             <div class="d-flex justify-end ma-2">
-
                                 <v-btn icon="ri-file-excel-line" color="#226d3a" @click="exportReport"></v-btn>
                             </div>
                             <v-card title="برداشت از کیف پول">
-
                                 <template v-slot:text>
-                                                                <ul class="listGuide">
-                    <li>
-معاملاتی که به‌طور مستقیم از موجودی کیف پول انجام شده و در انتظار تأیید هستند.
-                    </li>
-                  </ul>
+                                    <ul class="listGuide">
+                                        <li>
+                                            معاملاتی که به‌طور مستقیم از موجودی کیف پول انجام شده و در انتظار تأیید
+                                            هستند.
+                                        </li>
+                                    </ul>
                                     <v-text-field v-model="PendingWithdrawSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
@@ -47,14 +132,100 @@
                             </v-card>
                         </v-tabs-window-item>
                         <v-tabs-window-item value="two">
-
+                            <v-row class="filter my-3">
+                                <v-col cols="6" md="3">
+                                    <persian-date-picker v-model="filter.startDate"
+                                        placeholder="از تاریخ"></persian-date-picker>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
+                                        format="HH:mm:ss"></persian-date-picker>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <persian-date-picker v-model="filter.endDate"
+                                        placeholder="تا تاریخ"></persian-date-picker>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
+                                        format="HH:mm:ss"></persian-date-picker>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.firstName" label="نام" density="compact"
+                                        variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.lastName" label="نام خانوادگی" density="compact"
+                                        variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.phoneNumber" label="شماره موبایل" density="compact"
+                                        variant="outlined" :rules="phoneRules" @input="limitNumber"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.nationalCode" label="کد ملی" density="compact"
+                                        variant="outlined" :rules="nationalCodeRules"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.goldPrice" label="قیمت طلا" density="compact"
+                                        variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.goldWeight" label="وزن طلا" density="compact"
+                                        variant="outlined" :rules="validateWeight"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.admin" label="ادمین" density="compact"
+                                        variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.accounter
+                                        " label="حسابدار" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.invoiceId
+                                        " label="شماره فاکتور" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.shebaNumber
+                                        " label="شماره شبا" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.cardPan
+                                        " label="شماره کارت" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.amount
+                                        " label="مبلغ" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.withdrawalId
+                                        " label="مبلغ" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="6" md="3">
+                                    <v-text-field v-model="filter.description
+                                        " label="توضیحات" density="compact" variant="outlined"></v-text-field>
+                                </v-col>
+                                <v-col cols="12" md="3">
+                                    <div class="w-100 d-flex justify-end">
+                                        <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block
+                                            @click="SubmitFilter('completed')">به
+                                            روز
+                                            رسانی</v-btn>
+                                    </div>
+                                </v-col>
+                                <v-col cols="12" md="3">
+                                    <div class="w-100 d-flex justify-end">
+                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                    </div>
+                                </v-col>
+                            </v-row>
                             <v-card title="برداشت از کیف پول">
                                 <template v-slot:text>
-                                                 <ul class="listGuide">
-                    <li>
-تراکنش‌ هایی که از کیف پول کاربران کسر شده و با موفقیت انجام شده‌اند.
-                    </li>
-                  </ul>
+                                    <ul class="listGuide">
+                                        <li>
+                                            تراکنش‌ هایی که از کیف پول کاربران کسر شده و با موفقیت انجام شده‌اند.
+                                        </li>
+                                    </ul>
                                     <v-text-field v-model="CompleteWithdrawSearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
                                 </template>
@@ -245,7 +416,30 @@ const WithdrawDialog = ref(false);
 const withdrawalDetail = ref({
     withdrawalId: '',
     id: '',
-})
+});
+const filter = ref({
+    firstName: '',
+    lastName: '',
+    nationalCode: '',
+    phoneNumber: '',
+    type: 'withdraw',
+    goldPrice: '',
+    goldWeight: '',
+    admin: '',
+    accounter: '',
+    startDate: '',
+    startTime: '',
+    endDate: '',
+    endTime: '',
+    invoiceId: '',
+    status: '',
+    cardPan: '',
+    shebaNumber: '',
+    withdrawalId: '',
+    amount: '',
+    description: '',
+});
+
 
 const GetPendingWithdrawList = async () => {
     try {
@@ -334,6 +528,37 @@ const submitWithdraw = async () => {
     }
 }
 
+const SubmitFilter = async (status) => {
+    try {
+        if (status == 'pending') {
+            PendingWithdrawLoading.value = true;
+        } else if (status == 'completed') {
+            CompleteWithdrawLoading.value = true;
+        }
+        filter.value.status = status;
+        const response = await WalletService.SubmitFilterWallet(filter.value);
+        if (status == 'pending') {
+            PendingWithdrawData.value = response.data;
+        } else if (status == 'completed') {
+            CompleteWithdrawData.value = response.data;
+        }
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        PendingWithdrawLoading.value = false;
+        CompleteWithdrawLoading.value = false;
+    }
+}
+
 const exportReport = async () => {
     try {
         ExportLoading.value = true;
@@ -355,6 +580,31 @@ const exportReport = async () => {
         ExportLoading.value = false;
     }
 }
+
+
+const nationalCodeRules = [
+    (v) => /^\d{10}$/.test(v) || 'کد ملی باید ۱۰ رقم باشد',
+    (v) => {
+        if (!/^\d{10}$/.test(v)) return true;
+
+        const check = +v[9];
+        const sum = v.split('').slice(0, 9).reduce((acc, x, i) => acc + (+x * (10 - i)), 0) % 11;
+        return (sum < 2 && check === sum) || (sum >= 2 && check + sum === 11) || 'کد ملی نامعتبر است';
+    }
+];
+
+const limitNumber = () => {
+    filter.value.phoneNumber = filter.value.phoneNumber.replace(/\D/g, '').slice(0, 11);
+}
+
+const phoneRules = [
+    v => /^09\d{9}$/.test(v) || 'شماره معتبر نیست'
+];
+
+const validateWeight = [
+    (v) => !!v,
+    (v) => /^\d+(\.\d{1,3})?$/.test(v),
+];
 
 onMounted(() => {
     GetPendingWithdrawList();
@@ -398,13 +648,14 @@ onMounted(() => {
     width: 100%;
     padding: 2rem;
 }
+
 .listGuide {
-  font-size: 12px;
-  color: #2c3e50;
-  font-weight: 500px;
-  padding: 0.5rem;
-  margin: 0.1rem;
-  margin-bottom: 1rem;
-  margin-right: 0.5rem
+    font-size: 12px;
+    color: #2c3e50;
+    font-weight: 500px;
+    padding: 0.5rem;
+    margin: 0.1rem;
+    margin-bottom: 1rem;
+    margin-right: 0.5rem
 }
 </style>

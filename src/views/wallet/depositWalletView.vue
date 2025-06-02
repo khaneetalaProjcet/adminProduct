@@ -14,17 +14,17 @@
             <v-tabs-window-item value="one">
               <v-row class="filter my-3">
                 <v-col cols="6" md="3">
-                  <persian-date-picker v-model="filter.fromDate" placeholder="از تاریخ"></persian-date-picker>
+                  <persian-date-picker v-model="filter.startDate" placeholder="از تاریخ"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                  <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker v-model="filter.toDate" placeholder="تا تاریخ"></persian-date-picker>
+                  <persian-date-picker v-model="filter.endDate" placeholder="تا تاریخ"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                  <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
@@ -59,7 +59,27 @@
                   <v-text-field v-model="filter.accounter
                     " label="حسابدار" density="compact" variant="outlined"></v-text-field>
                 </v-col>
-                <v-col md="6" class="d-none d-md-flex">
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.invoiceId
+                    " label="شماره فاکتور" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.shebaNumber
+                    " label="شماره شبا" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.cardPan
+                    " label="شماره کارت" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.amount
+                    " label="مبلغ" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.description
+                    " label="توضیحات" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col md="3" class="d-none d-md-flex">
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
@@ -105,19 +125,19 @@
               </v-card>
             </v-tabs-window-item>
             <v-tabs-window-item value="two">
-<v-row class="filter my-3">
+              <v-row class="filter my-3">
                 <v-col cols="6" md="3">
-                  <persian-date-picker v-model="filter.fromDate" placeholder="از تاریخ"></persian-date-picker>
+                  <persian-date-picker v-model="filter.startDate" placeholder="از تاریخ"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                  <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker v-model="filter.toDate" placeholder="تا تاریخ"></persian-date-picker>
+                  <persian-date-picker v-model="filter.endDate" placeholder="تا تاریخ"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                  <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
@@ -152,11 +172,30 @@
                   <v-text-field v-model="filter.accounter
                     " label="حسابدار" density="compact" variant="outlined"></v-text-field>
                 </v-col>
-                <v-col md="6" class="d-none d-md-flex">
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.invoiceId
+                    " label="شماره فاکتور" density="compact" variant="outlined"></v-text-field>
                 </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.shebaNumber
+                    " label="شماره شبا" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.cardPan
+                    " label="شماره کارت" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.amount
+                    " label="مبلغ" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.description
+                    " label="توضیحات" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col md="3" class="d-none d-md-flex"></v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('pending')">به
+                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('completed')">به
                       روز
                       رسانی</v-btn>
                   </div>
@@ -200,17 +239,17 @@
             <v-tabs-window-item value="three">
               <v-row class="filter my-3">
                 <v-col cols="6" md="3">
-                  <persian-date-picker v-model="filter.fromDate" placeholder="از تاریخ"></persian-date-picker>
+                  <persian-date-picker v-model="filter.startDate" placeholder="از تاریخ"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                  <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker v-model="filter.toDate" placeholder="تا تاریخ"></persian-date-picker>
+                  <persian-date-picker v-model="filter.endDate" placeholder="تا تاریخ"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                  <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
@@ -245,11 +284,31 @@
                   <v-text-field v-model="filter.accounter
                     " label="حسابدار" density="compact" variant="outlined"></v-text-field>
                 </v-col>
-                <v-col md="6" class="d-none d-md-flex">
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.invoiceId
+                    " label="شماره فاکتور" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.shebaNumber
+                    " label="شماره شبا" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.cardPan
+                    " label="شماره کارت" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.amount
+                    " label="مبلغ" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.description
+                    " label="توضیحات" density="compact" variant="outlined"></v-text-field>
+                </v-col>
+                <v-col md="3" class="d-none d-md-flex">
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('pending')">به
+                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('failed')">به
                       روز
                       رسانی</v-btn>
                   </div>
@@ -485,8 +544,7 @@ const filter = ref({
   lastName: '',
   nationalCode: '',
   phoneNumber: '',
-  tradeType: 1,
-  type: 'buy',
+  type: 'deposite',
   goldPrice: '',
   goldWeight: '',
   admin: '',
@@ -497,6 +555,11 @@ const filter = ref({
   endTime: '',
   invoiceId: '',
   status: '',
+  cardPan: '',
+  shebaNumber: '',
+  withdrawalId: '',
+  amount: '',
+  description: '',
 });
 
 
@@ -617,41 +680,39 @@ const submitDeposit = async () => {
 
 
 const SubmitFilter = async (status) => {
-  console.log(status);
-
-    // try {
-    //     if (status == 'pending') {
-    //         PendingAccountingReviewLoading.value = true;
-    //     } else if (status == 'completed') {
-    //         CompleteAccountingReviewLoading.value = true;
-    //     } else if (status == 'failed') {
-    //         rejectAccountingReviewLoading.value = true;
-    //     }
-    //     filter.value.status = status;
-    //     const response = await InPersonService.SubmitFilterInvoice(filter.value);
-    //     if (status == 'pending') {
-    //         PendingAccountingReviewData.value = response.data;
-    //     } else if (status == 'completed') {
-    //         CompleteAccountingReviewData.value = response.data;
-    //     } else if (status == 'failed') {
-    //         rejectAccountingReviewData.value = response.data;
-    //     }
-    //     return response
-    // } catch (error) {
-    //     if (error.response.status == 401) {
-    //         localStorage.clear();
-    //         router.replace("/login");
-    //     }
-    //     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-    //     alertError.value = true;
-    //     setTimeout(() => {
-    //         alertError.value = false;
-    //     }, 10000)
-    // } finally {
-    //     PendingAccountingReviewLoading.value = false;
-    //     CompleteAccountingReviewLoading.value = false;
-    //     rejectAccountingReviewLoading.value = false;
-    // }
+  try {
+    if (status == 'pending') {
+      PendingDepositLoading.value = true;
+    } else if (status == 'completed') {
+      CompleteDepositLoading.value = true;
+    } else if (status == 'failed') {
+      FailedDepositLoading.value = true;
+    }
+    filter.value.status = status;
+    const response = await WalletService.SubmitFilterWallet(filter.value);
+    if (status == 'pending') {
+      PendingDepositData.value = response.data;
+    } else if (status == 'completed') {
+      CompleteDepositData.value = response.data;
+    } else if (status == 'failed') {
+      FailedDepositData.value = response.data;
+    }
+    return response
+  } catch (error) {
+    if (error.response.status == 401) {
+      localStorage.clear();
+      router.replace("/login");
+    }
+    errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+    alertError.value = true;
+    setTimeout(() => {
+      alertError.value = false;
+    }, 10000)
+  } finally {
+    PendingDepositLoading.value = false;
+    CompleteDepositLoading.value = false;
+    FailedDepositLoading.value = false;
+  }
 }
 
 
@@ -707,7 +768,7 @@ onMounted(() => {
 
 <style scoped>
 .k-alert {
-  position: absolute;
+  position: fixed;
   top: 10px;
   left: 40%;
   font-size: 12px;

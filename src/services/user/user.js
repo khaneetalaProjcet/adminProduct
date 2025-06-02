@@ -1,3 +1,4 @@
+import ReportTemplate from "../report/api";
 import QueryTemplate from "../template/api";
 import VerifyTemplate from "../verify/api";
 import UserTemplate from "./api";
@@ -32,7 +33,13 @@ const UserService = {
     async transferData(id){
         const response = await UserTemplate.post(`/admin/oldChecker/${id}`);
         return response.data;
-    }
+    },
+
+    async SubmitFilterUser(userForm) {
+        const body = JSON.stringify(userForm);
+        const response = await ReportTemplate.post(`/report/users`, body);
+        return response.data
+    },
 }
 
 

@@ -428,14 +428,14 @@ onMounted(() => {
 }
 
 .k-alert {
-  position: absolute;
+  position: fixed;
   bottom: 10px;
   right: 10px;
   font-size: 12px;
   padding: 2px !important;
 }
 
-.stat-bold{
+.stat-bold {
   font-weight: bold;
 }
 </style>

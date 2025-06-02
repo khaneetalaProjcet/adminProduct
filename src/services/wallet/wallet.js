@@ -95,25 +95,31 @@ const WalletService = {
         return response.data
     },
 
-    async TransferGoldList(status){
+    async TransferGoldList(status) {
         const response = await QueryTemplate.get(`/admin/transport/all?status=${status}`);
         return response.data
     },
 
-    async UseGoldList(status){
+    async UseGoldList(status) {
         const response = await ServerTemplate.get(`/branch/transaction/all?type=${status}`);
         return response.data
     },
 
-    async UserFinance(params){
+    async UserFinance(params) {
         const response = await QueryTemplate.get(`/user/glance?page=${params.page}&perPage=${params.perPage}&search=${params.search}`);
         return response.data
     },
 
-    async UserFinanceItem(id){
+    async UserFinanceItem(id) {
         const response = await QueryTemplate.get(`/user/glance/${id}`);
         return response.data
-    }
+    },
+
+    async SubmitFilterWallet(walletForm) {
+        const body = JSON.stringify(walletForm);
+        const response = await ReportTemplate.post(`/report/analyze/report/wallettransactions`, body);
+        return response.data
+    },
 
 
 }

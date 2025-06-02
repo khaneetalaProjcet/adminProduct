@@ -15,11 +15,11 @@
                         </v-btn>
                     </div>
                     <template v-slot:text>
-                                                                    <ul class="listGuide">
-<li>
-قابلیت اضافه کردن کاربر و تعیین مجوزهای مورد نیاز برای هر کاربر وجود دارد.
-</li>
-                                              </ul>
+                        <ul class="listGuide">
+                            <li>
+                                قابلیت اضافه کردن کاربر و تعیین مجوزهای مورد نیاز برای هر کاربر وجود دارد.
+                            </li>
+                        </ul>
                         <v-text-field v-model="AdminListSearch" label="جستجو"
                             prepend-inner-icon="ri-search-line"></v-text-field>
                     </template>
@@ -126,23 +126,51 @@
                 <div class="d-flex flex-column" v-else>
                     <div class="d-flex justify-space-between align-items-center mx-4 my-2">
                         <span>درگاه معاملات</span>
-                        <v-switch v-model="closeTradePermission" color="#b08c4d" @click="SubmitManagmentAccess"
-                            :loading="managmentAccessLoading"></v-switch>
+                        <!-- <v-switch v-model="closeTradePermission" color="#b08c4d" @click="SubmitManagmentAccess"
+                            :loading="managmentAccessLoading"></v-switch> -->
+                        <div>
+                            <v-chip :prepend-icon="closeTradePermission == 1 ? 'ri-check-double-line' : 'ri-close-line'"
+                                :text="closeTradePermission == 1 ? 'فعال' : 'غیر فعال'"
+                                :color="closeTradePermission == 1 ? '#1B5E20' : '#B71C1C'" class="me-2"></v-chip>
+                            <v-btn size="small" color="#b18d4d" variant="elevated" :loading="managmentAccessLoading"
+                                @click="accessOtp('TradePermission')">تغییر وضعیت</v-btn>
+                        </div>
                     </div>
                     <div class="d-flex justify-space-between align-items-center mx-4 my-2">
                         <span>احراز هویت</span>
-                        <v-switch v-model="AuthData" color="#b08c4d" @click="SubmitAuth"
-                            :loading="managmentAuthLoading"></v-switch>
+                        <!-- <v-switch v-model="AuthData" color="#b08c4d" @click="SubmitAuth"
+                            :loading="managmentAuthLoading"></v-switch> -->
+                        <div>
+                            <v-chip :prepend-icon="AuthData == 1 ? 'ri-check-double-line' : 'ri-close-line'"
+                                :text="AuthData == 1 ? 'فعال' : 'غیر فعال'"
+                                :color="AuthData == 1 ? '#1B5E20' : '#B71C1C'" class="me-2"></v-chip>
+                            <v-btn size="small" color="#b18d4d" variant="elevated" :loading="managmentAuthLoading"
+                                @click="accessOtp('AuthPermission')">تغییر وضعیت</v-btn>
+                        </div>
                     </div>
                     <div class="d-flex justify-space-between align-items-center mx-4 my-2">
                         <span>واریز</span>
-                        <v-switch v-model="DepositData" color="#b08c4d" @click="SubmitDeposit"
-                            :loading="managmentDepositLoading"></v-switch>
+                        <!-- <v-switch v-model="DepositData" color="#b08c4d" @click="SubmitDeposit"
+                            :loading="managmentDepositLoading"></v-switch> -->
+                        <div>
+                            <v-chip :prepend-icon="DepositData == 1 ? 'ri-check-double-line' : 'ri-close-line'"
+                                :text="DepositData == 1 ? 'فعال' : 'غیر فعال'"
+                                :color="DepositData == 1 ? '#1B5E20' : '#B71C1C'" class="me-2"></v-chip>
+                            <v-btn size="small" color="#b18d4d" variant="elevated" :loading="managmentDepositLoading"
+                                @click="accessOtp('DepositPermission')">تغییر وضعیت</v-btn>
+                        </div>
                     </div>
                     <div class="d-flex justify-space-between align-items-center mx-4 my-2">
                         <span>برداشت</span>
-                        <v-switch v-model="WithdrawtData" color="#b08c4d" @click="SubmitWithdraw"
-                            :loading="managmentWithdrawLoading"></v-switch>
+                        <!-- <v-switch v-model="WithdrawtData" color="#b08c4d" @click="SubmitWithdraw"
+                            :loading="managmentWithdrawLoading"></v-switch> -->
+                        <div>
+                            <v-chip :prepend-icon="WithdrawtData == 1 ? 'ri-check-double-line' : 'ri-close-line'"
+                                :text="WithdrawtData == 1 ? 'فعال' : 'غیر فعال'"
+                                :color="WithdrawtData == 1 ? '#1B5E20' : '#B71C1C'" class="me-2"></v-chip>
+                            <v-btn size="small" color="#b18d4d" variant="elevated" :loading="managmentWithdrawLoading"
+                                @click="accessOtp('WithdrawPermission')">تغییر وضعیت</v-btn>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -207,6 +235,28 @@
         </v-card>
     </v-dialog>
 
+
+    <v-dialog v-model="otpManagmentDialog" max-width="450" class="dialog" persistent>
+        <v-card class="dialog-card">
+            <div class="k-dialog-title">
+                <p>تایید مدیریت</p>
+            </div>
+            <p class="my-5">لطفا کد ارسال شده را وارد نمایید</p>
+            <div class="d-flex justify-center my-5 py-1">
+                <v-otp-input :length="4" v-model="otp" type="number" variant="outlined" class="otp-input"></v-otp-input>
+            </div>
+            <div class="d-flex justify-space-between mt-6">
+                <v-btn text="انصراف" @click="otpManagmentDialog = false" size="large" class="m-3"
+                    variant="outlined"></v-btn>
+                <v-btn text="ثبت دسترسی" @click="SubmitManagmentAccess" size="large" class="m-3"
+                    :loading="managmentAccessLoading"></v-btn>
+            </div>
+
+        </v-card>
+    </v-dialog>
+
+
+
     <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
         {{ errorMsg }}
     </v-alert>
@@ -267,6 +317,11 @@ const managmentAuthLoading = ref(false);
 const managmentDepositLoading = ref(false);
 const managmentWithdrawLoading = ref(false);
 const AccessPointData = ref();
+const otpManagmentDialog = ref(false);
+const otp = ref('');
+const permissionLoading = ref(false);
+const otpSubmitLoading = ref(false);
+const otpType = ref('');
 const AuthData = ref();
 const DepositData = ref();
 const WithdrawtData = ref();
@@ -371,95 +426,6 @@ const managmentDialogRequest = async () => {
         managmentAccessLoading.value = false;
     }
 }
-
-const SubmitManagmentAccess = async () => {
-    try {
-        managmentAccessLoading.value = true;
-        const response = await ManagmentService.TradePermission();
-        AccessPointData.value = response.data;
-        managmentDialog.value = false;
-        return response
-    } catch (error) {
-        if (error.response.status == 401) {
-            localStorage.clear();
-            router.replace("/login");
-        }
-        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-        alertError.value = true;
-        setTimeout(() => {
-            alertError.value = false;
-        }, 10000)
-    } finally {
-        managmentAccessLoading.value = false;
-    }
-};
-
-const SubmitAuth = async () => {
-    try {
-        managmentAuthLoading.value = true;
-        const response = await ManagmentService.AuthPermission();
-        AuthData.value = response.data;
-        managmentDialog.value = false;
-        return response
-    } catch (error) {
-        if (error.response.status == 401) {
-            localStorage.clear();
-            router.replace("/login");
-        }
-        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-        alertError.value = true;
-        setTimeout(() => {
-            alertError.value = false;
-        }, 10000)
-    } finally {
-        managmentAuthLoading.value = false;
-    }
-};
-
-const SubmitDeposit = async () => {
-    try {
-        managmentDepositLoading.value = true;
-        const response = await ManagmentService.DepositPermission();
-        DepositData.value = response.data;
-        managmentDialog.value = false;
-        return response
-    } catch (error) {
-        if (error.response.status == 401) {
-            localStorage.clear();
-            router.replace("/login");
-        }
-        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-        alertError.value = true;
-        setTimeout(() => {
-            alertError.value = false;
-        }, 10000)
-    } finally {
-        managmentDepositLoading.value = false;
-    }
-};
-
-const SubmitWithdraw = async () => {
-    try {
-        managmentWithdrawLoading.value = true;
-        const response = await ManagmentService.WithdrawPermission();
-        WithdrawtData.value = response.data;
-        managmentDialog.value = false;
-        return response
-    } catch (error) {
-        if (error.response.status == 401) {
-            localStorage.clear();
-            router.replace("/login");
-        }
-        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-        alertError.value = true;
-        setTimeout(() => {
-            alertError.value = false;
-        }, 10000)
-    } finally {
-        managmentWithdrawLoading.value = false;
-    }
-};
-
 
 const userInfo = async (item) => {
     AccessPointDialog.value = true;
@@ -616,6 +582,150 @@ const submitDeleteAdmin = async () => {
     }
 }
 
+const accessOtp = async (type) => {
+    try {
+        if (type == 'TradePermission') {
+            managmentAccessLoading.value = true;
+            otpType.value = 'trade';
+        } else if (type == 'DepositPermission') {
+            managmentAuthLoading.value = true;
+            otpType.value = 'deposit';
+        } else if (type == 'AuthPermission') {
+            managmentDepositLoading.value = true;
+            otpType.value = 'register';
+        } else if (type == 'WithdrawPermission') {
+            otpType.value = 'withdraw';
+            managmentWithdrawLoading.value = true;
+        }
+        const response = await ManagmentService.otpAccess(otpType.value);
+        otpManagmentDialog.value = true;
+        return response
+    } catch (error) {
+        console.log(error)
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        managmentAccessLoading.value = false;
+        managmentAuthLoading.value = false;
+        managmentDepositLoading.value = false;
+        managmentWithdrawLoading.value = false;
+    }
+}
+
+const SubmitManagmentAccess = async () => {
+    console.log(otpType.value)
+    if (otpType.value == 'trade') {
+        SubmitTrade();
+    } else if (otpType.value == 'deposit') {
+        SubmitDeposit();
+    } else if (otpType.value == 'register') {
+        SubmitAuth();
+    } else if (otpType.value == 'withdraw') {
+        SubmitWithdraw();
+    }
+};
+
+
+const SubmitAuth = async () => {
+    try {
+        managmentAccessLoading.value = true;
+        const response = await ManagmentService.AuthPermission(otp.value);
+        managmentDialog.value = false;
+        otpManagmentDialog.value = false;
+        otp.value = '';
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        managmentAccessLoading.value = false;
+    }
+};
+
+const SubmitDeposit = async () => {
+    try {
+        managmentAccessLoading.value = true;
+        const response = await ManagmentService.DepositPermission(otp.value);
+        managmentDialog.value = false;
+        otpManagmentDialog.value = false;
+        otp.value = '';
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        managmentAccessLoading.value = false;
+    }
+};
+
+const SubmitWithdraw = async () => {
+    try {
+        managmentAccessLoading.value = true;
+        const response = await ManagmentService.WithdrawPermission(otp.value);
+        managmentDialog.value = false;
+        otpManagmentDialog.value = false;
+        otp.value = '';
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        managmentAccessLoading.value = false;
+    }
+};
+
+const SubmitTrade = async () => {
+    try {
+        managmentAccessLoading.value = true;
+        const response = await ManagmentService.TradePermission(otp.value);
+        managmentDialog.value = false;
+        otpManagmentDialog.value = false;
+        otp.value = '';
+        return response
+    } catch (error) {
+        console.log(error)
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        managmentAccessLoading.value = false;
+    }
+};
+
 onMounted(() => {
     GetAdminList();
 })
@@ -671,12 +781,16 @@ onMounted(() => {
 }
 
 .listGuide {
-  font-size: 12px;
-  color: #2c3e50;
-  font-weight: 500px;
-  margin: 0.2rem;
-  margin-bottom: 2rem;
-  margin-right: 0.7rem;
-  margin-left: 1rem;
+    font-size: 12px;
+    color: #2c3e50;
+    font-weight: 500px;
+    margin: 0.2rem;
+    margin-bottom: 2rem;
+    margin-right: 0.7rem;
+    margin-left: 1rem;
+}
+
+.otp-input {
+    direction: ltr;
 }
 </style>
