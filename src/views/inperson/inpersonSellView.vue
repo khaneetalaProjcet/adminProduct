@@ -13,19 +13,19 @@
                         <v-tabs-window-item value="one">
                             <v-row class="filter my-3">
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.fromDate"
+                                    <persian-date-picker v-model="filter.startDate"
                                         placeholder="از تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.toDate"
+                                    <persian-date-picker v-model="filter.endDate"
                                         placeholder="تا تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
@@ -104,19 +104,19 @@
                         <v-tabs-window-item value="two">
                             <v-row class="filter my-3">
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.fromDate"
+                                    <persian-date-picker v-model="filter.startDate"
                                         placeholder="از تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.toDate"
+                                    <persian-date-picker v-model="filter.endDate"
                                         placeholder="تا تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">

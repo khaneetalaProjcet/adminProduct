@@ -745,15 +745,15 @@ const changeTabs = () => {
   filter.value.lastName = '';
   filter.value.accounter = '';
   filter.value.admin = '';
-  filter.value.toDate = '';
-  filter.value.toTime = '';
+  filter.value.endDate = '';
+  filter.value.endTime = '';
   filter.value.goldPrice = '';
   filter.value.goldWeight = '';
   filter.value.invoiceId = '';
   filter.value.nationalCode = '';
   filter.value.phoneNumber = '';
-  filter.value.fromTime = '';
-  filter.value.fromDate = '';
+  filter.value.startTime = '';
+  filter.value.startDate = '';
 }
 
 

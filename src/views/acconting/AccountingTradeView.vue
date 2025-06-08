@@ -15,17 +15,17 @@
 
               <v-row class="filte my-3">
                 <v-col cols="6" md="3">
-                  <persian-date-picker v-model="filter.fromDate" placeholder="از تاریخ"></persian-date-picker>
+                  <persian-date-picker v-model="filter.startDate" placeholder="از تاریخ"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                  <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker v-model="filter.toDate" placeholder="تا تاریخ"></persian-date-picker>
+                  <persian-date-picker v-model="filter.endDate" placeholder="تا تاریخ"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                  <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
@@ -104,17 +104,17 @@
             <v-tabs-window-item value="two">
               <v-row class="filter my-3">
                 <v-col cols="6" md="3">
-                  <persian-date-picker v-model="filter.fromDate" placeholder="از تاریخ"></persian-date-picker>
+                  <persian-date-picker v-model="filter.startDate" placeholder="از تاریخ"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                  <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker v-model="filter.toDate" placeholder="تا تاریخ"></persian-date-picker>
+                  <persian-date-picker v-model="filter.endDate" placeholder="تا تاریخ"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                  <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
@@ -188,17 +188,17 @@
             <v-tabs-window-item value="three">
               <v-row class="filter my-3">
                 <v-col cols="6" md="3">
-                  <persian-date-picker v-model="filter.fromDate" placeholder="از تاریخ"></persian-date-picker>
+                  <persian-date-picker v-model="filter.startDate" placeholder="از تاریخ"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                  <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker v-model="filter.toDate" placeholder="تا تاریخ"></persian-date-picker>
+                  <persian-date-picker v-model="filter.endDate" placeholder="تا تاریخ"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                  <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
@@ -719,15 +719,15 @@ const changeTabs = () => {
   filter.value.lastName = '';
   filter.value.accounter = '';
   filter.value.admin = '';
-  filter.value.toDate = '';
-  filter.value.toTime = '';
+  filter.value.endDate = '';
+  filter.value.endTime = '';
   filter.value.goldPrice = '';
   filter.value.goldWeight = '';
   filter.value.invoiceId = '';
   filter.value.nationalCode = '';
   filter.value.phoneNumber = '';
-  filter.value.fromTime = '';
-  filter.value.fromDate = '';
+  filter.value.startTime = '';
+  filter.value.startDate = '';
 }
 
 onMounted(() => {

@@ -14,19 +14,19 @@
                         <v-tabs-window-item value="one">
                             <v-row class="filter my-3">
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.fromDate"
+                                    <persian-date-picker v-model="filter.startDate"
                                         placeholder="از تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.toDate"
+                                    <persian-date-picker v-model="filter.endDate"
                                         placeholder="تا تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
@@ -77,12 +77,13 @@
                                 </v-col>
                             </v-row>
                             <v-card title="در انتظار تایید">
-                              <ul class="listGuide ">
-              <li>
-درخواست خرید حواله که از سوی کاربر ثبت شده و در انتطار بررسی از سوی حسابداری می باشد.
-              </li>
+                                <ul class="listGuide ">
+                                    <li>
+                                        درخواست خرید حواله که از سوی کاربر ثبت شده و در انتطار بررسی از سوی حسابداری می
+                                        باشد.
+                                    </li>
 
-            </ul>
+                                </ul>
                                 <template v-slot:text>
                                     <v-text-field v-model="PendingRemiitanceBuySearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
@@ -109,19 +110,19 @@
                         <v-tabs-window-item value="two">
                             <v-row class="filter my-3">
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.fromDate"
+                                    <persian-date-picker v-model="filter.startDate"
                                         placeholder="از تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.toDate"
+                                    <persian-date-picker v-model="filter.endDate"
                                         placeholder="تا تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
@@ -172,13 +173,13 @@
                                 </v-col>
                             </v-row>
                             <v-card title="موفق">
-                              <ul class="listGuide ">
-              <li>
+                                <ul class="listGuide ">
+                                    <li>
 
-درخواست خرید حواله که از سوی حسابداری تایید شده و با موفقیت انجام شده است.
-              </li>
+                                        درخواست خرید حواله که از سوی حسابداری تایید شده و با موفقیت انجام شده است.
+                                    </li>
 
-            </ul>
+                                </ul>
                                 <template v-slot:text>
                                     <v-text-field v-model="CompleteRemiitanceBuySearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
@@ -206,19 +207,19 @@
                         <v-tabs-window-item value="three">
                             <v-row class="filter my-3">
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.fromDate"
+                                    <persian-date-picker v-model="filter.startDate"
                                         placeholder="از تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.toDate"
+                                    <persian-date-picker v-model="filter.endDate"
                                         placeholder="تا تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
@@ -270,12 +271,13 @@
                             </v-row>
                             <v-card title="ناموفق">
 
-                              <ul class="listGuide ">
-              <li>
+                                <ul class="listGuide ">
+                                    <li>
 
-درخواست خرید حواله که از سوی حسابداری تایید نشده و یا کاربر از خرید صرف نظر کرده است.              </li>
+                                        درخواست خرید حواله که از سوی حسابداری تایید نشده و یا کاربر از خرید صرف نظر کرده
+                                        است. </li>
 
-            </ul>
+                                </ul>
                                 <template v-slot:text>
                                     <v-text-field v-model="FailedRemiitanceBuySearch" label="جستجو"
                                         prepend-inner-icon="ri-search-line"></v-text-field>
@@ -821,12 +823,12 @@ onMounted(() => {
 
 
 .listGuide {
-  font-size: 12px;
-  color: #2c3e50;
-  font-weight: 500px;
-  padding: 0.5rem;
-  margin: 0.1rem;
-  margin-bottom: 2rem;
-  margin-right: 0.9rem
+    font-size: 12px;
+    color: #2c3e50;
+    font-weight: 500px;
+    padding: 0.5rem;
+    margin: 0.1rem;
+    margin-bottom: 2rem;
+    margin-right: 0.9rem
 }
 </style>

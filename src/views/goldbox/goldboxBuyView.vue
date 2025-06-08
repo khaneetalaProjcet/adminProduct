@@ -15,19 +15,19 @@
                         <v-tabs-window-item value="one">
                             <v-row class="filter my-3">
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.fromDate"
+                                    <persian-date-picker v-model="filter.startDate"
                                         placeholder="از تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.toDate"
+                                    <persian-date-picker v-model="filter.endDate"
                                         placeholder="تا تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
@@ -78,12 +78,13 @@
                                 </v-col>
                             </v-row>
                             <v-card title="نامشخص">
-                              <ul class="listGuide ">
-              <li>
-خریدهایی که کاربر تا مرحله ورود به درگاه بانکی پیش رفته است، اما به دلیل انصراف یا بروز اختلال در درگاه بانکی تکمیل نشده‌اند.
-                </li>
+                                <ul class="listGuide ">
+                                    <li>
+                                        خریدهایی که کاربر تا مرحله ورود به درگاه بانکی پیش رفته است، اما به دلیل انصراف
+                                        یا بروز اختلال در درگاه بانکی تکمیل نشده‌اند.
+                                    </li>
 
-            </ul>
+                                </ul>
                                 <v-data-table :headers="PendingGoldBoxBuyHeader" :items="PendingGoldBoxBuyData"
                                     :loading="PendingGoldBoxBuyLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -106,19 +107,19 @@
                         <v-tabs-window-item value="two">
                             <v-row class="filter my-3">
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.fromDate"
+                                    <persian-date-picker v-model="filter.startDate"
                                         placeholder="از تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.toDate"
+                                    <persian-date-picker v-model="filter.endDate"
                                         placeholder="تا تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
@@ -169,11 +170,12 @@
                                 </v-col>
                             </v-row>
                             <v-card title="موفق">
-                                         <ul class="listGuide">
-                <li>
-خریدهایی که تمامی مراحل به‌درستی انجام شده و مبلغ نیز از طریق درگاه بانکی پرداخت گردیده است.
-                </li>
-                  </ul>
+                                <ul class="listGuide">
+                                    <li>
+                                        خریدهایی که تمامی مراحل به‌درستی انجام شده و مبلغ نیز از طریق درگاه بانکی پرداخت
+                                        گردیده است.
+                                    </li>
+                                </ul>
                                 <v-data-table :headers="CompleteGoldBoxBuyHeader" :items="CompleteGoldBoxBuyData"
                                     :loading="CompleteGoldBoxBuyLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -197,19 +199,19 @@
                         <v-tabs-window-item value="three">
                             <v-row class="filter my-3">
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.fromDate"
+                                    <persian-date-picker v-model="filter.startDate"
                                         placeholder="از تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.toDate"
+                                    <persian-date-picker v-model="filter.endDate"
                                         placeholder="تا تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
@@ -260,11 +262,13 @@
                                 </v-col>
                             </v-row>
                             <v-card title="ناموفق">
-                                                                       <ul class="listGuide">
-                <li>
-خریدهایی که تمام مراحل آن به طور صحیح انجام شده است اما به دلیل انصراف کاربر یا سایر عوامل نهایی نشده است.
-                </li>
-                  </ul>
+                                <ul class="listGuide">
+                                    <li>
+                                        خریدهایی که تمام مراحل آن به طور صحیح انجام شده است اما به دلیل انصراف کاربر یا
+                                        سایر عوامل نهایی نشده
+                                        است.
+                                    </li>
+                                </ul>
                                 <v-data-table :headers="FailedGoldBoxBuyHeader" :items="FailedGoldBoxBuyData"
                                     :loading="CompleteGoldBoxBuyLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -288,19 +292,19 @@
                         <v-tabs-window-item value="four">
                             <v-row class="filter my-3">
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.fromDate"
+                                    <persian-date-picker v-model="filter.startDate"
                                         placeholder="از تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.toDate"
+                                    <persian-date-picker v-model="filter.endDate"
                                         placeholder="تا تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
@@ -351,11 +355,12 @@
                                 </v-col>
                             </v-row>
                             <v-card title="پرداخت نشده">
-                                                                                                     <ul class="listGuide">
-                <li>
-خریدهایی که تا مرحله صدور فاکتور پیش رفته‌اند اما به دلیل لغو یا عدم پرداخت به سرانجام نرسیده‌اند.
-            </li>
-                  </ul>
+                                <ul class="listGuide">
+                                    <li>
+                                        خریدهایی که تا مرحله صدور فاکتور پیش رفته‌اند اما به دلیل لغو یا عدم پرداخت به
+                                        سرانجام نرسیده‌اند.
+                                    </li>
+                                </ul>
 
                                 <v-data-table :headers="InitGoldBoxBuyHeader" :items="InitGoldBoxBuyData"
                                     :loading="InitGoldBoxBuyLoading">
@@ -956,12 +961,12 @@ onMounted(() => {
 }
 
 .listGuide {
-  font-size: 12px;
-  color: #2c3e50;
-  font-weight: 500px;
-  padding: 0.5rem;
-  margin: 0.1rem;
-  margin-bottom: 2rem;
-  margin-right: 0.9rem
+    font-size: 12px;
+    color: #2c3e50;
+    font-weight: 500px;
+    padding: 0.5rem;
+    margin: 0.1rem;
+    margin-bottom: 2rem;
+    margin-right: 0.9rem
 }
 </style>

@@ -40,6 +40,12 @@ const UserService = {
         const response = await ReportTemplate.post(`/report/users`, body);
         return response.data
     },
+
+    async SubmitAddUser(form) {
+        const body = JSON.stringify(form);
+        const response = await UserTemplate.post(`/user/handle`, body);
+        return response.data
+    },
 }
 
 

@@ -14,19 +14,19 @@
                         <v-tabs-window-item value="one">
                             <v-row class="filter my-3">
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.fromDate"
+                                    <persian-date-picker v-model="filter.startDate"
                                         placeholder="از تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.toDate"
+                                    <persian-date-picker v-model="filter.endDate"
                                         placeholder="تا تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
@@ -77,11 +77,12 @@
                                 </v-col>
                             </v-row>
                             <v-card title="در انتظار تایید">
-                                     <ul class="listGuide">
-                    <li>
-معاملاتی که توسط کارشناس بخش حضوری ثبت شده‌اند و در مرحله انتظار برای تایید پرداخت هستند
-                    </li>
-                  </ul>
+                                <ul class="listGuide">
+                                    <li>
+                                        معاملاتی که توسط کارشناس بخش حضوری ثبت شده‌اند و در مرحله انتظار برای تایید
+                                        پرداخت هستند
+                                    </li>
+                                </ul>
 
                                 <v-data-table :headers="PendingInPersonBuyHeader" :items="PendingInPersonBuyData"
                                     :loading="PendingInPersonBuyLoading">
@@ -105,19 +106,19 @@
                         <v-tabs-window-item value="two">
                             <v-row class="filter my-3">
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.fromDate"
+                                    <persian-date-picker v-model="filter.startDate"
                                         placeholder="از تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.toDate"
+                                    <persian-date-picker v-model="filter.endDate"
                                         placeholder="تا تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
@@ -168,11 +169,12 @@
                                 </v-col>
                             </v-row>
                             <v-card title="موفق">
-                                          <ul class="listGuide">
-                    <li>
-خرید حضوری که پرداخت آن با موفقیت انجام شده و توسط واحد حسابداری تأیید گردیده است.
-                    </li>
-                  </ul>
+                                <ul class="listGuide">
+                                    <li>
+                                        خرید حضوری که پرداخت آن با موفقیت انجام شده و توسط واحد حسابداری تأیید گردیده
+                                        است.
+                                    </li>
+                                </ul>
                                 <v-data-table :headers="CompleteInPersonBuyHeader" :items="CompleteInPersonBuyData"
                                     :loading="CompleteInPersonBuyLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -196,19 +198,19 @@
                         <v-tabs-window-item value="three">
                             <v-row class="filter my-3">
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.fromDate"
+                                    <persian-date-picker v-model="filter.startDate"
                                         placeholder="از تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.fromTime" placeholder="از زمان"
+                                    <persian-date-picker type="time" v-model="filter.startTime" placeholder="از زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker v-model="filter.toDate"
+                                    <persian-date-picker v-model="filter.endDate"
                                         placeholder="تا تاریخ"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <persian-date-picker type="time" v-model="filter.toTime" placeholder="تا زمان"
+                                    <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان"
                                         format="HH:mm:ss"></persian-date-picker>
                                 </v-col>
                                 <v-col cols="6" md="3">
@@ -259,11 +261,12 @@
                                 </v-col>
                             </v-row>
                             <v-card title="ناموفق">
-                                         <ul class="listGuide">
-                    <li>
-خرید حضوری که به علت عدم موفقیت در پرداخت یا سایر دلایل توسط کارشناس بخش حضوری لغو شده باشد.
-                    </li>
-                  </ul>
+                                <ul class="listGuide">
+                                    <li>
+                                        خرید حضوری که به علت عدم موفقیت در پرداخت یا سایر دلایل توسط کارشناس بخش حضوری
+                                        لغو شده باشد.
+                                    </li>
+                                </ul>
                                 <v-data-table :headers="FailedInPersonBuyHeader" :items="FailedInPersonBuyData"
                                     :loading="FailedInPersonBuyLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -882,12 +885,12 @@ onMounted(() => {
 }
 
 .listGuide {
-  font-size: 12px;
-  color: #2c3e50;
-  font-weight: 500px;
-  padding: 0.5rem;
-  margin: 0.1rem;
-  margin-bottom: 2rem;
-  margin-right: 0.9rem
+    font-size: 12px;
+    color: #2c3e50;
+    font-weight: 500px;
+    padding: 0.5rem;
+    margin: 0.1rem;
+    margin-bottom: 2rem;
+    margin-right: 0.9rem
 }
 </style>
