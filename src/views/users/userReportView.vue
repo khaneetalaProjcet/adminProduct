@@ -1,11 +1,9 @@
 <template>
     <div>
         <v-row>
-
             <v-col cols="12">
-
                 <v-card-text>
-<v-row class="filter my-3">
+            <v-row class="filter my-3">
                 <v-col cols="6" md="3">
                   <persian-date-picker v-model="filter.startDate" placeholder="از تاریخ"></persian-date-picker>
                 </v-col>
@@ -68,15 +66,15 @@
                 </v-col>
               </v-row>
 
-    
+
                     <v-card title="اطلاعات مالی کاربران">
                         <template v-slot:text>
-                             <ul class="listGuide">
-                    <li>
-در این صفحه می‌توان تمامی فعالیت‌های مالی کاربر و موجودی‌ها را مشاهده و بررسی کرد.
-                    </li>
+                            <ul class="listGuide">
+                                <li>
+                                    در این صفحه می‌توان تمامی فعالیت‌های مالی کاربر و موجودی‌ها را مشاهده و بررسی کرد.
+                                </li>
 
-                  </ul>
+                            </ul>
 
                             <v-text-field v-model="financeSearch" label="جستجو"
                                 prepend-inner-icon="ri-search-line"></v-text-field>
@@ -161,39 +159,101 @@
                                 </v-col>
                                 <v-divider class="my-10"></v-divider>
                                 <v-col cols="12" class="my-2">
-                                    <v-data-table :headers="financeTransactionHeader" :items="financeItemData.buys"
-                                        :loading="financeItemLoading">
-                                        <template v-slot:item.status="{ item }">
-                                            <div>
-                                                <v-chip
-                                                    :text="item.status == 'completed' ? 'موفق' : (item.status) == 'pending' ? 'در انتظار' : 'ناموفق'"
-                                                    :color="item.status == 'completed' ? '#00853f' : (item.status) == 'pending' ? '#666666' : '#ff0000'"
-                                                    size="small"></v-chip>
-                                            </div>
-                                        </template>
+                                    <div class="w-100">
+                                        <v-tabs v-model="detailTab" align-tabs="center">
+                                            <v-tab value="wallet">تراکنش های کیف پول</v-tab>
+                                            <v-tab value="trade">تراکنش های معامله</v-tab>
+                                        </v-tabs>
+                                    </div>
+                                </v-col>
+                                <v-col cols="12" class="my-2">
+                                    <v-tabs-window v-model="detailTab">
+                                        <v-tabs-window-item value="wallet">
+                                            <v-data-table :headers="financeTransactionWalletHeader"
+                                                :items="financeItemData.wallets" :loading="financeItemLoading">
+                                                <template v-slot:item.status="{ item }">
+                                                    <div>
+                                                        <v-chip
+                                                            :text="item.status == 'completed' ? 'موفق' : (item.status) == 'pending' ? 'در انتظار' : 'ناموفق'"
+                                                            :color="item.status == 'completed' ? '#00853f' : (item.status) == 'pending' ? '#666666' : '#ff0000'"
+                                                            size="small"></v-chip>
+                                                    </div>
+                                                </template>
 
-                                        <template v-slot:item.tradeType="{ item }">
-                                            <div>
-                                                <v-chip
-                                                    :text="item.tradeType == '0' ? 'آنلاین' : (item.tradeType) == '1' ? 'تلفنی' : (item.tradeType) == '2' ? 'حضوری' : (item.tradeType) == '3' ? 'حواله' : (item.tradeType) == '4' ? 'تبدیل حضوری' : 'نامشخص'"
-                                                    color="#666666" size="small"></v-chip>
-                                            </div>
-                                        </template>
+                                                <template v-slot:item.tradeType="{ item }">
+                                                    <div>
+                                                        <v-chip
+                                                            :text="item.tradeType == '0' ? 'آنلاین' : (item.tradeType) == '1' ? 'تلفنی' : (item.tradeType) == '2' ? 'حضوری' : (item.tradeType) == '3' ? 'حواله' : (item.tradeType) == '4' ? 'تبدیل حضوری' : 'نامشخص'"
+                                                            color="#666666" size="small"></v-chip>
+                                                    </div>
+                                                </template>
 
-                                        <template v-slot:item.type.title="{ item }">
-                                            <div>
-                                                <v-chip
-                                                    :text="item.type.title == 'sell' ? 'فروش' : 'خرید' "
-                                                    color="#666666" size="small"></v-chip>
-                                                    <!-- <p>{{ item.type.title }}</p> -->
-                                            </div>
-                                        </template>
+                                                <template v-slot:item.amount="{ item }">
+                                                    <div>
+                                                        <p>
+                                                            {{ formatNumber(item.amount) }}
+                                                        </p>
+                                                    </div>
+                                                </template>
 
-                                        <template v-slot:item.action="{ item }">
-                                            <v-icon class="me-2" size="small" icon="ri-info-i" color="#d4af37"
-                                                @click="FinanceInfo(item)"></v-icon>
-                                        </template>
-                                    </v-data-table>
+                                                <template v-slot:item.type="{ item }">
+                                                    <div>
+                                                        <!-- <p v-if="item.type == 'withdraw'">برداشت</p>
+                                                    <p v-else>واریز</p> -->
+
+                                                        <v-chip :text="item.type == 'withdraw' ? 'برداشت' : 'واریز'"
+                                                            color="#666666" size="small"></v-chip>
+                                                    </div>
+                                                </template>
+
+                                                <template v-slot:item.type.title="{ item }">
+                                                    <div>
+                                                        <v-chip :text="item.type.title == 'sell' ? 'فروش' : 'خرید'"
+                                                            color="#666666" size="small"></v-chip>
+                                                    </div>
+                                                </template>
+
+                                                <template v-slot:item.action="{ item }">
+                                                    <v-icon class="me-2" size="small" icon="ri-info-i" color="#d4af37"
+                                                        @click="FinanceInfo(item, 'wallet')"></v-icon>
+                                                </template>
+                                            </v-data-table>
+                                        </v-tabs-window-item>
+                                        <v-tabs-window-item value="trade">
+                                            <v-data-table :headers="financeTransactionTradeHeader"
+                                                :items="financeItemData.invoices" :loading="financeItemLoading">
+                                                <template v-slot:item.status="{ item }">
+                                                    <div>
+                                                        <v-chip
+                                                            :text="item.status == 'completed' ? 'موفق' : (item.status) == 'pending' ? 'در انتظار' : 'ناموفق'"
+                                                            :color="item.status == 'completed' ? '#00853f' : (item.status) == 'pending' ? '#666666' : '#ff0000'"
+                                                            size="small"></v-chip>
+                                                    </div>
+                                                </template>
+
+                                                <template v-slot:item.tradeType="{ item }">
+                                                    <div>
+                                                        <v-chip
+                                                            :text="item.tradeType == '0' ? 'آنلاین' : (item.tradeType) == '1' ? 'تلفنی' : (item.tradeType) == '2' ? 'حضوری' : (item.tradeType) == '3' ? 'حواله' : (item.tradeType) == '4' ? 'تبدیل حضوری' : 'نامشخص'"
+                                                            color="#666666" size="small"></v-chip>
+                                                    </div>
+                                                </template>
+
+                                                <template v-slot:item.type.title="{ item }">
+                                                    <div>
+                                                        <v-chip :text="item.type.title == 'sell' ? 'فروش' : 'خرید'"
+                                                            color="#666666" size="small"></v-chip>
+                                                        <!-- <p>{{ item.type.title }}</p> -->
+                                                    </div>
+                                                </template>
+
+                                                <template v-slot:item.action="{ item }">
+                                                    <v-icon class="me-2" size="small" icon="ri-info-i" color="#d4af37"
+                                                        @click="FinanceInfo(item, 'trade')"></v-icon>
+                                                </template>
+                                            </v-data-table>
+                                        </v-tabs-window-item>
+                                    </v-tabs-window>
                                 </v-col>
                             </v-row>
                         </v-container>
@@ -225,22 +285,22 @@
                         <p>{{ financeDetail.time }}</p>
                     </div>
                 </v-col>
-                <v-col cols="6" class="my-1 pa-1">
+                <v-col cols="6" class="my-1 pa-1" v-if="financeDetail.invoiceType == 'trade'">
                     <div class="d-flex align-center">
                         <p>قیمت لحظه ای طلا : </p>
-                        <p>{{ financeDetail.goldPrice }}</p>
+                        <p>{{ formatNumber(financeDetail.goldPrice) }} تومان</p>
                     </div>
                 </v-col>
-                <v-col cols="6" class="my-1 pa-1">
+                <v-col cols="6" class="my-1 pa-1" v-if="financeDetail.invoiceType == 'trade'">
                     <div class="d-flex align-center">
                         <p>وزن طلا : </p>
-                        <p>{{ financeDetail.goldWeight }}</p>
+                        <p>{{ financeDetail.goldWeight }} گرم</p>
                     </div>
                 </v-col>
-                <v-col cols="6" class="my-1 pa-1">
+                <v-col cols="6" class="my-1 pa-1" v-if="financeDetail.invoiceType == 'trade'">
                     <div class="d-flex align-center">
                         <p>قیمت کل : </p>
-                        <p>{{ financeDetail.totalPrice }}</p>
+                        <p>{{ formatNumber(financeDetail.totalPrice) }}</p>
                     </div>
                 </v-col>
                 <v-col cols="6" class="my-1 pa-1">
@@ -257,7 +317,20 @@
                         <p v-else>ناموفق</p>
                     </div>
                 </v-col>
-                <v-col cols="6" class="my-1 pa-1">
+                <v-col cols="6" class="my-1 pa-1" v-if="financeDetail.invoiceType == 'wallet'">
+                    <div class="d-flex align-center">
+                        <p>مبلغ : </p>
+                        <p>{{ formatNumber(financeDetail.amount) }}</p>
+                    </div>
+                </v-col>
+                <v-col cols="6" class="my-1 pa-1"
+                    v-if="financeDetail.invoiceType == 'wallet' && financeDetail.type == 'withdraw'">
+                    <div class="d-flex align-center">
+                        <p>شماره تراکنش : </p>
+                        <p>{{ financeDetail.withdrawalId }}</p>
+                    </div>
+                </v-col>
+                <v-col cols="6" class="my-1 pa-1" v-if="financeDetail.invoiceType == 'trade'">
                     <div class="d-flex align-center">
                         <p>نوع معامله : </p>
                         <p v-if="financeDetail.tradeType == 0">آنلاین</p>
@@ -268,7 +341,7 @@
                         <p v-else>ناموفق</p>
                     </div>
                 </v-col>
-                <v-col cols="6" class="my-1 pa-1">
+                <v-col cols="6" class="my-1 pa-1" v-if="financeDetail.invoiceType == 'trade'">
                     <div class="d-flex align-center">
                         <p>نوع پرداخت : </p>
                         <p v-if="financeDetail.paymentMethod == 0">درگاه</p>
@@ -278,34 +351,40 @@
                         <p v-else> - </p>
                     </div>
                 </v-col>
-                <v-col cols="6" class="my-1 pa-1">
+                <v-col cols="6" class="my-1 pa-1" v-if="financeDetail.invoiceType == 'trade'">
                     <div class="d-flex align-center">
                         <p>ادمین : </p>
                         <p>{{ financeDetail.adminId }}</p>
                     </div>
                 </v-col>
-                <v-col cols="6" class="my-1 pa-1">
+                <v-col cols="6" class="my-1 pa-1" v-if="financeDetail.invoiceType == 'trade'">
                     <div class="d-flex align-center">
                         <p>حسابدار : </p>
                         <p>{{ financeDetail.accounterId }}</p>
                     </div>
                 </v-col>
-                <v-col cols="12" class="my-1 pa-1">
+                <v-col cols="12" class="my-1 pa-1" v-if="financeDetail.invoiceType == 'trade'">
                     <div class="d-flex align-center">
                         <p>شماره کارت مبدا : </p>
                         <p>{{ financeDetail.originCardPan }}</p>
                     </div>
                 </v-col>
-                <v-col cols="12" class="my-1 pa-1">
+                <v-col cols="12" class="my-1 pa-1" v-if="financeDetail.invoiceType == 'trade'">
                     <div class="d-flex align-center">
                         <p>شماره کارت مقصد : </p>
                         <p>{{ financeDetail.destCardPan }}</p>
                     </div>
                 </v-col>
-                <v-col cols="12" class="my-1 pa-1">
+                <v-col cols="12" class="my-1 pa-1" v-if="financeDetail.invoiceType == 'trade'">
                     <div class="d-flex align-center">
                         <p>توضیحات حسابدار : </p>
                         <p>{{ financeDetail.accounterDescription }}</p>
+                    </div>
+                </v-col>
+                <v-col cols="12" class="my-1 pa-1">
+                    <div class="d-flex align-center">
+                        <p>توضیحات: </p>
+                        <p>{{ financeDetail.description }}</p>
                     </div>
                 </v-col>
             </v-row>
@@ -330,6 +409,7 @@ const itemsPerPageOptions = ref([5, 10, 25, 50]);
 const totalItems = ref(0);
 const totalPages = ref(1);
 const detailModal = ref(false);
+const detailTab = ref(null);
 const financeHeader = ref([
     {
         title: 'نام',
@@ -360,6 +440,76 @@ const financeHeader = ref([
         key: 'action'
     }
 ]);
+const financeTransactionTradeHeader = ref([
+    {
+        title: 'تاریخ',
+        key: 'date',
+    },
+    {
+        title: 'زمان',
+        key: 'time',
+    },
+    {
+        title: 'وزن طلا(گرم)',
+        key: 'goldWeight',
+    },
+    {
+        title: 'مبلغ (تومان)',
+        key: 'goldPrice',
+    },
+    {
+        title: 'وضعیت',
+        key: 'status',
+    },
+    {
+        title: 'نوع پرداخت',
+        key: 'tradeType',
+    },
+    {
+        title: 'شماره فاکتور',
+        key: 'invoiceId',
+    },
+    {
+        title: 'نوع تراکنش',
+        key: 'type.title',
+    },
+    {
+        title: 'فعالیت',
+        key: 'action',
+    },
+]);
+
+const financeTransactionWalletHeader = ref([
+    {
+        title: 'تاریخ',
+        key: 'date',
+    },
+    {
+        title: 'زمان',
+        key: 'time',
+    },
+    {
+        title: 'مبلغ (تومان)',
+        key: 'amount',
+    },
+    {
+        title: 'وضعیت',
+        key: 'status',
+    },
+    {
+        title: 'شماره فاکتور',
+        key: 'invoiceId',
+    },
+    {
+        title: 'نوع تراکنش',
+        key: 'type',
+    },
+    {
+        title: 'فعالیت',
+        key: 'action',
+    },
+])
+
 const financeTransactionHeader = ref([
     {
         title: 'تاریخ',
@@ -389,7 +539,7 @@ const financeTransactionHeader = ref([
         title: 'شماره فاکتور',
         key: 'invoiceId',
     },
-     {
+    {
         title: 'نوع تراکنش',
         key: 'type.title',
     },
@@ -397,7 +547,6 @@ const financeTransactionHeader = ref([
         title: 'فعالیت',
         key: 'action',
     },
-
 ])
 const financeSearch = ref('');
 const financeData = ref();
@@ -407,15 +556,17 @@ const financeItemData = ref({
     phoneNumber: '',
     nationalCode: '',
     bankAccounts: [],
-    buys: [],
+    invoices: [],
+    wallets: [],
     wallet: {
-        balance: '-',
-        blocked: '-',
-        goldWeight: '-',
+        balance: '',
+        blocked: '',
+        goldBlock: '',
+        goldWeight: '',
     }
 });
-
 const financeDetail = ref({
+    invoiceType: '',
     date: '-',
     time: '-',
     totalPrice: '-',
@@ -431,9 +582,10 @@ const financeDetail = ref({
     adminId: '-',
     accounterId: '-',
     accounterDescription: '-',
+    withdrawalId: '-',
+    type: '',
+    amount: '-'
 })
-
-
 const filter = ref({
     firstName: '',
     lastName: '',
@@ -493,21 +645,20 @@ const formatNumber = (num) => {
 
 const userFinanceInfo = async (item) => {
     try {
+        financeItemData.value.firstName = item.firstName;
+        financeItemData.value.lastName = item.lastName;
+        financeItemData.value.nationalCode = item.nationalCode;
+        financeItemData.value.phoneNumber = item.phoneNumber;
+        financeItemData.value.wallet.balance = item.wallet.balance;
+        financeItemData.value.wallet.blocked = item.wallet.blocked;
+        financeItemData.value.wallet.goldBlock = item.wallet.goldBlock;
+        financeItemData.value.wallet.goldWeight = item.wallet.goldWeight;
+        financeItemData.value.bankAccounts = item.bankAccounts;
         financeItemLoading.value = true;
         financeSheet.value = true;
         const response = await WalletService.UserFinanceItem(item.id);
-        financeItemData.value.firstName = response.data?.firstName;
-        financeItemData.value.lastName = response.data?.lastName;
-        financeItemData.value.nationalCode = response.data?.nationalCode;
-        financeItemData.value.phoneNumber = response.data?.phoneNumber;
-        financeItemData.value.bankAccounts = response.data?.bankAccounts;
-        financeItemData.value.buys = response.data?.buys;
-        financeItemData.value.wallet.balance = response.data?.wallet.balance;
-        financeItemData.value.wallet.blocked = response.data?.wallet.blocked;
-        financeItemData.value.wallet.goldWeight = response.data?.wallet.goldWeight;
-        financeItemData.value.buys.map((item)=>{
-            console.log(item.type)
-        })
+        financeItemData.value.wallets = response?.data?.wallet;
+        financeItemData.value.invoices = response?.data?.invoices;
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -524,8 +675,10 @@ const userFinanceInfo = async (item) => {
     }
 }
 
-const FinanceInfo = async (item) => {
+const FinanceInfo = async (item, type) => {
     detailModal.value = true;
+    financeDetail.value.invoiceType = type;
+
     financeDetail.value.accounterDescription = item.accounterDescription;
     financeDetail.value.accounterId = item.accounterId;
     financeDetail.value.adminId = item.adminId;
@@ -541,6 +694,9 @@ const FinanceInfo = async (item) => {
     financeDetail.value.time = item.time;
     financeDetail.value.totalPrice = item.totalPrice;
     financeDetail.value.tradeType = item.tradeType;
+    financeDetail.value.withdrawalId = item.withdrawalId;
+    financeDetail.value.type = item.type;
+    financeDetail.value.amount = item.amount;
 }
 
 
@@ -549,7 +705,7 @@ const limitNumber = () => {
 }
 
 const SubmitFilter = async (status) => {
-  console.log(status)
+    console.log(status)
     // try {
     //     if (status == 'pending') {
     //         PendingAccountingReviewLoading.value = true;
@@ -587,21 +743,21 @@ const SubmitFilter = async (status) => {
 
 
 const phoneRules = [
-  (v) => !!v || 'شماره همراه نمی‌تواند خالی باشد',
-  (v) => /^\d{11}$/.test(v) || 'شماره همراه باید 11 رقم باشد',
-  (v) => v.startsWith('09') || 'شماره همراه باید با 09 شروع شود',
+    (v) => !!v || 'شماره همراه نمی‌تواند خالی باشد',
+    (v) => /^\d{11}$/.test(v) || 'شماره همراه باید 11 رقم باشد',
+    (v) => v.startsWith('09') || 'شماره همراه باید با 09 شروع شود',
 ];
 
 const nationalCodeRules = [
-  (v) => !!v || 'کد ملی الزامی است',
-  (v) => /^\d{10}$/.test(v) || 'کد ملی باید ۱۰ رقم باشد',
-  (v) => {
-    if (!/^\d{10}$/.test(v)) return true;
+    (v) => !!v || 'کد ملی الزامی است',
+    (v) => /^\d{10}$/.test(v) || 'کد ملی باید ۱۰ رقم باشد',
+    (v) => {
+        if (!/^\d{10}$/.test(v)) return true;
 
-    const check = +v[9];
-    const sum = v.split('').slice(0, 9).reduce((acc, x, i) => acc + (+x * (10 - i)), 0) % 11;
-    return (sum < 2 && check === sum) || (sum >= 2 && check + sum === 11) || 'کد ملی نامعتبر است';
-  }
+        const check = +v[9];
+        const sum = v.split('').slice(0, 9).reduce((acc, x, i) => acc + (+x * (10 - i)), 0) % 11;
+        return (sum < 2 && check === sum) || (sum >= 2 && check + sum === 11) || 'کد ملی نامعتبر است';
+    }
 ];
 
 const validateWeight = [
@@ -695,13 +851,14 @@ watch(
     color: #fff;
     padding: 0 0.5rem;
 }
+
 .listGuide {
-  font-size: 12px;
-  color: #2c3e50;
-  font-weight: 500px;
-  padding: 0.5rem;
-  margin: 0.2rem;
-  margin-bottom: 2rem;
+    font-size: 12px;
+    color: #2c3e50;
+    font-weight: 500px;
+    padding: 0.5rem;
+    margin: 0.2rem;
+    margin-bottom: 2rem;
 
 }
 </style>

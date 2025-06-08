@@ -43,7 +43,7 @@
                     :rules="nationalCodeRules"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="searchFilter.balance" label="کیف پول" density="compact"
+                  <v-text-field v-model="searchFilter.goldPrice" label="قیمت طلا" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
@@ -51,12 +51,12 @@
                     :rules="validateWeight"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="searchFilter.city" label="شهر" density="compact"
+                  <v-text-field v-model="searchFilter.admin" label="ادمین" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-select v-model="searchFilter.auth" label="وضعیت احراز" :items="['در انتظار احراز', 'احراز شده']"
-                    density="compact" variant="outlined"></v-select>
+                  <v-text-field v-model="searchFilter.accounter" label="حسابدار" density="compact"
+                    variant="outlined"></v-text-field>
                 </v-col>
                 <v-col md="6" class="d-none d-md-flex">
                 </v-col>
@@ -438,14 +438,18 @@ const searchFilter = ref({
   lastName: '',
   nationalCode: '',
   phoneNumber: '',
+  tradeType: 1,
+  type: 'buy',
+  goldPrice: '',
+  goldWeight: '',
+  admin: '',
+  accounter: '',
   startDate: '',
   startTime: '',
   endDate: '',
   endTime: '',
-  city: '',
-  auth: '',
-  goldWeight: '',
-  balance: '',
+  invoiceId: '',
+  status: '',
 });
 
 
@@ -801,35 +805,40 @@ const limitNumber = () => {
 }
 
 const SubmitFilter = async (status) => {
-  console.log(searchFilter.value)
-  try {
-      if (status == 'Auth') {
-          userLoading.value = true;
-      } else if (status == 'noAuth') {
-          oldUserLoading.value = true;
-      }
-      filter.value.status = status;
-      const response = await UserService.SubmitFilterInvoice(filter.value);
-      if (status == 'Auth') {
-          userData.value = response.data;
-      } else if (status == 'noAuth') {
-          OldUser.value = response.data;
-      }
-      return response
-  } catch (error) {
-      if (error.response.status == 401) {
-          localStorage.clear();
-          router.replace("/login");
-      }
-      errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-      alertError.value = true;
-      setTimeout(() => {
-          alertError.value = false;
-      }, 10000)
-  } finally {
-      userLoading.value = false;
-      oldUserLoading.value = false;
-  }
+  console.log(status)
+  // try {
+  //     if (status == 'pending') {
+  //         PendingAccountingReviewLoading.value = true;
+  //     } else if (status == 'completed') {
+  //         CompleteAccountingReviewLoading.value = true;
+  //     } else if (status == 'failed') {
+  //         rejectAccountingReviewLoading.value = true;
+  //     }
+  //     filter.value.status = status;
+  //     const response = await InPersonService.SubmitFilterInvoice(filter.value);
+  //     if (status == 'pending') {
+  //         PendingAccountingReviewData.value = response.data;
+  //     } else if (status == 'completed') {
+  //         CompleteAccountingReviewData.value = response.data;
+  //     } else if (status == 'failed') {
+  //         rejectAccountingReviewData.value = response.data;
+  //     }
+  //     return response
+  // } catch (error) {
+  //     if (error.response.status == 401) {
+  //         localStorage.clear();
+  //         router.replace("/login");
+  //     }
+  //     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+  //     alertError.value = true;
+  //     setTimeout(() => {
+  //         alertError.value = false;
+  //     }, 10000)
+  // } finally {
+  //     PendingAccountingReviewLoading.value = false;
+  //     CompleteAccountingReviewLoading.value = false;
+  //     rejectAccountingReviewLoading.value = false;
+  // }
 }
 
 

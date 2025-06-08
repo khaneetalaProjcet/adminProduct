@@ -1,5 +1,6 @@
 import ServerTemplate from "../server/api";
 import QueryTemplate from "../template/api";
+import UserTemplate from "../user/api";
 import ManagmentTemplate from "./api";
 
 
@@ -41,23 +42,35 @@ const ManagmentService = {
         return response.data;
     },
 
-    async TradePermission() {
-        const response = await ServerTemplate.post('/main/trade/permision');
+    async TradePermission(otp) {
+        const body = JSON.stringify({
+            otpCode: otp
+        });
+        const response = await ServerTemplate.post('/main/trade/permision', body);
         return response.data;
     },
 
-    async AuthPermission() {
-        const response = await ServerTemplate.post('/secondmain/permision/register');
+    async AuthPermission(otp) {
+        const body = JSON.stringify({
+            otpCode: otp
+        });
+        const response = await ServerTemplate.post('/secondmain/permision/register', body);
         return response.data;
     },
 
-    async DepositPermission() {
-        const response = await ServerTemplate.post('/secondmain/permision/deposit');
+    async DepositPermission(otp) {
+        const body = JSON.stringify({
+            otpCode: otp
+        });
+        const response = await ServerTemplate.post('/secondmain/permision/deposit', body);
         return response.data;
     },
 
-    async WithdrawPermission() {
-        const response = await ServerTemplate.post('/secondmain/permision/withdraw');
+    async WithdrawPermission(otp) {
+        const body = JSON.stringify({
+            otpCode: otp
+        });
+        const response = await ServerTemplate.post('/secondmain/permision/withdraw', body);
         return response.data;
     },
 
@@ -113,9 +126,22 @@ const ManagmentService = {
         return response.data;
     },
 
-    async UpdateAdmin(detail , id) {
+    async UpdateAdmin(detail, id) {
         const body = JSON.stringify(detail);
         const response = await ServerTemplate.post(`/admin/update/${id}`, body);
+        return response.data;
+    },
+
+    async otpAccess(type) {
+        const response = await UserTemplate.post(`/market/otp/${type}`);
+        return response.data;
+    },
+
+    async SubmitAccessPermission(otp) {
+        const body = JSON.stringify({
+            otpCode: otp
+        });
+        const response = await ServerTemplate.post(``, body);
         return response.data;
     },
 }
