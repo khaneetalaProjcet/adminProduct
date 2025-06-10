@@ -53,11 +53,11 @@
                                         variant="outlined" :rules="validateWeight"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                                    <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                                    <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col md="6" class="d-none d-md-flex">
@@ -71,16 +71,18 @@
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                        <v-btn prepend-icon="ri-file-excel-line" block :disabled="completeExportExcel"
+                                            @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
                             <v-card title="موفق">
-                             <ul class="listGuide">
-                    <li>
-معاملاتی که فروش آن‌ها به‌صورت حضوری انجام شده و مبلغ آن‌ها از طریق حسابداری به حساب ثبت‌ شده در سایت بازگردانده می‌شود.
-                    </li>
-                  </ul>
+                                <ul class="listGuide">
+                                    <li>
+                                        معاملاتی که فروش آن‌ها به‌صورت حضوری انجام شده و مبلغ آن‌ها از طریق حسابداری به
+                                        حساب ثبت‌ شده در سایت بازگردانده می‌شود.
+                                    </li>
+                                </ul>
                                 <v-data-table :headers="CompleteInPersonSellHeader" :items="CompleteInPersonSellData"
                                     :loading="CompleteInPersonSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -144,11 +146,11 @@
                                         variant="outlined" :rules="validateWeight"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                                    <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                                    <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col md="6" class="d-none d-md-flex">
@@ -162,16 +164,17 @@
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                        <v-btn prepend-icon="ri-file-excel-line" block :disabled="failedExportExcel"
+                                            @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
                             <v-card title="ناموفق">
-                                                                   <ul class="listGuide">
-                    <li>
-معاملاتی که توسط کاربر از فروش آنها صرف نظر شده یا به دلایل مختلف لغو شده‌اند
-                    </li>
-                  </ul>
+                                <ul class="listGuide">
+                                    <li>
+                                        معاملاتی که توسط کاربر از فروش آنها صرف نظر شده یا به دلایل مختلف لغو شده‌اند
+                                    </li>
+                                </ul>
                                 <v-data-table :headers="FailedInPersonSellHeader" :items="FailedInPersonSellData"
                                     :loading="CompleteInPersonSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -295,6 +298,7 @@ const filter = ref({
     endTime: '',
     invoiceId: '',
     status: '',
+    destCardPan: '',
 });
 const CompleteInPersonSellHeader = ref([
     {
@@ -381,7 +385,11 @@ const InPersonSellDialog = ref(false);
 const InPersonSellSubmitDetail = ref({
     authority: '',
     id: '',
-})
+});
+const completeExportExcel = ref(true);
+const failedExportExcel = ref(true);
+const exportLink = ref('');
+const exportLoading = ref(false);
 
 
 const GetCompleteInPersonSellList = async () => {
@@ -469,6 +477,7 @@ const changeTabs = () => {
     filter.value.phoneNumber = '';
     filter.value.startTime = '';
     filter.value.startDate = '';
+    filter.value.destCardPan = '';
 }
 
 const submitInPersonSell = async () => {
@@ -508,10 +517,13 @@ const SubmitFilter = async (status) => {
         }
         filter.value.status = status;
         const response = await InPersonService.SubmitFilterInvoice(filter.value);
+        exportLink.value = response.link;
         if (status == 'completed') {
             CompleteInPersonSellData.value = response?.data;
+            completeExportExcel.value = false;
         } else if (status == 'failed') {
             FailedInPersonSellData.value = response?.data;
+            completeExportExcel.value = false;
         }
         return response
     } catch (error) {
@@ -528,6 +540,14 @@ const SubmitFilter = async (status) => {
         FailedInPersonSellLoading.value = false;
         CompleteInPersonSellLoading.value = false;
     }
+}
+
+const exportExcel = async () => {
+    exportLoading.value = true;
+    window.location.href = exportLink.value;
+    setTimeout(() => {
+        exportLoading.value = false;
+    }, 5000);
 }
 
 onMounted(() => {
@@ -574,12 +594,12 @@ onMounted(() => {
 }
 
 .listGuide {
-  font-size: 12px;
-  color: #2c3e50;
-  font-weight: 500px;
-  padding: 0.5rem;
-  margin: 0.2rem;
-  margin-bottom: 2rem;
-margin-right : 1rem
+    font-size: 12px;
+    color: #2c3e50;
+    font-weight: 500px;
+    padding: 0.5rem;
+    margin: 0.2rem;
+    margin-bottom: 2rem;
+    margin-right: 1rem
 }
 </style>

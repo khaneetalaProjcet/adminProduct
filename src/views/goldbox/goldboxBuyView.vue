@@ -55,11 +55,11 @@
                                         variant="outlined" :rules="validateWeight"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                                    <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                                    <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col md="6" class="d-none d-md-flex">
@@ -73,7 +73,8 @@
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                        <v-btn prepend-icon="ri-file-excel-line" block :disabled="pendingExportExcel"
+                                            @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
@@ -147,11 +148,11 @@
                                         variant="outlined" :rules="validateWeight"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                                    <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                                    <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col md="6" class="d-none d-md-flex">
@@ -165,7 +166,8 @@
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                        <v-btn prepend-icon="ri-file-excel-line" block :disabled="completeExportExcel"
+                                            @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
@@ -239,11 +241,11 @@
                                         variant="outlined" :rules="validateWeight"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                                    <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                                    <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col md="6" class="d-none d-md-flex">
@@ -257,7 +259,8 @@
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                        <v-btn prepend-icon="ri-file-excel-line" block :disabled="failedExportExcel"
+                                            @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
@@ -332,11 +335,11 @@
                                         variant="outlined" :rules="validateWeight"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                                    <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                                    <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col md="6" class="d-none d-md-flex">
@@ -350,7 +353,8 @@
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                        <v-btn prepend-icon="ri-file-excel-line" block :disabled="initExportExcel"
+                                            @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
@@ -683,7 +687,14 @@ const filter = ref({
     endTime: '',
     invoiceId: '',
     status: '',
+    destCardPan: '',
 });
+const completeExportExcel = ref(true);
+const failedExportExcel = ref(true);
+const pendingExportExcel = ref(true);
+const initExportExcel = ref(true);
+const exportLink = ref('');
+const exportLoading = ref(false);
 
 const GetPendingGoldBoxBuyList = async () => {
     try {
@@ -811,6 +822,7 @@ const changeTabs = () => {
     filter.value.phoneNumber = '';
     filter.value.startTime = '';
     filter.value.startDate = '';
+    filter.value.destCardPan = '';
 }
 
 const PendingGoldBoxBuyInfo = (item) => {
@@ -818,8 +830,6 @@ const PendingGoldBoxBuyInfo = (item) => {
     GoldBoxBuyDetail.value = item;
     GoldBoxBuySubmitDetail.value.id = item.id;
     GoldBoxBuySubmitDetail.value.authority = item.authority;
-    console.log(item);
-    console.log(GoldBoxBuySubmitDetail.value)
 }
 
 const submitGoldBoxBuy = async () => {
@@ -874,7 +884,6 @@ const PayInfo = async (item) => {
 }
 
 const SubmitFilter = async (status) => {
-    console.log(status)
     try {
         if (status == 'pending') {
             PendingGoldBoxBuyLoading.value = true;
@@ -887,14 +896,19 @@ const SubmitFilter = async (status) => {
         }
         filter.value.status = status;
         const response = await InPersonService.SubmitFilterInvoice(filter.value);
+        exportLink.value = response.link;
         if (status == 'pending') {
-            PendingGoldBoxBuyData.value = true;
+            PendingGoldBoxBuyData.value = response.data;
+            pendingExportExcel.value = false;
         } else if (status == 'completed') {
-            CompleteGoldBoxBuyData.value = true;
+            CompleteGoldBoxBuyData.value = response.data;
+            completeExportExcel.value = false;
         } else if (status == 'failed') {
-            FailedGoldBoxBuyData.value = true;
+            FailedGoldBoxBuyData.value = response.data;
+            failedExportExcel.value = false;
         } else if (status == 'init') {
-            InitGoldBoxBuyData.value = true;
+            InitGoldBoxBuyData.value = response.data;
+            initExportExcel.value = false;
         }
         return response
     } catch (error) {
@@ -914,6 +928,15 @@ const SubmitFilter = async (status) => {
         InitGoldBoxBuyLoading.value = false;
     }
 }
+
+const exportExcel = async () => {
+    exportLoading.value = true;
+    window.location.href = exportLink.value;
+    setTimeout(() => {
+        exportLoading.value = false;
+    }, 5000);
+}
+
 
 onMounted(() => {
     GetPendingGoldBoxBuyList();

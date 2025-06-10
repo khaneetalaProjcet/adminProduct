@@ -90,7 +90,8 @@
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" block :disabled="pendingExportExcel" @click="exportExcel"
+                      :loading="exportLoading">خروجی اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -202,7 +203,8 @@
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" block :disabled="completeExportExcel" @click="exportExcel"
+                      :loading="exportLoading">خروجی اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -315,7 +317,8 @@
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" block :disabled="failedExportExcel" @click="exportExcel"
+                      :loading="exportLoading">خروجی اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -544,7 +547,7 @@ const filter = ref({
   lastName: '',
   nationalCode: '',
   phoneNumber: '',
-  type: 'deposite',
+  type: 'deposit',
   goldPrice: '',
   goldWeight: '',
   admin: '',
@@ -560,9 +563,13 @@ const filter = ref({
   withdrawalId: '',
   amount: '',
   description: '',
+  destCardPan: '',
 });
-
-
+const completeExportExcel = ref(true);
+const failedExportExcel = ref(true);
+const pendingExportExcel = ref(true);
+const exportLink = ref('');
+const exportLoading = ref(false);
 const CompleteDepositData = ref();
 const CompleteDepositLoading = ref();
 const FailedDepositLoading = ref();
@@ -678,7 +685,6 @@ const submitDeposit = async () => {
   }
 }
 
-
 const SubmitFilter = async (status) => {
   try {
     if (status == 'pending') {
@@ -690,12 +696,16 @@ const SubmitFilter = async (status) => {
     }
     filter.value.status = status;
     const response = await WalletService.SubmitFilterWallet(filter.value);
+    exportLink.value = response.link;
     if (status == 'pending') {
       PendingDepositData.value = response.data;
+      pendingExportExcel.value = false;
     } else if (status == 'completed') {
       CompleteDepositData.value = response.data;
+      completeExportExcel.value = false;
     } else if (status == 'failed') {
       FailedDepositData.value = response.data;
+      failedExportExcel.value = false;
     }
     return response
   } catch (error) {
@@ -713,6 +723,14 @@ const SubmitFilter = async (status) => {
     CompleteDepositLoading.value = false;
     FailedDepositLoading.value = false;
   }
+}
+
+const exportExcel = async () => {
+  exportLoading.value = true;
+  window.location.href = exportLink.value;
+  setTimeout(() => {
+    exportLoading.value = false;
+  }, 5000);
 }
 
 
@@ -754,6 +772,12 @@ const changeTabs = () => {
   filter.value.phoneNumber = '';
   filter.value.startTime = '';
   filter.value.startDate = '';
+  filter.value.shebaNumber = '';
+  filter.value.cardPan = '';
+  filter.value.amount = '';
+  filter.value.description = '';
+  filter.value.destCardPan = '';	
+  filter.value.withdrawalId = '';
 }
 
 

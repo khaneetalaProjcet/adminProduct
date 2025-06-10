@@ -94,7 +94,8 @@
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                        <v-btn prepend-icon="ri-file-excel-line" block :disabled="pendingExportExcel"
+                                            @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
@@ -215,7 +216,8 @@
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                        <v-btn prepend-icon="ri-file-excel-line" block :disabled="completeExportExcel"
+                                            @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
@@ -438,7 +440,12 @@ const filter = ref({
     withdrawalId: '',
     amount: '',
     description: '',
+    destCardPan: '',
 });
+const completeExportExcel = ref(true);
+const pendingExportExcel = ref(true);
+const exportLink = ref('');
+const exportLoading = ref(false);
 
 
 const GetPendingWithdrawList = async () => {
@@ -537,10 +544,13 @@ const SubmitFilter = async (status) => {
         }
         filter.value.status = status;
         const response = await WalletService.SubmitFilterWallet(filter.value);
+        exportLink.value = response.link;
         if (status == 'pending') {
             PendingWithdrawData.value = response.data;
+            pendingExportExcel.value = false;
         } else if (status == 'completed') {
             CompleteWithdrawData.value = response.data;
+            completeExportExcel.value = false;
         }
         return response
     } catch (error) {
@@ -557,6 +567,14 @@ const SubmitFilter = async (status) => {
         PendingWithdrawLoading.value = false;
         CompleteWithdrawLoading.value = false;
     }
+};
+
+const exportExcel = async () => {
+    exportLoading.value = true;
+    window.location.href = exportLink.value;
+    setTimeout(() => {
+        exportLoading.value = false;
+    }, 5000);
 }
 
 const exportReport = async () => {
@@ -580,7 +598,6 @@ const exportReport = async () => {
         ExportLoading.value = false;
     }
 }
-
 
 const nationalCodeRules = [
     (v) => /^\d{10}$/.test(v) || 'کد ملی باید ۱۰ رقم باشد',

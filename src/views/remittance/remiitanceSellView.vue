@@ -56,11 +56,11 @@
                                         variant="outlined" :rules="validateWeight"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                                    <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                                    <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col md="6" class="d-none d-md-flex">
@@ -74,18 +74,19 @@
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                        <v-btn prepend-icon="ri-file-excel-line" block :disabled="pendingExportExcel"
+                                            @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
                             <v-card title="در انتظار تایید">
-        <ul class="listGuide ">
-              <li>
+                                <ul class="listGuide ">
+                                    <li>
 
-درخواست فروش حواله که در انتظار تایید و بررسی حسابداری می باشد.
-              </li>
+                                        درخواست فروش حواله که در انتظار تایید و بررسی حسابداری می باشد.
+                                    </li>
 
-            </ul>
+                                </ul>
 
                                 <v-data-table :headers="PendingRemiitanceSellHeader" :items="PendingRemiitanceSellData"
                                     :loading="PendingRemiitanceSellLoading">
@@ -149,11 +150,11 @@
                                         variant="outlined" :rules="validateWeight"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                                    <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                                    <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col md="6" class="d-none d-md-flex">
@@ -167,18 +168,20 @@
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                        <v-btn prepend-icon="ri-file-excel-line" block :disabled="completeExportExcel"
+                                            @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
                             <v-card title="موفق">
-        <ul class="listGuide ">
-              <li>
+                                <ul class="listGuide ">
+                                    <li>
 
-درخواست فروش حواله که از سوی حسابداری بررسی شده و با فرایند آن با موفقیت انجام شده است.
-              </li>
+                                        درخواست فروش حواله که از سوی حسابداری بررسی شده و با فرایند آن با موفقیت انجام
+                                        شده است.
+                                    </li>
 
-            </ul>
+                                </ul>
                                 <v-data-table :headers="CompleteRemiitanceSellHeader"
                                     :items="CompleteRemiitanceSellData" :loading="CompleteRemiitanceSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -242,11 +245,11 @@
                                         variant="outlined" :rules="validateWeight"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                                    <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                                    <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col md="6" class="d-none d-md-flex">
@@ -260,18 +263,18 @@
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                        <v-btn prepend-icon="ri-file-excel-line" block :disabled="failedExportExcel"
+                                            @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
                             <v-card title="ناموفق">
-        <ul class="listGuide ">
-              <li>
+                                <ul class="listGuide ">
+                                    <li>
+                                        درخواست فروش حواله که به دلیل انصراف مشتری و یا دلایل دیگر لغو شده اند.
+                                    </li>
 
-درخواست فروش حواله که به دلیل انصراف مشتری و یا دلایل دیگر لغو شده  اند.
-              </li>
-
-            </ul>
+                                </ul>
                                 <v-data-table :headers="FailedRemiitanceSellHeader" :items="FailedRemiitanceSellData"
                                     :loading="FailedRemiitanceSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -378,7 +381,6 @@ const successMsg = ref('');
 const alertError = ref(false);
 const alertSuccess = ref(false);
 const PendingRemiitanceSellLoading = ref(false);
-const RemmitanceSellSubmitLoading = ref(false);
 const acceptRemmitanceSellLoading = ref(false);
 const rejectRemmitanceSellLoading = ref(false);
 const tab = ref(null);
@@ -540,7 +542,13 @@ const filter = ref({
     endTime: '',
     invoiceId: '',
     status: '',
+    destCardPan: '',
 });
+const completeExportExcel = ref(true);
+const failedExportExcel = ref(true);
+const pendingExportExcel = ref(true);
+const exportLink = ref('');
+const exportLoading = ref(false);
 
 const GetPendingRemiitanceSellList = async () => {
     try {
@@ -604,7 +612,6 @@ const GetFailedRemiitanceSellList = async () => {
         FailedRemiitanceSellLoading.value = false;
     }
 };
-
 
 const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -672,8 +679,6 @@ const acceptRemmitanceSell = async () => {
     }
 }
 
-
-
 const rejectRemmitanceSell = async () => {
     try {
         acceptRemmitanceSellLoading.value = true;
@@ -715,15 +720,18 @@ const SubmitFilter = async (status) => {
         }
         filter.value.status = status;
         const response = await InPersonService.SubmitFilterInvoice(filter.value);
+        exportLink.value = response.link;
         if (status == 'pending') {
             PendingRemiitanceSellData.value = response.data;
+            pendingExportExcel.value = false;
         } else if (status == 'completed') {
             CompleteRemiitanceSellData.value = response.data;
+            completeExportExcel.value = false;
         } else if (status == 'failed') {
             FailedRemiitanceSellData.value = response.data;
+            failedExportExcel.value = false;
         }
         return response
-        //test mikonim vase pushing
     } catch (error) {
         if (error.response.status == 401) {
             localStorage.clear();
@@ -755,6 +763,15 @@ const changeTabs = () => {
     filter.value.phoneNumber = '';
     filter.value.startTime = '';
     filter.value.startDate = '';
+    filter.value.destCardPan = '';
+}
+
+const exportExcel = async () => {
+    exportLoading.value = true;
+    window.location.href = exportLink.value;
+    setTimeout(() => {
+        exportLoading.value = false;
+    }, 5000);
 }
 
 const nationalCodeRules = [
@@ -828,13 +845,12 @@ onMounted(() => {
 
 
 .listGuide {
-  font-size: 12px;
-  color: #2c3e50;
-  font-weight: 500px;
-  padding: 0.5rem;
-  margin: 0.1rem;
-  margin-bottom: 2rem;
-  margin-right: 0.9rem
+    font-size: 12px;
+    color: #2c3e50;
+    font-weight: 500px;
+    padding: 0.5rem;
+    margin: 0.1rem;
+    margin-bottom: 2rem;
+    margin-right: 0.9rem
 }
-
 </style>

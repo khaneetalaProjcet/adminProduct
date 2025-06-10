@@ -53,11 +53,11 @@
                                         variant="outlined" :rules="validateWeight"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                                    <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                                    <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col md="6" class="d-none d-md-flex">
@@ -71,17 +71,19 @@
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                        <v-btn prepend-icon="ri-file-excel-line" block :disabled="completeExportExcel"
+                                            @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
                             <v-card title="فروش موفق">
-                                         <ul class="listGuide">
-                <li>
-معاملاتی که فرآیند فروش آن‌ها توسط کاربران در سایت و اپلیکیشن انجام شده و مبلغ مورد نظر از سوی حسابداری به حساب منتخب کاربر بازگردانده شده است.
+                                <ul class="listGuide">
+                                    <li>
+                                        معاملاتی که فرآیند فروش آن‌ها توسط کاربران در سایت و اپلیکیشن انجام شده و مبلغ
+                                        مورد نظر از سوی حسابداری به حساب منتخب کاربر بازگردانده شده است.
 
-                </li>
-                  </ul>
+                                    </li>
+                                </ul>
                                 <v-data-table :headers="CompleteGoldBoxSellHeader" :items="CompleteGoldBoxSellData"
                                     :loading="CompleteGoldBoxSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -143,11 +145,11 @@
                                         variant="outlined" :rules="validateWeight"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                                    <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col cols="6" md="3">
-                                    <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                                    <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
                                 <v-col md="6" class="d-none d-md-flex">
@@ -161,17 +163,20 @@
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
-                                        <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                                        <v-btn prepend-icon="ri-file-excel-line" block :disabled="failedExportExcel"
+                                            @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                                     </div>
                                 </v-col>
                             </v-row>
                             <v-card title="فروش ناموفق">
-                                                            <ul class="listGuide">
-                <li>
-معاملاتی که فرایند فروش آنها توسط کاربران از طریق سایت یا اپلیکیشن صورت گرفته، اما به‌دلیل انصراف کاربر یا عوامل دیگر لغو شده‌اند.
+                                <ul class="listGuide">
+                                    <li>
+                                        معاملاتی که فرایند فروش آنها توسط کاربران از طریق سایت یا اپلیکیشن صورت گرفته،
+                                        اما به‌دلیل انصراف کاربر
+                                        یا عوامل دیگر لغو شده‌اند.
 
-                </li>
-                  </ul>
+                                    </li>
+                                </ul>
                                 <v-data-table :headers="FailedGoldBoxSellHeader" :items="FailedGoldBoxSellData"
                                     :search="FailedGoldBoxSellSearch" :loading="CompleteGoldBoxSellLoading">
                                     <template v-slot:item.totalPrice="{ item }">
@@ -312,7 +317,13 @@ const filter = ref({
     endTime: '',
     invoiceId: '',
     status: '',
+    destCardPan: '',
 });
+const completeExportExcel = ref(true);
+const failedExportExcel = ref(true);
+const exportLink = ref('');
+const exportLoading = ref(false);
+
 
 const GetCompleteGoldBoxSellList = async () => {
     try {
@@ -398,6 +409,7 @@ const changeTabs = () => {
     filter.value.phoneNumber = '';
     filter.value.startTime = '';
     filter.value.startDate = '';
+    filter.value.destCardPan = '';
 }
 
 const SubmitFilter = async (status) => {
@@ -410,10 +422,13 @@ const SubmitFilter = async (status) => {
         }
         filter.value.status = status;
         const response = await InPersonService.SubmitFilterInvoice(filter.value);
+        exportLink.value = response.link;
         if (status == 'completed') {
             CompleteGoldBoxSellData.value = response.data;
+            completeExportExcel.value = false;
         } else if (status == 'failed') {
             FailedGoldBoxSellData.value = response.data;
+            failedExportExcel.value = false;
         }
         return response
     } catch (error) {
@@ -430,6 +445,14 @@ const SubmitFilter = async (status) => {
         CompleteGoldBoxSellLoading.value = false;
         FailedGoldBoxSellLoading.value = false;
     }
+}
+
+const exportExcel = async () => {
+    exportLoading.value = true;
+    window.location.href = exportLink.value;
+    setTimeout(() => {
+        exportLoading.value = false;
+    }, 5000);
 }
 
 
@@ -475,13 +498,14 @@ onMounted(() => {
     width: 100%;
     padding: 0 2rem;
 }
+
 .listGuide {
-  font-size: 12px;
-  color: #2c3e50;
-  font-weight: 500px;
-  padding: 0.5rem;
-  margin: 0.1rem;
-  margin-bottom: 2rem;
-  margin-right: 0.9rem
+    font-size: 12px;
+    color: #2c3e50;
+    font-weight: 500px;
+    padding: 0.5rem;
+    margin: 0.1rem;
+    margin-bottom: 2rem;
+    margin-right: 0.9rem
 }
 </style>

@@ -53,11 +53,11 @@
                     :rules="validateWeight"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                  <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                  <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col md="6" class="d-none d-md-flex">
@@ -71,7 +71,8 @@
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" block :disabled="pendingExportExcel"
+                      @click="exportExcel" :loading="exportLoading">خروجی اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -142,11 +143,11 @@
                     :rules="validateWeight"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                  <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                  <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col md="6" class="d-none d-md-flex">
@@ -160,7 +161,9 @@
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" block :disabled="completeExportExcel"
+                      @click="exportExcel" :loading="exportLoading">خروجی
+                      اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -226,11 +229,11 @@
                     :rules="validateWeight"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.goldWeight" label="ادمین" density="compact"
+                  <v-text-field v-model="filter.admin" label="ادمین" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.goldWeight" label="حسابدار" density="compact"
+                  <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col md="6" class="d-none d-md-flex">
@@ -243,7 +246,9 @@
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" block :disabled="failedExportExcel"
+                      @click="exportExcel" :loading="exportLoading">خروجی
+                      اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -429,9 +434,7 @@ const PendingAccountingReviewHeader = ref([
     key: 'action'
   }
 ]);
-const PendingAccountingReviewSearch = ref();
 const PendingAccountingReviewData = ref();
-const CompleteAccountingReviewSearch = ref();
 const CompleteAccountingReviewHeader = ref([
   {
     title: 'نام',
@@ -474,7 +477,6 @@ const AccountingRevieItemDetail = ref({
   description: '',
   id: '',
 })
-const rejectAccountingReviewSearch = ref();
 const rejectAccountingReviewHeader = ref([
   {
     title: 'نام',
@@ -529,7 +531,13 @@ const filter = ref({
   endTime: '',
   invoiceId: '',
   status: '',
+  destCardPan: '',
 });
+const pendingExportExcel = ref(true);
+const completeExportExcel = ref(true);
+const failedExportExcel = ref(true);
+const exportLink = ref('');
+const exportLoading = ref(false);
 
 const GetPendingAccountingReviewList = async () => {
   try {
@@ -665,12 +673,16 @@ const SubmitFilter = async (status) => {
     }
     filter.value.status = status;
     const response = await InPersonService.SubmitFilterInvoice(filter.value);
+    exportLink.value = response.link;
     if (status == 'pending') {
       PendingAccountingReviewData.value = response.data;
+      pendingExportExcel.value = false;
     } else if (status == 'completed') {
       CompleteAccountingReviewData.value = response.data;
+      completeExportExcel.value = false;
     } else if (status == 'failed') {
       rejectAccountingReviewData.value = response.data;
+      failedExportExcel.value = false;
     }
     return response
   } catch (error) {
@@ -688,6 +700,14 @@ const SubmitFilter = async (status) => {
     CompleteAccountingReviewLoading.value = false;
     rejectAccountingReviewLoading.value = false;
   }
+}
+
+const exportExcel = async () => {
+  exportLoading.value = true;
+  window.location.href = exportLink.value;
+  setTimeout(() => {
+    exportLoading.value = false;
+  }, 5000);
 }
 
 const nationalCodeRules = [
@@ -728,6 +748,7 @@ const changeTabs = () => {
   filter.value.phoneNumber = '';
   filter.value.startTime = '';
   filter.value.startDate = '';
+  filter.value.destCardPan = '';
 }
 
 onMounted(() => {
