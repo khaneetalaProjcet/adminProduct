@@ -412,6 +412,8 @@ const CompleteWithdrawHeader = ref([
         title: 'وضعیت',
         key: 'status'
     },
+
+
     {
         title: 'نوع برداشت',
         key: 'description'
@@ -420,6 +422,8 @@ const CompleteWithdrawHeader = ref([
         title: 'شناسه پرداخت',
         key: 'withdrawalId'
     },
+
+    
 
     // {
     //     title: 'فعالیت',
