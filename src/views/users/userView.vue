@@ -86,7 +86,7 @@
                     @input="onSearchInput"></v-text-field>
                 </template>
 
-                <v-data-table :headers="userHeader" :items="userData" :search="search" :loading="userLoading">
+                <v-data-table :headers="userHeader" :items="userData" :search="search" :loading="userLoading" :items-per-page-options="itemsPerPageOptions">
                   <template v-slot:item.wallet.balance="{ item }">
                     <p>{{ formatNumber(item?.wallet?.balance) }}</p>
                   </template>
@@ -237,10 +237,10 @@
               <p>موجودی کیف پول: </p>
               <p class="mx-2">{{ formatNumber(UserInfo.wallet.balance) }} تومان</p>
             </div>
-            <div class="d-flex align-items-center my-2">
+            <!-- <div class="d-flex align-items-center my-2">
               <p>شماره کارت: </p>
               <p class="mx-2">{{ UserInfo.bankAccounts[0]?.cardNumber }}</p>
-            </div>
+            </div> -->
             <div class="d-flex align-items-center my-2">
               <p>تاریخ احراز هویت: </p>
               <p class="mx-2" v-if="UserInfo.date != null">{{ UserInfo.date }}</p>
@@ -269,10 +269,10 @@
               <p>موجودی طلا: </p>
               <p class="mx-2">{{ UserInfo.wallet.goldWeight }} گرم</p>
             </div>
-            <div class="d-flex align-items-center my-2">
+            <!-- <div class="d-flex align-items-center my-2">
               <p>شماره شبا: </p>
               <p class="mx-2">{{ UserInfo.bankAccounts[0]?.shebaNumber }}</p>
-            </div>
+            </div> -->
           </div>
         </div>
         <v-card-actions>
@@ -355,7 +355,7 @@ const verifyLoading = ref(false);
 const transferLoading = ref(false);
 const itemsPerPage = ref(50);
 const currentPage = ref(1);
-const itemsPerPageOptions = ref([5, 10, 25, 50]);
+const itemsPerPageOptions = ref([10, 25]);
 const totalItems = ref(0);
 const totalPages = ref(1);
 const successMsg = ref("");
