@@ -244,6 +244,16 @@
                                                 size="small"></v-chip>
                                         </div>
                                     </template>
+
+                                    <template v-slot:item.description="{ item }">
+                                        <div>
+                                            <!-- <p v-if="item.description == 'withdrawByAdmin'">برداشت حضوری</p>
+                                            <p v-else>برداشت آنلاین</p> -->
+                                            <v-chip
+                                                :text="item.description == 'withdrawByAdmin' ? 'برداشت حضوری' : 'برداشت آنلاین'"
+                                                color='#66666' size="small"></v-chip>
+                                        </div>
+                                    </template>
                                     <!-- <template v-slot:item.action="{ item }">
                                         <v-icon class="me-2" size="small" icon="ri-refund-2-line" color="#d4af37"
                                             @click="CompleteWithdrawInfo(item)"></v-icon>
@@ -403,9 +413,14 @@ const CompleteWithdrawHeader = ref([
         key: 'status'
     },
     {
+        title: 'نوع برداشت',
+        key: 'description'
+    },
+    {
         title: 'شناسه پرداخت',
         key: 'withdrawalId'
     },
+
     // {
     //     title: 'فعالیت',
     //     key: 'action'

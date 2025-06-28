@@ -61,7 +61,12 @@
                                     <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
-                                <v-col md="6" class="d-none d-md-flex">
+                                <v-col cols="6" md="3">
+                                    <v-select v-model="filter.destCardPan" :items="bankAccounts" label="حساب بانکی"
+                                        variant="outlined" item-title="label"
+                                        item-value="item"></v-select>
+                                </v-col>
+                                <v-col md="3" class="d-none d-md-flex">
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
@@ -158,7 +163,12 @@
                                     <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
-                                <v-col md="6" class="d-none d-md-flex">
+                                <v-col cols="6" md="3">
+                                    <v-select v-model="filter.destCardPan" :items="bankAccounts" label="حساب بانکی"
+                                        variant="outlined" item-title="label"
+                                        item-value="item"></v-select>
+                                </v-col>
+                                <v-col md="3" class="d-none d-md-flex">
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
@@ -256,7 +266,12 @@
                                     <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
                                         variant="outlined"></v-text-field>
                                 </v-col>
-                                <v-col md="6" class="d-none d-md-flex">
+                                <v-col cols="6" md="3">
+                                    <v-select v-model="filter.destCardPan" :items="bankAccounts" label="حساب بانکی"
+                                        variant="outlined" item-title="label"
+                                        item-value="item"></v-select>
+                                </v-col>
+                                <v-col md="3" class="d-none d-md-flex">
                                 </v-col>
                                 <v-col cols="12" md="3">
                                     <div class="w-100 d-flex justify-end">
@@ -569,6 +584,17 @@ const failedExportExcel = ref(true);
 const pendingExportExcel = ref(true);
 const exportLink = ref('');
 const exportLoading = ref(false);
+const bankAccounts = ref([
+    { label: "کشاورزی (مطهر معصومی)", value: "0" },
+    { label: "ملی (مطهر معصومی)", value: "1" },
+    { label: "ملت (مطهر معصومی)", value: "2" },
+    { label: "سپه (مطهر معصومی)", value: "3" },
+    { label: "صادرات (مطهر معصومی)", value: "4" },
+    { label: "کشاورزی (محمود معصومی)", value: "5" },
+    { label: "ملی (محمود معصومی)", value: "6" },
+    { label: "ملت (محمود معصومی)", value: "7" },
+    { label: "سایر", value: "8" },
+]);
 
 const GetPendingRemiitanceBuyList = async () => {
     try {
@@ -782,7 +808,8 @@ const nationalCodeRules = [
 
 const limitNumber = () => {
     filter.value.phoneNumber = filter.value.phoneNumber.replace(/\D/g, '').slice(0, 11);
-}
+};
+
 
 const phoneRules = [
     v => /^09\d{9}$/.test(v) || 'شماره معتبر نیست'
