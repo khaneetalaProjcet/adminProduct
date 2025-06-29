@@ -266,7 +266,7 @@ const hasPermission = (routeName) => {
       to: '/inpersonConvertTrade'
     }" />
     <VerticalNavLink v-if="hasPermission('inpersonCounterTrade')" :item="{
-      title: 'کانتر فروش',
+      title: 'استفاده',
       icon: 'ri-store-2-line',
       href: '#',
       to: '/inpersonCounterTrade'

@@ -1,4 +1,5 @@
 import ReportTemplate from "../report/api";
+import ServerTemplate from "../server/api";
 import QueryTemplate from "../template/api";
 import InPersonTemplate from "./api";
 
@@ -67,7 +68,7 @@ const InPersonService = {
         return response.data
     },
 
-    async SubmitPayment(paymentForm,id) {
+    async SubmitPayment(paymentForm, id) {
         const body = JSON.stringify(paymentForm);
         const response = await InPersonTemplate.post(`/inperson/convert/payment/${id}`, body);
         return response.data
@@ -75,7 +76,15 @@ const InPersonService = {
 
     async SubmitCounterPayment(paymentForm) {
         const body = JSON.stringify(paymentForm);
-        const response = await InPersonTemplate.post(`/inperson/convert/sell`, body);
+        const response = await ServerTemplate.post(`/branch/transAction/admin/create`, body);
+        return response.data
+    },
+
+    async approveCounterPayment(transactionId) {
+        const body = JSON.stringify({
+            transActionId: transactionId
+        });
+        const response = await ServerTemplate.post(`/branch/transAction/admin/verify`, body);
         return response.data
     },
 
@@ -89,6 +98,16 @@ const InPersonService = {
         const body = JSON.stringify(InvoiceForm);
         const response = await ReportTemplate.post(`/report/analyze/report/invoice`, body);
         return response.data
+    },
+
+    async GetBranches() {
+        const response = await ServerTemplate.get(`/branch/all`);
+        return response.data;
+    },
+
+    async GetSellers(id) {
+        const response = await ServerTemplate.get(`/branch/seller/all/${id}`);
+        return response.data;
     },
 
 }

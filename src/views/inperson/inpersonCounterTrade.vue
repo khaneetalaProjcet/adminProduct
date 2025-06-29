@@ -182,12 +182,20 @@
                                                 <p class="ma-0">{{ userInfo.wallet.goldWeight }} گرم</p>
                                             </div>
                                         </v-col>
-                                        <v-col md="4" class="d-none d-md-flex my-2"></v-col>
-                                        <v-col cols="12" md="4" class="d-none d-md-flex my-2"><v-text-field
-                                                v-model="invoiceForm.goldWeight" label="طلا (گرم)"
-                                                variant="outlined"></v-text-field></v-col>
-                                        <v-col md="4" class="d-none d-md-flex my-2"></v-col>
-                                        <v-col md="4" class="d-none d-md-flex my-2"></v-col>
+                                        <v-col md="4" class="my-2">
+                                            <v-text-field v-model="invoiceForm.goldWeight" label="طلا (گرم)"
+                                                variant="outlined"></v-text-field>
+                                        </v-col>
+                                        <v-col cols="12" md="4" class="my-2">
+                                            <v-select v-model="invoiceForm.branchId" :items="branches" label="شعبه ها"
+                                                variant="outlined" :rules="BranchRules" item-title="name"
+                                                item-value="id" @update:modelValue="defineSellers"></v-select>
+                                        </v-col>
+                                        <v-col md="4" class="my-2">
+                                            <v-select v-model="invoiceForm.sellerId" :items="seller" label="کد فروشنده"
+                                                variant="outlined" :rules="BranchRules" item-title="code"
+                                                item-value="id" v-if="invoiceForm.branchId"></v-select>
+                                        </v-col>
                                     </v-row>
                                 </v-container>
                             </v-form>
@@ -255,22 +263,47 @@
                                         </v-col>
                                         <v-col cols="12">
                                             <v-row class="product-row">
-                                                <v-col cols="6" md="3">
+
+                                                <v-col cols="6">
+                                                    <div class="d-flex">
+                                                        <p>شعبه: </p>
+                                                        <v-progress-circular color="#d4af37" indeterminate :size="20"
+                                                            v-if="stepThreeLoading"></v-progress-circular>
+                                                        <p v-else>{{ confirmForm.seller.branch }}</p>
+                                                    </div>
+                                                </v-col>
+
+                                                <v-col cols="6">
+                                                    <div class="d-flex">
+                                                        <p>فروشنده: </p>
+                                                        <v-progress-circular color="#d4af37" indeterminate :size="20"
+                                                            v-if="stepThreeLoading"></v-progress-circular>
+                                                        <p v-else>{{ confirmForm.seller.firstName }} {{
+                                                            confirmForm.seller.lastName }}</p>
+                                                    </div>
+                                                </v-col>
+
+                                                <v-col cols="6">
                                                     <div class="d-flex">
                                                         <p>موجودی صندوق طلا : </p>
                                                         <p>{{ userInfo.wallet.goldWeight }} گرم</p>
                                                     </div>
                                                 </v-col>
-                                                <v-col cols="6" md="3">
+                                                <v-col cols="6">
                                                     <div class="d-flex">
-                                                        <p>مبلغ کم شده از صندوق طلا: </p>
-                                                        <p>{{ invoiceForm.goldWeight }} گرم</p>
+                                                        <p>حجم طلای استفاده شده از صندوق طلا: </p>
+                                                        <v-progress-circular color="#d4af37" indeterminate :size="20"
+                                                            v-if="stepThreeLoading"></v-progress-circular>
+                                                        <p v-else>{{ confirmForm.goldWeight }} گرم</p>
                                                     </div>
                                                 </v-col>
-                                                <v-col cols="6" md="3">
+                                                <v-col cols="6">
                                                     <div class="d-flex">
                                                         <p>موجودی جدید صندوق طلا : </p>
-                                                        <p>{{ +userInfo.wallet.goldWeight - +invoiceForm.goldWeight }}
+                                                        <v-progress-circular color="#d4af37" indeterminate :size="20"
+                                                            v-if="stepThreeLoading"></v-progress-circular>
+                                                        <p v-else>{{ +userInfo.wallet.goldWeight -
+                                                            +confirmForm.goldWeight }}
                                                             گرم</p>
                                                     </div>
                                                 </v-col>
@@ -303,10 +336,10 @@
             <v-icon class="mt-3 mb-6" icon="ri-checkbox-circle-fill" color="#0b8707"></v-icon>
             <h4>
                 <!-- گرم از صندوق طلای با موفقیت کم شد {{ confirmConvert.seller.firstName }} {{ confirmConvert.seller.lastName }} {{ confirmConvert.goldWeight }} -->
-                {{ confirmConvert.goldWeight }} گرم از صندوق طلای {{ confirmConvert.seller.firstName }}
-                {{ confirmConvert.seller.lastName }} با موفقیت کم شد
+                {{ confirmForm.goldWeight }} گرم از صندوق طلای {{ userInfo.firstName }}
+                {{ userInfo.lastName }} با موفقیت کم شد
             </h4>
-            <p>کارشناس : {{ confirmConvert.adminId }}</p>
+            <p>کارشناس : {{ confirmForm.adminId }}</p>
         </v-card>
     </v-dialog>
 </template>
@@ -326,15 +359,22 @@ const stepFourLoading = ref(false);
 const successModal = ref(false);
 const otpLoading = ref(false);
 const otpVerification = ref(false);
+const branchLoading = ref(false);
 const selectedDate = ref();
 const selectedMonth = ref();
 const selectedYear = ref();
 const alertError = ref(false);
 const errorMsg = ref('');
+const seller = ref([]);
 const inPersonForm = ref({
     phoneNumber: '',
     otp: '',
 });
+const branches = ref([
+    { name: "آنلاین", id: "0" },
+    { name: "کوچصفهان", id: "1" },
+]);
+const sellerLoading = ref(false);
 
 const userInfo = ref({
     isVerified: '',
@@ -352,8 +392,20 @@ const userInfo = ref({
         id: '',
         goldWeight: '',
         balance: '',
-    }
+    },
 });
+
+const confirmForm = ref({
+    goldWeight: '',
+    goldPrice: '',
+    adminId: '',
+    seller: {
+        branch: '',
+        firstName: '',
+        lastName: '',
+    },
+    transactionId: '',
+})
 
 const confirmConvert = ref({});
 
@@ -362,6 +414,9 @@ const invoiceDetail = ref();
 const invoiceForm = ref({
     goldWeight: '',
     nationalCode: '',
+    branchId: '',
+    sellerId: '',
+    userId: '',
 })
 
 const persianDates = ref([
@@ -558,16 +613,15 @@ const nextStep = async (type) => {
     }
 };
 
-
 const TradeRequest = async () => {
     if (step.value === 1) {
         return await AuthUser();
     } else if (step.value === 2) {
         return true;
     } else if (step.value === 3) {
-        return true;
+        return await createCounterPayment();
     } else if (step.value === 4) {
-        return await SubmitCounterPayment();
+        return await submitCounterPayment();
     }
 
 }
@@ -666,13 +720,41 @@ const IdentityUser = async () => {
     }
 }
 
-const SubmitCounterPayment = async () => {
+const createCounterPayment = async () => {
+    try {
+        stepThreeLoading.value = true;
+        invoiceForm.value.nationalCode = userInfo.value.nationalCode;
+        invoiceForm.value.userId = userInfo.value.id;
+        const response = await InPersonService.SubmitCounterPayment(invoiceForm.value);
+        confirmForm.value.adminId = response.data.adminId;
+        confirmForm.value.goldPrice = response.data.goldPrice;
+        confirmForm.value.goldWeight = response.data.goldWeight;
+        confirmForm.value.seller.firstName = response.data.seller.firstName;
+        confirmForm.value.seller.lastName = response.data.seller.lastName;
+        confirmForm.value.seller.branch = response.data.seller.branch.name;
+        confirmForm.value.transactionId = response.data.id;
+        return response
+    } catch (error) {
+        console.log(error)
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        stepThreeLoading.value = false;
+    }
+};
+
+const submitCounterPayment = async () => {
     try {
         stepFourLoading.value = true;
-        invoiceForm.value.nationalCode = userInfo.value.nationalCode;
-        const response = await InPersonService.SubmitCounterPayment(invoiceForm.value);
-        confirmConvert.value = response.data
-        submitForm()
+        const response = await InPersonService.approveCounterPayment(confirmForm.value.transactionId);
+        submitForm();
         return response
     } catch (error) {
         console.log(error)
@@ -688,7 +770,49 @@ const SubmitCounterPayment = async () => {
     } finally {
         stepFourLoading.value = false;
     }
-}
+};
+
+const GetBranches = async () => {
+    try {
+        branchLoading.value = true;
+        const response = await InPersonService.GetBranches();
+        branches.value = response.data;
+        return response;
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/Login");
+        }
+        errorMsg.value = error.response.data.msg || "خطایی رخ داده است!";
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 5000);
+    } finally {
+        branchLoading.value = false;
+    }
+};
+
+const defineSellers = async (id) => {
+    try {
+        sellerLoading.value = true;
+        const response = await InPersonService.GetSellers(id);
+        seller.value = response.data;
+        return response;
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/Login");
+        }
+        errorMsg.value = error.response.data.msg || "خطایی رخ داده است!";
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 5000);
+    } finally {
+        sellerLoading.value = false;
+    }
+};
 
 const phoneRules = [
     v => !!v || 'شماره همراه الزامی است',
@@ -748,6 +872,8 @@ const limitNumber = () => {
     inPersonForm.value.phoneNumber = inPersonForm.value.phoneNumber.replace(/\D/g, '').slice(0, 11);
 }
 
+const BranchRules = [(v) => !!v || "یک مورد را انتخاب کنید!"];
+
 const submitForm = async () => {
     successModal.value = true;
     setInterval(() => {
@@ -759,10 +885,14 @@ const submitForm = async () => {
     }, 3000)
 };
 
-
 const print = () => {
     window.print();
 }
+
+onMounted(() => {
+    GetBranches();
+});
+
 </script>
 
 <style scoped>

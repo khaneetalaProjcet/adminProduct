@@ -7,8 +7,7 @@
                 <v-card title="سطح دسترسی ها">
 
                     <div class="px-5 py-3 d-flex justify-end">
-
-                        <v-btn @click="AddAdminDialog = true" class="mx-2">افزودن کاربر</v-btn>
+                        <v-btn @click="AddAdminDialog = true" class="mx-2">افزودن مدیر</v-btn>
                         <v-btn color="error" class="error-btn" :loading="managmentAccessLoading"
                             @click="managmentDialogRequest">
                             مدیریت بازار
@@ -101,11 +100,13 @@
                             :rules="phoneRules"></v-text-field>
                     </v-col>
                     <v-col cols="12" md="6" class="my-4">
-                        <v-text-field v-model="adminData.password" label="رمز عبور" variant="outlined"
-                            :rules="passwordRules"></v-text-field>
+                        <v-text-field v-model="adminData.password" label="رمز عبور" variant="outlined"></v-text-field>
+                    </v-col>
+                    <v-col cols="12" md="6" class="my-2">
+                        <v-text-field v-model="adminData.userName" label="نام کاربری" variant="outlined"></v-text-field>
                     </v-col>
                 </v-row>
-                <div class="d-flex justify-space-between">
+                <div class="d-flex justify-space-between mt-5">
                     <v-btn text="انصراف" @click="AddAdminDialog = false" size="large" class="m-3"
                         variant="outlined"></v-btn>
                     <v-btn type="submit" text="افزودن" size="large" class="m-3" :loading="AddAdminLoading"></v-btn>
@@ -336,6 +337,7 @@ const adminData = ref({
     lastName: '',
     phoneNumber: '',
     password: '',
+    userName: '',
     role: 0
 });
 const deleteDialog = ref(false);
