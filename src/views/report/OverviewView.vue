@@ -142,7 +142,33 @@
             </div>
           </v-col>
         </v-row>
-
+        <!-- <v-divider></v-divider>
+        <v-row class="my-4">
+          <v-col cols="12" md="6">
+            <div class="d-flex justify-space-between align-center">
+              <p>مجموع معاملات حضوری : </p>
+              <p></p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6">
+            <div class="d-flex justify-space-between align-center">
+              <p>مجموع معاملات تلفنی : </p>
+              <p></p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6">
+            <div class="d-flex justify-space-between align-center">
+              <p>مجموع معاملات آنلاین : </p>
+              <p></p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6">
+            <div class="d-flex justify-space-between align-center">
+              <p>مجموع معاملات حواله ای : </p>
+              <p></p>
+            </div>
+          </v-col>
+        </v-row> -->
       </div>
     </v-col>
     <v-col cols="12" md="6">
