@@ -1,1 +1,0 @@
-import{aJ as o}from"./index-B9h8umMm.js";const a={async ReportSubmit(t){const r=JSON.stringify(t);return(await o.post("/report/analyze/data",r)).data},async ReportHour(t){const r=JSON.stringify(t);return(await o.post("/report/analyze/report/hour",r)).data}};export{a as R};
