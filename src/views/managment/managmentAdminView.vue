@@ -7,7 +7,7 @@
                 <v-card title="سطح دسترسی ها">
 
                     <div class="px-5 py-3 d-flex justify-end">
-                        <v-btn @click="AddAdminDialog = true" class="mx-2">افزودن مدیر</v-btn>
+                        <v-btn @click="AddAdminDialog = true" class="mx-2">افزودن کارشناس</v-btn>
                         <v-btn color="error" class="error-btn" :loading="managmentAccessLoading"
                             @click="managmentDialogRequest">
                             مدیریت بازار

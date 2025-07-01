@@ -18,6 +18,12 @@ const InPersonService = {
         return response.data
     },
 
+    async submitOtpAlternative(item) {
+        const body = JSON.stringify(item);
+        const response = await InPersonTemplate.post(`/inperson/otp/verify?pass=true`, body);
+        return response.data
+    },
+
     async identityUser(item) {
         console.log(item)
         const body = JSON.stringify({

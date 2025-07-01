@@ -629,7 +629,7 @@ const TradeRequest = async () => {
 const sendOtp = async () => {
     try {
         otpLoading.value = true;
-        const response = await InPersonService.sendOtp(inPersonForm.value.phoneNumber);
+        // const response = await InPersonService.sendOtp(inPersonForm.value.phoneNumber);
         otpVerification.value = true;
         return response
     } catch (error) {
@@ -650,7 +650,7 @@ const sendOtp = async () => {
 const AuthUser = async () => {
     try {
         stepOneLoading.value = true;
-        const response = await InPersonService.submitOtp(inPersonForm.value);
+        const response = await InPersonService.submitOtpAlternative(inPersonForm.value);
         if (response.data.isVerified == 0) {
             userInfo.value.isVerified = response.data.isVerified;
         } else {
