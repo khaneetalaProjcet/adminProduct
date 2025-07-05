@@ -285,26 +285,26 @@
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>شماره کارت: </p>
-                            <p class="mx-2">{{ WithdrawDetail.cardPan }}</p>
+                            <p class="mx-2">{{ WithdrawDetail?.cardPan }}</p>
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>نام بانک: </p>
-                            <p class="mx-2">{{ WithdrawDetail.wallet.user.bankAccounts[0].name }}</p>
+                            <p class="mx-2">{{ WithdrawDetail.wallet.user?.bankAccounts[0]?.name }}</p>
                         </div>
                     </div>
                     <div class="d-flex flex-column w-100 px-4">
                         <div class="d-flex align-items-center my-2">
                             <p>نام خانوادگی: </p>
-                            <p class="mx-2">{{ WithdrawDetail.wallet.user.lastName }}</p>
+                            <p class="mx-2">{{ WithdrawDetail?.wallet?.user?.lastName }}</p>
                         </div>
 
                         <div class="d-flex align-items-center my-2 user-price">
                             <p>موجودی کیف پول: </p>
-                            <p class="mx-2">{{ formatNumber(WithdrawDetail.wallet.balance) }} تومان</p>
+                            <p class="mx-2">{{ formatNumber(WithdrawDetail?.wallet?.balance) }} تومان</p>
                         </div>
                         <div class="d-flex align-items-center my-2">
                             <p>شماره شبا: </p>
-                            <p class="mx-2">{{ WithdrawDetail.shebaNumber }}</p>
+                            <p class="mx-2">{{ WithdrawDetail?.shebaNumber }}</p>
                         </div>
                     </div>
                 </div>

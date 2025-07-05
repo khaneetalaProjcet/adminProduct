@@ -13,6 +13,11 @@ const ServerService = {
         return response.data
     },
 
+    async analyseUser() {
+        const response = await QueryTemplate.get(``);
+        return response.data
+    },
+
     async transferDetail(item) {
         const response = await QueryTemplate.get(`/analyze/${item}`);
         return response.data

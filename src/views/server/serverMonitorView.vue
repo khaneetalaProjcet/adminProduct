@@ -5,6 +5,7 @@
                 <v-tabs v-model="tab" align-tabs="center">
                     <v-tab value="one">مانیتور سرور</v-tab>
                     <v-tab value="two">مانیتور انتقال</v-tab>
+                    <v-tab value="three">تحلیل کاربران</v-tab>
                 </v-tabs>
             </v-col>
             <v-col cols="12">
@@ -59,6 +60,31 @@
                                         <v-icon class="me-2" size="small" icon="ri-exchange-funds-line" color="#c9190c"
                                             :loading="transferDetailLoading" @click="TransferDetail(item)"></v-icon>
                                     </template>
+                                </v-data-table>
+                            </v-card>
+                        </v-tabs-window-item>
+                        <v-tabs-window-item value="three">
+                            <v-card title="تحلیل کاربران">
+                                <template v-slot:text>
+                                    <v-text-field v-model="analyseSearch" label="جستجو"
+                                        prepend-inner-icon="ri-search-line"></v-text-field>
+                                </template>
+                                <div class="pa-4">
+                                    <v-alert title="درصد خطا" type="error" variant="tonal">
+                                        <div class="d-flex justify-end">
+                                            <h2 class="text-error">{{ ErrorPercentage }}%</h2>
+                                        </div>
+                                    </v-alert>
+                                </div>
+                                <v-data-table :headers="analyseHeader" :items="analyseData" :search="analyseSearch"
+                                    :loading="analyseLoading">
+                                    <template v-slot:item.compare="{ item }">
+                                        <v-chip :text="item.compare" :color="'#ff0000'" size="small"></v-chip>
+                                    </template>
+                                    <!-- <template v-slot:item.error="{ item }">
+                                        <v-icon class="me-2" size="small" icon="ri-signal-wifi-error-line"
+                                            color="#d4af37" @click="errorView(item)"></v-icon>
+                                    </template> -->
                                 </v-data-table>
                             </v-card>
                         </v-tabs-window-item>
@@ -318,6 +344,43 @@ const transferHeader = ref(
 const transferLoading = ref();
 const transferDetailLoading = ref();
 const transferDialog = ref(false);
+const analyseSearch = ref();
+const analyseHeader = ref(
+    [
+        {
+            title: 'نام',
+            key: 'firstName',
+        },
+        {
+            title: 'نام خانوادگی',
+            key: 'lastName',
+        },
+        {
+            title: 'شماره همراه',
+            key: 'phoneNumber',
+        },
+        {
+            title: 'کد ملی',
+            key: 'nationalCode',
+        },
+        {
+            title: 'شهر',
+            key: 'officeName',
+        },
+        {
+            title: 'اختلاف طلا (گرم)',
+            key: 'compare',
+        },
+        {
+            title: 'فعالیت',
+            key: 'action'
+        }
+    ]
+);
+const analyseData = ref();
+const analyseLoading = ref();
+const ErrorPercentage = ref();
+
 
 
 
@@ -364,6 +427,28 @@ const GetTransferData = async () => {
     }
 };
 
+
+const GetAnalyseData = async () => {
+    try {
+        analyseLoading.value = true;
+        const response = await ServerService.analyseUser();
+        analyseData.value = response;
+        return response
+    } catch (error) {
+        if (error.response.status == 401) {
+            localStorage.clear();
+            router.replace("/login");
+        }
+        errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+        alertError.value = true;
+        setTimeout(() => {
+            alertError.value = false;
+        }, 10000)
+    } finally {
+        analyseLoading.value = false;
+    }
+};
+
 const TransferDetail = (item) => {
     transferDialog.value = true;
     getTransferDetail(item.id)
@@ -405,6 +490,7 @@ watch(
 onMounted(() => {
     GetStatus();
     GetTransferData();
+    GetAnalyseData();
 })
 
 </script>

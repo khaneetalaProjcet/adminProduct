@@ -1,4 +1,5 @@
 import DashboardTemplate from "../dashboard/api";
+import ServerTemplate from "../server/api";
 import QueryTemplate from "../template/api";
 import VerifyTemplate from "../verify/api";
 import GoldBoxTemplate from "./api";
@@ -80,6 +81,24 @@ const GoldBoxService = {
         const response = await DashboardTemplate.put(`/admin/transAction/${item}`);
         return response.data
     },
+
+    async inquiryGoldBoxSender(item) {
+        const response = await ServerTemplate.get(`/old/inquiry/${item}`);
+        return response.data
+    },
+
+    async inquiryGoldBoxReciever(item) {
+        const response = await QueryTemplate.get(`/admin/inquiry/${item}`);
+        return response.data
+    },
+
+    async confirmTransfer(item) {
+        const body = JSON.stringify(item);
+        console.log(body)
+        const response = await ServerTemplate.post(`/old/transmission`, body);
+        return response.data
+    },
+
 }
 
 

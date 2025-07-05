@@ -279,10 +279,11 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavGroup v-if="hasPermission('transfer') || hasPermission('inquiry')" :item="{
-    title: 'انتقال',
-    icon: 'ri-user-shared-line',
-  }">
+  <VerticalNavGroup v-if="hasPermission('transfer') || hasPermission('inquiry') || hasPermission('EmergencyTransfer')"
+    :item="{
+      title: 'انتقال',
+      icon: 'ri-user-shared-line',
+    }">
     <VerticalNavLink v-if="hasPermission('transfer')" :item="{
       title: 'انتقال طلا',
       icon: 'ri-user-shared-line',
@@ -294,6 +295,12 @@ const hasPermission = (routeName) => {
       icon: 'ri-menu-search-line',
       href: '#',
       to: '/inquiry'
+    }" />
+    <VerticalNavLink v-if="hasPermission('EmergencyTransfer')" :item="{
+      title: 'انتقال اضطراری',
+      icon: 'ri-menu-search-line',
+      href: '#',
+      to: '/EmergencyTransfer'
     }" />
   </VerticalNavGroup>
 
