@@ -23,7 +23,7 @@
                                     :rules="nationalCodeRules" @input="validateSenderNationalCode"></v-text-field>
                             </v-col>
                             <v-col cols="12" md="6">
-                                <v-btn class="h-100 py-2" color="primary" size="large" variant="elevated" block
+                                <v-btn class="py-2" color="primary" size="large" variant="elevated" block
                                     @click="senderInquiry()" :loading="senderLoading">
                                     استعلام انتقال دهنده
                                 </v-btn>
@@ -54,6 +54,14 @@
                                     <p>{{ sender?.goldWeight }} گرم</p>
                                 </div>
                             </v-col>
+                            <v-col cols="12" md="4">
+                                <div class="d-flex align-center justify-start">
+                                    <p class="mb-0">وضعیت : </p>
+                                    <v-chip :text="sender.verificationStatus == 1 ? 'منتقل شده' : sender.verificationStatus == 2 ? 'منتقل نشده' : 'نامشخص'"
+                                        :color="sender.verificationStatus == 1 ? '#00853f' : sender.verificationStatus == 2 ? '#ff0000' : '#66666'"
+                                        size="small"></v-chip>
+                                </div>
+                            </v-col>
                         </v-row>
                     </v-card-text>
                 </v-card>
@@ -73,7 +81,7 @@
                                     :rules="nationalCodeRules" @input="validateRecieverNationalCode"></v-text-field>
                             </v-col>
                             <v-col cols="12" md="6">
-                                <v-btn class="h-100 py-2" color="primary" size="large" variant="elevated" block
+                                <v-btn class="py-2" color="primary" size="large" variant="elevated" block
                                     @click="recieverInquiry()">
                                     استعلام انتقال گیرنده
                                 </v-btn>
@@ -193,6 +201,7 @@ const sender = ref({
     lastName: '',
     nationalCode: '',
     goldWeight: '',
+    verificationStatus: '',
 });
 const reciever = ref({
     firstName: '',
@@ -201,7 +210,6 @@ const reciever = ref({
     phoneNumber: '',
     goldWeight: '',
     goldBlock: 0,
-
 });
 const confirmLoading = ref(false);
 
@@ -216,6 +224,7 @@ const senderInquiry = async () => {
         sender.value.lastName = response?.lastName;
         sender.value.nationalCode = response?.nationalCode;
         sender.value.goldWeight = response?.wallet?.goldWeight;
+        sender.value.verificationStatus = response?.verificationStatus;
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -291,6 +300,7 @@ const submitForm = async () => {
         sender.value.lastName = '';
         sender.value.goldWeight = '';
         sender.value.nationalCode = '';
+        sender.value.verificationStatus = '';
         reciever.value.firstName = '';
         reciever.value.lastName = '';
         reciever.value.goldBlock = '';
@@ -362,7 +372,7 @@ const validateWeight = [
     z-index: 100000;
 }
 
-.guide-section{
+.guide-section {
     border: 1px solid rgba(201, 191, 6, 0.4);
 }
 
