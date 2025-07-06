@@ -298,7 +298,7 @@ const hasPermission = (routeName) => {
     }" />
     <VerticalNavLink v-if="hasPermission('EmergencyTransfer')" :item="{
       title: 'انتقال اضطراری',
-      icon: 'ri-menu-search-line',
+      icon: 'ri-swap-box-line',
       href: '#',
       to: '/EmergencyTransfer'
     }" />

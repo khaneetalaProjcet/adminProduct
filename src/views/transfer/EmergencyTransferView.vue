@@ -2,6 +2,18 @@
     <v-container>
         <v-row>
             <v-col cols="12" class="my-2">
+                <v-card class="guide-section">
+                    <v-card-text>
+                        <h4 class="guideSection-title">راهنمای انتقال اضطراری</h4>
+                        <ul>
+                            <li>شخص انتقال دهنده، حتما باید جزو کاربران احراز نشده باشد.</li>
+                            <li>شخص انتقال گیرنده حتما باید جزو کاربران احراز شده باشد.</li>
+                            <li>مقدر انتقال باید برابر باشد با تمام موجودی شخص انتقال دهنده.</li>
+                        </ul>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+            <v-col cols="12" class="my-2">
                 <v-card>
                     <v-card-text>
                         <h3 class="mb-2">اطلاعات انتقال دهنده</h3>
@@ -114,7 +126,7 @@
                             <v-col cols="12" md="6">
                                 <div class="d-flex justify-end">
                                     <v-btn class="py-2 px-10" color="#c61a09" size="large" variant="elevated"
-                                        :disabled="senderStatus != true || recieverStatus != true || transferData.goldWeight == ''"
+                                        :disabled="senderStatus != true || recieverStatus != true || transferData.goldWeight != sender.goldWeight"
                                         @click="transferModal = true">
                                         تایید انتقال
                                     </v-btn>
@@ -348,5 +360,18 @@ const validateWeight = [
     font-size: 12px;
     padding: 10px !important;
     z-index: 100000;
+}
+
+.guide-section{
+    border: 1px solid rgba(201, 191, 6, 0.4);
+}
+
+.guide-section li {
+    font-size: 12px;
+    margin: 0.5rem 0;
+}
+
+.guide-section ul {
+    padding-right: 1rem;
 }
 </style>
