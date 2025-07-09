@@ -199,6 +199,12 @@ const hasPermission = (routeName) => {
       href: '#',
       to: '/AccountingTransfer'
     }" />
+    <VerticalNavLink v-if="hasPermission('AccountingEmergencyTransfer')" :item="{
+      title: 'انتقال طلا',
+      icon: 'ri-file-transfer-line',
+      href: '#',
+      to: '/AccountingEmergencyTransfer'
+    }" />
   </VerticalNavGroup>
 
 

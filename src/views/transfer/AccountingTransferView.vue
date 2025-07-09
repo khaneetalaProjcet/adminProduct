@@ -542,8 +542,6 @@ const filter = ref({
 });
 
 
-
-
 const GetPendingTransferGoldList = async () => {
   try {
     PendingTransferGoldLoading.value = true;

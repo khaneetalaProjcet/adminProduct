@@ -20,7 +20,7 @@
                         <v-row>
                             <v-col cols="12" md="6">
                                 <v-text-field v-model="transferData.sender" label="کد ملی" variant="outlined"
-                                    :rules="nationalCodeRules" @input="validateSenderNationalCode"></v-text-field>
+                                    :rules="nationalCodeRulesSender" @input="validateSenderNationalCode"></v-text-field>
                             </v-col>
                             <v-col cols="12" md="6">
                                 <v-btn class="py-2" color="primary" size="large" variant="elevated" block
@@ -57,7 +57,8 @@
                             <v-col cols="12" md="4">
                                 <div class="d-flex align-center justify-start">
                                     <p class="mb-0">وضعیت : </p>
-                                    <v-chip :text="sender.verificationStatus == 1 ? 'منتقل شده' : sender.verificationStatus == 2 ? 'منتقل نشده' : 'نامشخص'"
+                                    <v-chip
+                                        :text="sender.verificationStatus == 1 ? 'منتقل شده' : sender.verificationStatus == 2 ? 'منتقل نشده' : 'نامشخص'"
                                         :color="sender.verificationStatus == 1 ? '#00853f' : sender.verificationStatus == 2 ? '#ff0000' : '#66666'"
                                         size="small"></v-chip>
                                 </div>
@@ -312,7 +313,6 @@ const submitForm = async () => {
 
 
 const validateSenderNationalCode = () => {
-    transferData.value.sender = transferData.value.sender.replace(/\D/g, '').slice(0, 10);
     nationalCodeRules.every(rule => rule(transferData.value.sender) === true);
 };
 
@@ -332,6 +332,11 @@ const nationalCodeRules = [
         return (sum < 2 && check === sum) || (sum >= 2 && check + sum === 11) || 'کد ملی نامعتبر است';
     }
 ];
+
+const nationalCodeRulesSender = [
+    (v) => !!v || 'کد ملی الزامی است',
+];
+
 
 const GoldweightInput = () => {
     transferData.value.goldWeight = transferData.value.goldWeight.replace(/[^0-9.]/g, "");
@@ -364,7 +369,7 @@ const validateWeight = [
 }
 
 .k-alert {
-    position: absolute;
+    position: fixed;
     top: 10px;
     left: 40%;
     font-size: 12px;

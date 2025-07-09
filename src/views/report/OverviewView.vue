@@ -142,33 +142,82 @@
             </div>
           </v-col>
         </v-row>
-        <!-- <v-divider></v-divider>
-        <v-row class="my-4">
+        <v-divider></v-divider>
+        <v-row class="my-2">
           <v-col cols="12" md="6">
             <div class="d-flex justify-space-between align-center">
-              <p>مجموع معاملات حضوری : </p>
-              <p></p>
+              <p>خرید حضوری : </p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ filterStatistics.inpersonBought }} گرم</p>
             </div>
           </v-col>
           <v-col cols="12" md="6">
             <div class="d-flex justify-space-between align-center">
-              <p>مجموع معاملات تلفنی : </p>
-              <p></p>
+              <p>فروش حضوری : </p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ filterStatistics.inpersonSold }} گرم</p>
+            </div>
+          </v-col>
+        </v-row>
+        <v-divider></v-divider>
+        <v-row class="my-2">
+          <v-col cols="12" md="6">
+            <div class="d-flex justify-space-between align-center">
+              <p>خرید آنلاین : </p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ filterStatistics.bought }} گرم</p>
             </div>
           </v-col>
           <v-col cols="12" md="6">
             <div class="d-flex justify-space-between align-center">
-              <p>مجموع معاملات آنلاین : </p>
-              <p></p>
+              <p>فروش آنلاین : </p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ filterStatistics.sold }} گرم</p>
+            </div>
+          </v-col>
+        </v-row>
+        <v-divider></v-divider>
+        <v-row class="my-2">
+          <v-col cols="12" md="6">
+            <div class="d-flex justify-space-between align-center">
+              <p>خرید تلفنی : </p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ filterStatistics.phoneBought }} گرم</p>
             </div>
           </v-col>
           <v-col cols="12" md="6">
             <div class="d-flex justify-space-between align-center">
-              <p>مجموع معاملات حواله ای : </p>
-              <p></p>
+              <p>فروش تلفنی : </p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ filterStatistics.phoneSold }} گرم</p>
             </div>
           </v-col>
-        </v-row> -->
+        </v-row>
+        <v-divider></v-divider>
+        <v-row class="my-2">
+          <v-col cols="12" md="6">
+            <div class="d-flex justify-space-between align-center">
+              <p>خرید حواله ای : </p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ filterStatistics.REMMITANCEBought }} گرم</p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6">
+            <div class="d-flex justify-space-between align-center">
+              <p>فروش فروش حواله ای : </p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ filterStatistics.REMMITANCESold }} گرم</p>
+            </div>
+          </v-col>
+        </v-row>
       </div>
     </v-col>
     <v-col cols="12" md="6">
@@ -227,6 +276,12 @@ const filterStatistics = ref({
   bought: '-',
   allBalance: '-',
   succeedWithdraw: '-',
+  inpersonBought: '-',
+  inpersonSold: '-',
+  phoneBought: '-',
+  phoneSold: '-',
+  REMMITANCEBought: '-',
+  REMMITANCESold: '-',
   deposit: '-',
 })
 const errorMsg = ref('');
@@ -397,6 +452,12 @@ const reportWithHour = async () => {
     filterStatistics.value.allBalance = response.data.allBalance;
     filterStatistics.value.sold = response.data.sold;
     filterStatistics.value.succeedWithdraw = response.data.succeedWithdraw;
+    filterStatistics.value.REMMITANCEBought = response.data.REMMITANCEBought;
+    filterStatistics.value.REMMITANCESold = response.data.REMMITANCESold;
+    filterStatistics.value.inpersonBought = response.data.inpersonBought;
+    filterStatistics.value.inpersonSold = response.data.inpersonSold;
+    filterStatistics.value.phoneBought = response.data.phoneBought;
+    filterStatistics.value.phoneSold = response.data.phoneSold;
     return response
   } catch (error) {
     if (error.response.status == 401) {

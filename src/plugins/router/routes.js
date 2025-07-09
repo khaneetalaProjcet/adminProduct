@@ -246,6 +246,12 @@ export const routes = [
         component: () => import('@/views/transfer/EmergencyTransferView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/AccountingEmergencyTransfer',
+        name: 'AccountingEmergencyTransfer',
+        component: () => import('@/views/transfer/AccountingEmergencyTransferView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {
