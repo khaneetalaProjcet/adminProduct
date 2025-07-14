@@ -392,7 +392,6 @@ import { router } from '@/plugins/router';
 import WalletService from '@/services/wallet/wallet';
 import { onMounted, ref } from 'vue';
 
-
 const errorMsg = ref('');
 const alertError = ref(false);
 const PendingTransferGoldLoading = ref(false);

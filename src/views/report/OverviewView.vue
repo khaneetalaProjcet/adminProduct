@@ -88,6 +88,12 @@
             <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان" format="HH:mm:ss"
               class="custom-datepicker"></persian-date-picker>
           </v-col>
+          <v-col cols="12" class="my-2">
+            <div class="total-box">
+              <span>موجودی کل صندوق طلا: </span>
+              <span>{{ (+filterStatistics.allGoldWeight).toFixed(5) }}</span>
+            </div>
+          </v-col>
           <v-col cols="12" md="6" class="my-2">
             <div class="d-flex justify-space-between">
               <p>طلای فروخته شده:</p>
@@ -283,6 +289,7 @@ const filterStatistics = ref({
   REMMITANCEBought: '-',
   REMMITANCESold: '-',
   deposit: '-',
+  allGoldWeight: null
 })
 const errorMsg = ref('');
 const alertError = ref(false);
@@ -458,6 +465,7 @@ const reportWithHour = async () => {
     filterStatistics.value.inpersonSold = response.data.inpersonSold;
     filterStatistics.value.phoneBought = response.data.phoneBought;
     filterStatistics.value.phoneSold = response.data.phoneSold;
+    filterStatistics.value.allGoldWeight = response.data.allGoldWeight;
     return response
   } catch (error) {
     if (error.response.status == 401) {
@@ -473,8 +481,6 @@ const reportWithHour = async () => {
     statisticLoading.value = false;
   }
 }
-
-
 
 
 onMounted(() => {
@@ -524,5 +530,14 @@ onMounted(() => {
 
 .stat-bold {
   font-weight: bold;
+}
+
+.total-box {
+  background-color: rgba(255, 196, 0, 0.2);
+  padding: 0.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 8px;
 }
 </style>

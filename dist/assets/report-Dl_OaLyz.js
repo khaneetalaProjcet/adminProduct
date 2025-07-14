@@ -1,0 +1,1 @@
+import{aI as o}from"./index-RRXVcsWe.js";const a={async ReportSubmit(t){const r=JSON.stringify(t);return(await o.post("/report/analyze/data",r)).data},async ReportHour(t){const r=JSON.stringify(t);return(await o.post("/report/analyze/report/hour",r)).data}};export{a as R};

@@ -11,7 +11,7 @@
                     <!-- مرحله ۱ -->
                     <v-stepper-window-item :value="1">
                         <v-card class="step-card">
-                            <v-form :ref="(el) => setFormRef(el, 1) "  >
+                            <v-form :ref="(el) => setFormRef(el, 1)">
 
                                 <v-container>
                                     <v-row>
@@ -167,7 +167,7 @@
                     <!-- مرحله ۳ -->
                     <v-stepper-window-item :value="3">
                         <v-card class="step-card">
-                            <v-tabs v-model="tab">
+                            <v-tabs v-model="tab" @update:modelValue="changeTabs">
                                 <v-tab value="one">خرید</v-tab>
                                 <v-tab value="two">فروش</v-tab>
                             </v-tabs>
@@ -181,9 +181,10 @@
                                                 <v-col cols="12">
                                                     <div class="w-100 d-flex justify-space-between align-items-center">
                                                         <h3 class="trade-step-title">ثبت خرید</h3>
-                                                                                                                                                               <div class="d-flex justify-end my-1">
-                <v-btn color="#930506" size="small" class="info-btn" @click="guideinperson">راهنما</v-btn>
-                </div>
+                                                        <div class="d-flex justify-end my-1">
+                                                            <v-btn color="#930506" size="small" class="info-btn"
+                                                                @click="guideinperson">راهنما</v-btn>
+                                                        </div>
                                                     </div>
                                                 </v-col>
                                             </v-row>
@@ -268,9 +269,10 @@
                                                 <v-col cols="12">
                                                     <div class="w-100 d-flex justify-space-between align-items-center">
                                                         <h3 class="trade-step-title">ثبت فروش</h3>
-                                                                                                                                                                                                                 <div class="d-flex justify-end my-1">
-                <v-btn color="#930506" size="small" class="info-btn" @click="guideinpersonSell">راهنما</v-btn>
-                </div>
+                                                        <div class="d-flex justify-end my-1">
+                                                            <v-btn color="#930506" size="small" class="info-btn"
+                                                                @click="guideinpersonSell">راهنما</v-btn>
+                                                        </div>
                                                     </div>
                                                 </v-col>
                                             </v-row>
@@ -480,45 +482,47 @@
 
 
 
-        <v-dialog max-width="500" v-model="guideBuy">
-      <v-card class="guideSectionStyle">
-        <h2 class="guideSection-title">راهنما ثبت معامله تلفنی</h2>
-        <ul>
-          <li>
-در ابتدا لازم است دو بخش مربوط به تاریخ و زمان را ثبت کنید تا امکان فعال‌سازی کادر استعلام قیمت طلا فراهم شود.
+    <v-dialog max-width="500" v-model="guideBuy">
+        <v-card class="guideSectionStyle">
+            <h2 class="guideSection-title">راهنما ثبت معامله تلفنی</h2>
+            <ul>
+                <li>
+                    در ابتدا لازم است دو بخش مربوط به تاریخ و زمان را ثبت کنید تا امکان فعال‌سازی کادر استعلام قیمت طلا
+                    فراهم شود.
 
-          </li>
+                </li>
 
-         <li>
-مبلغی که کاربر پرداخت می‌کند، باید حتماً به همان حسابی که هنگام ثبت سفارش مشخص شده است واریز شود.
-          </li>
+                <li>
+                    مبلغی که کاربر پرداخت می‌کند، باید حتماً به همان حسابی که هنگام ثبت سفارش مشخص شده است واریز شود.
+                </li>
 
-          <li>
-زمان ثبت معامله باید حتماً در همان لحظه انجام شود.
-          </li>
-        </ul>
+                <li>
+                    زمان ثبت معامله باید حتماً در همان لحظه انجام شود.
+                </li>
+            </ul>
 
-      </v-card>
+        </v-card>
     </v-dialog>
-        <v-dialog max-width="500" v-model="guideSell">
-      <v-card class="guideSectionStyle">
-        <h2 class="guideSection-title">راهنما ثبت فروش معامله تلفنی</h2>
-        <ul>
-          <li>
-در ابتدا لازم است دو بخش مربوط به تاریخ و زمان را ثبت کنید تا امکان فعال‌سازی کادر استعلام قیمت طلا فراهم شود.
+    <v-dialog max-width="500" v-model="guideSell">
+        <v-card class="guideSectionStyle">
+            <h2 class="guideSection-title">راهنما ثبت فروش معامله تلفنی</h2>
+            <ul>
+                <li>
+                    در ابتدا لازم است دو بخش مربوط به تاریخ و زمان را ثبت کنید تا امکان فعال‌سازی کادر استعلام قیمت طلا
+                    فراهم شود.
 
-          </li>
+                </li>
 
-          <li>
-            قیمت فروش طلا با یک درصد کارمزد نمایش داده می شود.
-          </li>
+                <li>
+                    قیمت فروش طلا با یک درصد کارمزد نمایش داده می شود.
+                </li>
 
-          <li>
-زمان ثبت معامله باید حتماً در همان لحظه انجام شود.
-          </li>
-        </ul>
+                <li>
+                    زمان ثبت معامله باید حتماً در همان لحظه انجام شود.
+                </li>
+            </ul>
 
-      </v-card>
+        </v-card>
     </v-dialog>
 
 </template>
@@ -1092,6 +1096,7 @@ const setFormRef = (el, index) => {
     if (el) {
         formRefs.value[index] = el;
     }
+
 };
 
 const limitNumber = () => {
@@ -1277,10 +1282,30 @@ const sellGoldweightConvert = () => {
 }
 
 const guideinperson = () => {
-  guideBuy.value = true ;
+    guideBuy.value = true;
 }
 const guideinpersonSell = () => {
-  guideSell.value = true ;
+    guideSell.value = true;
+}
+
+const changeTabs = () => {
+    goldPriceForm.value.time = '';
+    goldPriceForm.value.date = '';
+    goldPriceForm.value.milliseconds = '';
+    goldPriceForm.value.buyPrice = '';
+    goldPriceForm.value.sellPrice = '';
+    tradeBuyForm.value.description = '';
+    tradeBuyForm.value.destCardPan = '';
+    tradeBuyForm.value.goldPrice = '';
+    tradeBuyForm.value.goldWeight = '';
+    tradeBuyForm.value.invoiceId = '';
+    tradeBuyForm.value.totalPrice = '';
+    tradeSellForm.value.description = '';
+    tradeSellForm.value.goldPrice = '';
+    tradeSellForm.value.goldWeight = '';
+    tradeSellForm.value.invoiceId = '';
+    tradeSellForm.value.totalPrice = '';
+
 }
 
 </script>
@@ -1366,21 +1391,20 @@ const guideinpersonSell = () => {
 
 
 .guideSectionStyle {
-  min-height: 14rem;
-  padding: 0.9rem;
+    min-height: 14rem;
+    padding: 0.9rem;
 
 }
 
 .guideSectionStyle li {
-  margin: 1rem;
-  font-weight: bold;
+    margin: 1rem;
+    font-weight: bold;
 }
 
 
- .guideSection-title {
-  margin: 0.8rem 0.5rem;
-  color: #d4af37;
-  font-weight: 400;
+.guideSection-title {
+    margin: 0.8rem 0.5rem;
+    color: #d4af37;
+    font-weight: 400;
 }
-
 </style>

@@ -121,6 +121,11 @@ const WalletService = {
         return response.data
     },
 
+    async EmergencyTransferList() {
+        const response = await QueryTemplate.post(`/`, body);
+        return response.data
+    }
+
 
 }
 

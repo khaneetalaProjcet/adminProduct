@@ -82,11 +82,14 @@
                     </li>
 
                   </ul>
-                  <v-text-field v-model="search" label="جستجو" prepend-inner-icon="ri-search-line"
-                    @input="onSearchInput"></v-text-field>
+                  <!-- <v-text-field v-model="search" label="جستجو" prepend-inner-icon="ri-search-line"
+                    @input="onSearchInput"></v-text-field> -->
+                  <v-text-field v-model="search" label="جستجو" prepend-inner-icon="ri-search-line"></v-text-field>
                 </template>
 
-                <v-data-table :headers="userHeader" :items="userData" :search="search" :loading="userLoading" :items-per-page-options="itemsPerPageOptions">
+                <v-data-table :page="currentNewPage" :items-per-page="itemsNewPerPage" :headers="userHeader"
+                  :items="userData" :search="search" :loading="userLoading" :server-items-length="totalNewItems"
+                  :items-per-page-options="itemsPerPageOptions" @update:options="handleOptionsChangeNewUser">
                   <template v-slot:item.wallet.balance="{ item }">
                     <p>{{ formatNumber(item?.wallet?.balance) }}</p>
                   </template>
@@ -107,10 +110,14 @@
                     <v-icon class="me-2" size="small" icon="ri-exchange-funds-line" color="#c9190c"
                       :loading="transferLoading" @click="userTransfer(item)"></v-icon>
                   </template>
+                  <template v-slot:bottom>
+                    <div class="text-center pt-2">
+                      <v-pagination v-model="currentNewPage" :length="totalNewPages" :total-visible="4"></v-pagination>
+                    </div>
+                  </template>
                 </v-data-table>
               </v-card>
             </v-tabs-window-item>
-
             <v-tabs-window-item value="two">
 
               <v-row class="filter my-3">
@@ -354,10 +361,14 @@ const VerifyDialog = ref(false);
 const verifyLoading = ref(false);
 const transferLoading = ref(false);
 const itemsPerPage = ref(50);
+const itemsNewPerPage = ref(50);
 const currentPage = ref(1);
+const currentNewPage = ref(1)
 const itemsPerPageOptions = ref([10, 25]);
 const totalItems = ref(0);
+const totalNewItems = ref(0);
 const totalPages = ref(1);
+const totalNewPages = ref(1);
 const successMsg = ref("");
 const alertSuccess = ref(false);
 const userHeader = ref([
@@ -627,8 +638,14 @@ const persianYears = ref([
 const Getuser = async () => {
   try {
     userLoading.value = true;
-    const response = await UserService.Alluser();
-    userData.value = response.data;
+    const response = await UserService.Alluser({
+      page: currentNewPage.value,
+      perPage: itemsNewPerPage.value,
+      search: search.value,
+    });
+    totalNewItems.value = response.data.totalItem;
+    userData.value = response.data.users;
+    totalNewPages.value = Math.ceil(totalNewItems.value / itemsNewPerPage.value)
     return response
   } catch (error) {
     if (error.response.status == 401) {
@@ -643,12 +660,6 @@ const Getuser = async () => {
   } finally {
     userLoading.value = false;
   }
-};
-
-const handleOptionsChange = (options) => {
-  currentPage.value = options.page;
-  itemsPerPage.value = options.itemsPerPage;
-  GetOldUser();
 };
 
 
@@ -678,6 +689,18 @@ const GetOldUser = async () => {
   }
 };
 
+const handleOptionsChange = (options) => {
+  currentPage.value = options.page;
+  itemsPerPage.value = options.itemsPerPage;
+  GetOldUser();
+};
+
+const handleOptionsChangeNewUser = (options) => {
+  currentNewPage.value = options.page;
+  itemsNewPerPage.value = options.itemsPerPage;
+  Getuser();
+}
+
 const onSearchInput = () => {
   currentPage.value = 1
   handleOptionsChange({
@@ -691,10 +714,22 @@ watch([currentPage, itemsPerPage], () => {
   GetOldUser();
 });
 
+
+watch([currentNewPage, itemsNewPerPage], () => {
+  Getuser();
+});
+
 watch(
   OldSearch,
   debounce(() => {
     GetOldUser()
+  }, 1000)
+)
+
+watch(
+  search,
+  debounce(() => {
+    Getuser()
   }, 1000)
 )
 
@@ -840,7 +875,6 @@ const SubmitFilter = async (status) => {
   //     rejectAccountingReviewLoading.value = false;
   // }
 }
-
 
 const phoneRules = [
   (v) => !!v || 'شماره همراه نمی‌تواند خالی باشد',

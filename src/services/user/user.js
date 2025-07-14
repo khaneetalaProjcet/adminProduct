@@ -5,8 +5,8 @@ import UserTemplate from "./api";
 
 
 const UserService = {
-    async Alluser() {
-        const response = await QueryTemplate.get('/admin/users/all');
+    async Alluser(params) {
+        const response = await QueryTemplate.get(`/admin/users/all?page=${params.page}&perPage=${params.perPage}&search=${params.search}`);
         return response.data;
     },
 
@@ -30,7 +30,7 @@ const UserService = {
         return response.data;
     },
 
-    async transferData(id){
+    async transferData(id) {
         const response = await UserTemplate.post(`/admin/oldChecker/${id}`);
         return response.data;
     },

@@ -1,4 +1,4 @@
-<!-- <template>
+<template>
     <div>
         <v-row>
             <v-col cols="12">
@@ -67,29 +67,27 @@
                             </div>
                         </v-col>
                     </v-row>
-
                     <v-card title="انتقال های اضطراری">
-
                         <template v-slot:text>
                             <ul class="listGuide">
-                                <li>انتقال اضطراری برای انتقال طلای کاربرانی که کد ملی اشتباه دارند مورد استفاده قرار میگیرد</li>
+                                <li>انتقال اضطراری برای انتقال طلای کاربرانی که کد ملی اشتباه دارند مورد استفاده قرار
+                                    میگیرد</li>
                             </ul>
-
-                            <v-text-field v-model="PendingTransferGoldSearch" label="جستجو"
+                            <v-text-field v-model="EmergencyTransferGoldSearch" label="جستجو"
                                 prepend-inner-icon="ri-search-line"></v-text-field>
                         </template>
-                        <v-data-table :headers="PendingTransferGoldHeader" :items="PendingTransferGoldData"
-                            :search="PendingTransferGoldSearch" :loading="PendingTransferGoldLoading">
-                            <template v-slot:item.status="{ item }">
+                        <v-data-table :headers="EmergencyTransferGoldHeader" :items="EmergencyTransferGoldData"
+                            :search="EmergencyTransferGoldSearch" :loading="EmergencyTransferGoldLoading">
+                            <!-- <template v-slot:item.status="{ item }">
                                 <div>
                                     <v-chip :text="item.status == 'pending' ? 'نامشخص' : 'بررسی شده'"
                                         :color="item.status == 'pending' ? '#ff0000' : '#66666'" size="small"></v-chip>
                                 </div>
-                            </template>
-                            <template v-slot:item.action="{ item }">
+                            </template> -->
+                            <!-- <template v-slot:item.action="{ item }">
                                 <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
-                                    @click="PendingTransferGoldInfo(item)"></v-icon>
-                            </template>
+                                    @click="EmergencyTransferGoldInfo(item)"></v-icon>
+                            </template> -->
                         </v-data-table>
                     </v-card>
                 </v-card-text>
@@ -110,8 +108,8 @@ import { onMounted, ref } from 'vue';
 
 const errorMsg = ref('');
 const alertError = ref(false);
-const PendingTransferGoldLoading = ref(false);
-const PendingTransferGoldHeader = ref([
+const EmergencyTransferGoldLoading = ref(false);
+const EmergencyTransferGoldHeader = ref([
     {
         title: 'نام فرستنده',
         key: 'sender.firstName',
@@ -147,12 +145,10 @@ const PendingTransferGoldHeader = ref([
     {
         title: 'فعالیت',
         key: 'action'
-    }
+    },
 ]);
-const PendingTransferGoldSearch = ref();
-const PendingTransferGoldData = ref();
-const TransferGoldDetail = ref();
-const TransferGoldDialog = ref(false);
+const EmergencyTransferGoldSearch = ref();
+const EmergencyTransferGoldData = ref();
 const filter = ref({
     firstName: '',
     lastName: '',
@@ -172,11 +168,11 @@ const filter = ref({
     status: '',
 });
 
-const GetPendingTransferGoldList = async () => {
+const GetEmergencyTransferGoldList = async () => {
     try {
-        PendingTransferGoldLoading.value = true;
-        const response = await WalletService.TransferGoldList('pending');
-        PendingTransferGoldData.value = response.data;
+        EmergencyTransferGoldLoading.value = true;
+        const response = await WalletService.EmergencyTransferList();
+        EmergencyTransferGoldData.value = response.data;
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -189,14 +185,9 @@ const GetPendingTransferGoldList = async () => {
             alertError.value = false;
         }, 10000)
     } finally {
-        PendingTransferGoldLoading.value = false;
+        EmergencyTransferGoldLoading.value = false;
     }
 };
-
-const PendingTransferGoldInfo = (item) => {
-    TransferGoldDialog.value = true;
-    TransferGoldDetail.value = item;
-}
 
 const nationalCodeRules = [
     (v) => /^\d{10}$/.test(v) || 'کد ملی باید ۱۰ رقم باشد',
@@ -223,7 +214,7 @@ const validateWeight = [
 ];
 
 onMounted(() => {
-    GetPendingTransferGoldList();
+    GetEmergencyTransferGoldList();
 })
 
 </script>
@@ -277,17 +268,4 @@ onMounted(() => {
     margin-right: 1.5rem;
     margin-left: 1rem
 }
-</style> -->
-
-
-<template>
-    <div>
-        <h1>test</h1>
-    </div>
-</template>
-
-<script setup>
-
-</script>
-
-<style scoped></style>
+</style>
