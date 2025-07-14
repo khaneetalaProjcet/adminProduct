@@ -121,12 +121,10 @@ const WalletService = {
         return response.data
     },
 
-    async EmergencyTransferList() {
-        const response = await QueryTemplate.post(`/`, body);
+    async EmergencyTransferList(params) {
+        const response = await ServerTemplate.get(`old/transmission/?page=${params.page}&perPage=${params.perPage}&search=${params.search}`);
         return response.data
     }
-
-
 }
 
 

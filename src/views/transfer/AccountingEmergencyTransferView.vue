@@ -76,18 +76,27 @@
                             <v-text-field v-model="EmergencyTransferGoldSearch" label="جستجو"
                                 prepend-inner-icon="ri-search-line"></v-text-field>
                         </template>
-                        <v-data-table :headers="EmergencyTransferGoldHeader" :items="EmergencyTransferGoldData"
-                            :search="EmergencyTransferGoldSearch" :loading="EmergencyTransferGoldLoading">
-                            <!-- <template v-slot:item.status="{ item }">
+                        <v-data-table :page="currentPage" :items-per-page="itemsPerPage"
+                            :headers="EmergencyTransferGoldHeader" :items="EmergencyTransferGoldData"
+                            :search="EmergencyTransferGoldSearch" :loading="EmergencyTransferGoldLoading"
+                            :server-items-length="totalItems" :items-per-page-options="itemsPerPageOptions"
+                            @update:options="handleOptionsChange">
+                            <template v-slot:item.status="{ item }">
                                 <div>
-                                    <v-chip :text="item.status == 'pending' ? 'نامشخص' : 'بررسی شده'"
-                                        :color="item.status == 'pending' ? '#ff0000' : '#66666'" size="small"></v-chip>
+                                    <v-chip :text="item.status == 'completed' ? 'موفق' : 'ناموفق'"
+                                        :color="item.status == 'completed' ? '#00853f' : '#666666'" size="small"></v-chip>
                                 </div>
-                            </template> -->
+                            </template>
                             <!-- <template v-slot:item.action="{ item }">
                                 <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
                                     @click="EmergencyTransferGoldInfo(item)"></v-icon>
                             </template> -->
+                            <template v-slot:bottom>
+                                <div class="text-center pt-2">
+                                    <v-pagination v-model="currentPage" :length="totalPages"
+                                        :total-visible="4"></v-pagination>
+                                </div>
+                            </template>
                         </v-data-table>
                     </v-card>
                 </v-card-text>
@@ -104,6 +113,7 @@
 import { router } from '@/plugins/router';
 import WalletService from '@/services/wallet/wallet';
 import { onMounted, ref } from 'vue';
+import { debounce } from 'lodash'
 
 
 const errorMsg = ref('');
@@ -119,12 +129,8 @@ const EmergencyTransferGoldHeader = ref([
         key: 'sender.lastName',
     },
     {
-        title: 'نام گیرنده',
-        key: 'reciever.firstName',
-    },
-    {
-        title: 'نام خانوادگی گیرنده',
-        key: 'reciever.lastName',
+        title: 'کد ملی گیرنده',
+        key: 'reciever',
     },
     {
         title: 'میزان طلا (گرم)',
@@ -142,13 +148,14 @@ const EmergencyTransferGoldHeader = ref([
         title: 'وضعیت',
         key: 'status'
     },
-    {
-        title: 'فعالیت',
-        key: 'action'
-    },
 ]);
-const EmergencyTransferGoldSearch = ref();
+const currentPage = ref(1);
+const itemsPerPageOptions = ref([10, 25]);
+const itemsPerPage = ref(50);
+const totalItems = ref(0);
+const EmergencyTransferGoldSearch = ref('');
 const EmergencyTransferGoldData = ref();
+const totalPages = ref(1);
 const filter = ref({
     firstName: '',
     lastName: '',
@@ -171,8 +178,15 @@ const filter = ref({
 const GetEmergencyTransferGoldList = async () => {
     try {
         EmergencyTransferGoldLoading.value = true;
-        const response = await WalletService.EmergencyTransferList();
+        const response = await WalletService.EmergencyTransferList({
+            page: currentPage.value,
+            perPage: itemsPerPage.value,
+            search: EmergencyTransferGoldSearch.value,
+        });
+        totalItems.value = response.totalItem;
         EmergencyTransferGoldData.value = response.data;
+        totalPages.value = Math.ceil(totalItems.value / itemsPerPage.value)
+        // EmergencyTransferGoldData.value = response.data;
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -212,6 +226,23 @@ const validateWeight = [
     (v) => !!v,
     (v) => /^\d+(\.\d{1,3})?$/.test(v),
 ];
+
+const handleOptionsChange = (options) => {
+    currentPage.value = options.page;
+    itemsPerPage.value = options.itemsPerPage;
+    GetEmergencyTransferGoldList();
+};
+
+watch([currentPage, itemsPerPage], () => {
+    GetEmergencyTransferGoldList();
+});
+
+watch(
+    EmergencyTransferGoldSearch,
+    debounce(() => {
+        GetEmergencyTransferGoldList();
+    }, 1000)
+)
 
 onMounted(() => {
     GetEmergencyTransferGoldList();

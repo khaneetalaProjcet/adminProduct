@@ -84,7 +84,7 @@ const hasPermission = (routeName) => {
   </VerticalNavGroup>
 
   <VerticalNavSectionTitle
-    v-if="hasPermission('AccountingTrade') || hasPermission('AccountingSellTrade') || hasPermission('goldboxBuy') || hasPermission('goldboxSell') || hasPermission('remiitanceSell') || hasPermission('remiitanceBuy') || hasPermission('inpersonBuy') || hasPermission('inpersonSell') || hasPermission('walletView') || hasPermission('withdrawWallet') || hasPermission('depositWallet')"
+    v-if="hasPermission('AccountingTrade') || hasPermission('AccountingSellTrade') || hasPermission('goldboxBuy') || hasPermission('goldboxSell') || hasPermission('remiitanceSell') || hasPermission('remiitanceBuy') || hasPermission('inpersonBuy') || hasPermission('inpersonSell') || hasPermission('walletView') || hasPermission('withdrawWallet') || hasPermission('depositWallet') || hasPermission('AccountingEmergencyTransfer')"
     :item="{
       heading: 'حسابداری',
     }" />
@@ -189,7 +189,7 @@ const hasPermission = (routeName) => {
 
 
 
-  <VerticalNavGroup v-if="hasPermission('AccountingTransfer')" :item="{
+  <VerticalNavGroup v-if="hasPermission('AccountingTransfer') || hasPermission('AccountingEmergencyTransfer')" :item="{
     title: 'انتقال',
     icon: 'ri-file-transfer-line',
   }">
@@ -200,7 +200,7 @@ const hasPermission = (routeName) => {
       to: '/AccountingTransfer'
     }" />
     <VerticalNavLink v-if="hasPermission('AccountingEmergencyTransfer')" :item="{
-      title: 'انتقال طلا',
+      title: 'انتقال اضطراری',
       icon: 'ri-file-transfer-line',
       href: '#',
       to: '/AccountingEmergencyTransfer'
