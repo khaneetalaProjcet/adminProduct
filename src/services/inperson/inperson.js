@@ -116,6 +116,12 @@ const InPersonService = {
         return response.data;
     },
 
+    async SubmitFilterUsegoldInvoice(InvoiceForm) {
+        const body = JSON.stringify(InvoiceForm);
+        const response = await ReportTemplate.post(`/report/analyze/report/branches`, body);
+        return response.data
+    },
+
 }
 
 

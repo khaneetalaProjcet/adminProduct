@@ -52,15 +52,18 @@
                     :rules="validateWeight"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.admin" label="ادمین" density="compact"
+                  <!-- <v-select v-model="filter.branch" :items="branches" label="شعبه ها" variant="outlined"
+                    item-title="name" item-value="id" @update:modelValue="defineSellers"></v-select> -->
+                  <v-text-field v-model="filter.branch" label="شعبه" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
+                  <!-- <v-select v-model="filter.seller" :items="seller" label="کد فروشنده" variant="outlined"
+                    item-title="code" item-value="id" v-if="filter.branch"></v-select> -->
+                  <v-text-field v-model="filter.seller" label="فروشنده" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
-                <v-col md="6" class="d-none d-md-flex">
-                </v-col>
+                <v-col cols="6" class="d-none d-md-flex"></v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
                     <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('pending')">به
@@ -70,7 +73,8 @@
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" :disabled="pendingExportExcel" @click="exportExcel"
+                      :loading="exportLoading" block>خروجی اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -142,25 +146,29 @@
                     :rules="validateWeight"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.admin" label="ادمین" density="compact"
+                  <!-- <v-select v-model="filter.branch" :items="branches" label="شعبه ها" variant="outlined"
+                    item-title="name" item-value="id" @update:modelValue="defineSellers"></v-select> -->
+                  <v-text-field v-model="filter.branch" label="شعبه" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
+                  <!-- <v-select v-model="filter.seller" :items="seller" label="کد فروشنده" variant="outlined"
+                    item-title="code" item-value="id" v-if="filter.branch"></v-select> -->
+                  <v-text-field v-model="filter.seller" label="فروشنده" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
-                <v-col md="6" class="d-none d-md-flex">
-                </v-col>
+                <v-col cols="6" class="d-none d-md-flex"></v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('pending')">به
+                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('completed')">به
                       روز
                       رسانی</v-btn>
                   </div>
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" :disabled="completeExportExcel" @click="exportExcel"
+                      :loading="exportLoading" block>خروجی اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -230,25 +238,29 @@
                     :rules="validateWeight"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.admin" label="ادمین" density="compact"
+                  <!-- <v-select v-model="filter.branch" :items="branches" label="شعبه ها" variant="outlined"
+                    item-title="name" item-value="id" @update:modelValue="defineSellers"></v-select> -->
+                  <v-text-field v-model="filter.branch" label="شعبه" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
+                  <!-- <v-select v-model="filter.seller" :items="seller" label="کد فروشنده" variant="outlined"
+                    item-title="code" item-value="id" v-if="filter.branch"></v-select> -->
+                  <v-text-field v-model="filter.seller" label="فروشنده" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
-                <v-col md="6" class="d-none d-md-flex">
-                </v-col>
+                <v-col cols="6" class="d-none d-md-flex"></v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('pending')">به
+                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('failed')">به
                       روز
                       رسانی</v-btn>
                   </div>
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" :disabled="failedExportExcel" @click="exportExcel"
+                      :loading="exportLoading" block>خروجی اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -342,6 +354,12 @@
           <v-divider></v-divider>
           <v-col cols="12" md="6" class="my-1">
             <div class="d-flex align-items-center">
+              <p>شعبه:</p>
+              <p class="mx-2">{{ UseGoldDetail.seller.branch.name }}</p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6" class="my-1">
+            <div class="d-flex align-items-center">
               <p>فروشنده:</p>
               <p class="mx-2">{{ UseGoldDetail.seller.firstName }} {{ UseGoldDetail.seller.lastName }}</p>
             </div>
@@ -369,6 +387,7 @@
 
 <script setup>
 import { router } from '@/plugins/router';
+import InPersonService from '@/services/inperson/inperson';
 import WalletService from '@/services/wallet/wallet';
 import { onMounted, ref } from 'vue';
 
@@ -385,6 +404,10 @@ const PendingUseGoldHeader = ref([
   {
     title: 'نام خانوادگی',
     key: 'user.lastName',
+  },
+  {
+    title: 'کد ملی',
+    key: 'user.nationalCode',
   },
   {
     title: 'میزان طلا (گرم)',
@@ -414,6 +437,12 @@ const PendingUseGoldHeader = ref([
 const PendingUseGoldSearch = ref();
 const PendingUseGoldData = ref();
 const CompleteUseGoldSearch = ref();
+const completeExportExcel = ref(true);
+const failedExportExcel = ref(true);
+const pendingExportExcel = ref(true);
+const exportLink = ref('');
+const exportLoading = ref(false);
+const branches = ref([]);
 const CompleteUseGoldHeader = ref([
   {
     title: 'نام',
@@ -422,6 +451,10 @@ const CompleteUseGoldHeader = ref([
   {
     title: 'نام خانوادگی',
     key: 'user.lastName',
+  },
+  {
+    title: 'کد ملی',
+    key: 'user.nationalCode',
   },
   {
     title: 'میزان طلا (گرم)',
@@ -448,6 +481,8 @@ const CompleteUseGoldHeader = ref([
     key: 'action'
   }
 ]);
+const seller = ref([]);
+const sellerLoading = ref(false);
 const CompleteUseGoldData = ref();
 const CompleteUseGoldLoading = ref();
 const UseGoldDetail = ref();
@@ -461,6 +496,10 @@ const failedUseGoldHeader = ref([
   {
     title: 'نام خانوادگی',
     key: 'user.lastName',
+  },
+  {
+    title: 'کد ملی',
+    key: 'user.nationalCode',
   },
   {
     title: 'میزان طلا (گرم)',
@@ -497,17 +536,18 @@ const filter = ref({
   type: 'buy',
   goldPrice: '',
   goldWeight: '',
-  admin: '',
-  accounter: '',
   startDate: '',
   startTime: '',
   endDate: '',
   endTime: '',
+  branch: '',
+  seller: '',
   invoiceId: '',
   status: '',
 });
 const failedUseGoldData = ref();
 const failedUseGoldLoading = ref();
+const branchLoading = ref();
 
 const GetPendingUseGoldList = async () => {
   try {
@@ -592,43 +632,97 @@ const formatNumber = (num) => {
 };
 
 const SubmitFilter = async (status) => {
-  console.log(status);
-
-  // try {
-  //     if (status == 'pending') {
-  //         PendingAccountingReviewLoading.value = true;
-  //     } else if (status == 'completed') {
-  //         CompleteAccountingReviewLoading.value = true;
-  //     } else if (status == 'failed') {
-  //         rejectAccountingReviewLoading.value = true;
-  //     }
-  //     filter.value.status = status;
-  //     const response = await InPersonService.SubmitFilterInvoice(filter.value);
-  //     if (status == 'pending') {
-  //         PendingAccountingReviewData.value = response.data;
-  //     } else if (status == 'completed') {
-  //         CompleteAccountingReviewData.value = response.data;
-  //     } else if (status == 'failed') {
-  //         rejectAccountingReviewData.value = response.data;
-  //     }
-  //     return response
-  // } catch (error) {
-  //     if (error.response.status == 401) {
-  //         localStorage.clear();
-  //         router.replace("/login");
-  //     }
-  //     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-  //     alertError.value = true;
-  //     setTimeout(() => {
-  //         alertError.value = false;
-  //     }, 10000)
-  // } finally {
-  //     PendingAccountingReviewLoading.value = false;
-  //     CompleteAccountingReviewLoading.value = false;
-  //     rejectAccountingReviewLoading.value = false;
-  // }
+  try {
+    if (status == 'pending') {
+      PendingUseGoldLoading.value = true;
+    } else if (status == 'completed') {
+      CompleteUseGoldLoading.value = true;
+    } else if (status == 'failed') {
+      failedUseGoldLoading.value = true;
+    }
+    filter.value.status = status;
+    const response = await InPersonService.SubmitFilterUsegoldInvoice(filter.value);
+    exportLink.value = response.link;
+    if (status == 'pending') {
+      pendingExportExcel.value = false;
+      PendingUseGoldData.value = response.data;
+    } else if (status == 'completed') {
+      completeExportExcel.value = false;
+      CompleteUseGoldData.value = response.data;
+    } else if (status == 'failed') {
+      failedExportExcel.value = false;
+      failedUseGoldData.value = response.data;
+    }
+    return response
+  } catch (error) {
+    if (error.response.status == 401) {
+      localStorage.clear();
+      router.replace("/login");
+    }
+    errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+    alertError.value = true;
+    setTimeout(() => {
+      alertError.value = false;
+    }, 10000)
+  } finally {
+    PendingUseGoldLoading.value = false;
+    CompleteUseGoldLoading.value = false;
+    failedUseGoldLoading.value = false;
+  }
 }
 
+const defineSellers = async (id) => {
+  if (filter.value.seller != '') {
+    filter.value.seller = '';
+  }
+  try {
+    sellerLoading.value = true;
+    const response = await InPersonService.GetSellers(id);
+    seller.value = response.data;
+    return response;
+  } catch (error) {
+    if (error.response.status == 401) {
+      localStorage.clear();
+      router.replace("/Login");
+    }
+    errorMsg.value = error.response.data.msg || "خطایی رخ داده است!";
+    alertError.value = true;
+    setTimeout(() => {
+      alertError.value = false;
+    }, 5000);
+  } finally {
+    sellerLoading.value = false;
+  }
+};
+
+const GetBranches = async () => {
+  try {
+    branchLoading.value = true;
+    const response = await InPersonService.GetBranches();
+    branches.value = response.data;
+    return response;
+  } catch (error) {
+    if (error.response.status == 401) {
+      localStorage.clear();
+      router.replace("/Login");
+    }
+    errorMsg.value = error.response.data.msg || "خطایی رخ داده است!";
+    alertError.value = true;
+    setTimeout(() => {
+      alertError.value = false;
+    }, 5000);
+  } finally {
+    branchLoading.value = false;
+  }
+};
+
+const exportExcel = async () => {
+  exportLoading.value = true;
+  window.location.href = exportLink.value;
+  setTimeout(() => {
+    exportLoading.value = false;
+  }, 5000);
+}
 
 
 const nationalCodeRules = [
@@ -658,8 +752,6 @@ const validateWeight = [
 const changeTabs = () => {
   filter.value.firstName = '';
   filter.value.lastName = '';
-  filter.value.accounter = '';
-  filter.value.admin = '';
   filter.value.startDate = '';
   filter.value.endTime = '';
   filter.value.goldPrice = '';
@@ -669,14 +761,16 @@ const changeTabs = () => {
   filter.value.phoneNumber = '';
   filter.value.startTime = '';
   filter.value.endDate = '';
+  filter.value.branch = '';
+  filter.value.seller = '';
 }
-
 
 
 onMounted(() => {
   GetPendingUseGoldList();
   GetCompleteUseGoldList();
   GetfailedUseGoldList();
+  GetBranches();
 })
 
 

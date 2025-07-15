@@ -88,11 +88,75 @@
             <persian-date-picker type="time" v-model="filter.endTime" placeholder="تا زمان" format="HH:mm:ss"
               class="custom-datepicker"></persian-date-picker>
           </v-col>
-          <v-col cols="12" class="my-2">
-            <div class="total-box">
+          <v-col cols="12">
+            <div class="d-flex justify-end">
+              <v-btn class="px-15" color="#b08c4d" @click="reportWithHour">محاسبه</v-btn>
+            </div>
+          </v-col>
+          <v-col cols="12" class="my-4">
+            <v-row class="total-box">
+              <v-col cols="12" md="4">
+                <div class="d-flex justify-space-between font-weight-bold">
+                  <span>دارایی کل :</span>
+                  <v-progress-circular color="#d4af37" indeterminate :size="20"
+                    v-if="statisticLoading"></v-progress-circular>
+                  <span v-else>{{ (+filterStatistics.allGoldWeight + +filterStatistics.oldWeight).toFixed(5) }}
+                    گرم</span>
+                </div>
+              </v-col>
+              <v-col cols="12" md="4" class="middle-border">
+                <div class="d-flex justify-space-between">
+                  <span>دارایی احراز شده ها :</span>
+                  <v-progress-circular color="#d4af37" indeterminate :size="20"
+                    v-if="statisticLoading"></v-progress-circular>
+                  <span v-else>{{ (+filterStatistics.allGoldWeight).toFixed(5) }} گرم</span>
+                </div>
+              </v-col>
+              <v-col cols="12" md="4">
+                <div class="d-flex justify-space-between">
+                  <span>دارایی احراز نشده ها :</span>
+                  <v-progress-circular color="#d4af37" indeterminate :size="20"
+                    v-if="statisticLoading"></v-progress-circular>
+                  <span v-else>{{ (+filterStatistics.oldWeight).toFixed(5) }} گرم</span>
+                </div>
+              </v-col>
+            </v-row>
+            <!-- <div class="total-box">
               <span>موجودی کل صندوق طلا: </span>
               <span>{{ (+filterStatistics.allGoldWeight).toFixed(5) }}</span>
-            </div>
+            </div> -->
+          </v-col>
+          <v-col cols="12" class="my-4">
+            <v-row class="total-box-light">
+              <v-col cols="12" md="4">
+                <div class="d-flex justify-space-between font-weight-bold">
+                  <span>کل مبلغ درگاه بانک :</span>
+                  <v-progress-circular color="#d4af37" indeterminate :size="20"
+                    v-if="statisticLoading"></v-progress-circular>
+                  <span v-else>{{ }} تومان</span>
+                </div>
+              </v-col>
+              <v-col cols="12" md="4" class="middle-border">
+                <div class="d-flex justify-space-between">
+                  <span>شارژ کیف پول :</span>
+                  <v-progress-circular color="#d4af37" indeterminate :size="20"
+                    v-if="statisticLoading"></v-progress-circular>
+                  <span v-else>{{ }} تومان</span>
+                </div>
+              </v-col>
+              <v-col cols="12" md="4">
+                <div class="d-flex justify-space-between">
+                  <span>خرید طلا :</span>
+                  <v-progress-circular color="#d4af37" indeterminate :size="20"
+                    v-if="statisticLoading"></v-progress-circular>
+                  <span v-else>{{ }} تومان</span>
+                </div>
+              </v-col>
+            </v-row>
+            <!-- <div class="total-box">
+              <span>موجودی کل صندوق طلا: </span>
+              <span>{{ (+filterStatistics.allGoldWeight).toFixed(5) }}</span>
+            </div> -->
           </v-col>
           <v-col cols="12" md="6" class="my-2">
             <div class="d-flex justify-space-between">
@@ -140,11 +204,6 @@
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="statisticLoading"></v-progress-circular>
               <p v-else>{{ filterStatistics.all }} گرم</p>
-            </div>
-          </v-col>
-          <v-col cols="12">
-            <div class="d-flex justify-end">
-              <v-btn class="px-8" color="#b08c4d" @click="reportWithHour">محاسبه</v-btn>
             </div>
           </v-col>
         </v-row>
@@ -289,11 +348,11 @@ const filterStatistics = ref({
   REMMITANCEBought: '-',
   REMMITANCESold: '-',
   deposit: '-',
-  allGoldWeight: null
+  allGoldWeight: null,
+  oldWeight: null,
 })
 const errorMsg = ref('');
 const alertError = ref(false);
-
 const MountlyBuychartOptions = ref({
   chart: {
     fontFamily: "YekanBakhFaNum",
@@ -466,6 +525,7 @@ const reportWithHour = async () => {
     filterStatistics.value.phoneBought = response.data.phoneBought;
     filterStatistics.value.phoneSold = response.data.phoneSold;
     filterStatistics.value.allGoldWeight = response.data.allGoldWeight;
+    filterStatistics.value.oldWeight = response.data.oldWeight;
     return response
   } catch (error) {
     if (error.response.status == 401) {
@@ -534,10 +594,20 @@ onMounted(() => {
 
 .total-box {
   background-color: rgba(255, 196, 0, 0.2);
+  box-shadow: 0px 8px 10px -9px rgba(0, 0, 0, 0.2);
   padding: 0.5rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   border-radius: 8px;
+}
+
+.total-box-light {
+  background-color: rgba(255, 0, 0, 0.2);
+  box-shadow: 0px 8px 10px -9px rgba(0, 0, 0, 0.2);
+  padding: 0.5rem;
+  border-radius: 8px;
+}
+
+.middle-border {
+  border-right: 2px solid #d4d4d4;
+  border-left: 2px solid #d4d4d4;
 }
 </style>
