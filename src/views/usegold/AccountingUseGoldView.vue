@@ -6,6 +6,7 @@
           <v-tab value="one">نامشخص</v-tab>
           <v-tab value="two">موفق</v-tab>
           <v-tab value="three">ناموفق</v-tab>
+          <v-tab value="four">اصلاحیه</v-tab>
         </v-tabs>
       </v-col>
       <v-col cols="12">
@@ -290,6 +291,30 @@
                 </v-data-table>
               </v-card>
             </v-tabs-window-item>
+            <v-tabs-window-item value="four">
+              <v-card title="تراکنش های استفاده اصلاح شده">
+
+                <template v-slot:text>
+                  <ul class="listGuide">
+                    <li>تراکنش های اصلاحی، تراکنش هایی هستند که به اشتباه ثبت شده اند و ادمین سند اصلاح برای آنها ثبت
+                      میکند</li>
+                  </ul>
+                </template>
+                <v-data-table :headers="ReverseUseGoldHeader" :items="ReverseUseGoldData"
+                  :loading="ReverseUseGoldLoading">
+
+                  <!-- <template v-slot:item.action="{ item }">
+                    <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"></v-icon>
+                  </template> -->
+
+                  <template v-slot:item.status="{ item }">
+                    <div>
+                      <v-chip text="اصلاحی" color="#ff0000" size="small"></v-chip>
+                    </div>
+                  </template>
+                </v-data-table>
+              </v-card>
+            </v-tabs-window-item>
           </v-tabs-window>
         </v-card-text>
       </v-col>
@@ -485,6 +510,54 @@ const seller = ref([]);
 const sellerLoading = ref(false);
 const CompleteUseGoldData = ref();
 const CompleteUseGoldLoading = ref();
+const ReverseUseGoldHeader = ref([
+  {
+    title: 'نام',
+    key: 'user.firstName',
+  },
+  {
+    title: 'نام خانوادگی',
+    key: 'user.lastName',
+  },
+  {
+    title: 'کد ملی',
+    key: 'user.nationalCode',
+  },
+  {
+    title: 'میزان طلا (گرم)',
+    key: 'goldWeight',
+  },
+  {
+    title: 'قیمت لحظه ای (تومان)',
+    key: 'goldPrice',
+  },
+  {
+    title: 'اصلاح کننده',
+    key: 'reverser',
+  },
+  {
+    title: 'صادر کننده',
+    key: 'adminId',
+  },
+  {
+    title: 'تاریخ',
+    key: 'date',
+  },
+  {
+    title: 'زمان',
+    key: 'time',
+  },
+  {
+    title: 'وضعیت',
+    key: 'status'
+  },
+  // {
+  //   title: 'فعالیت',
+  //   key: 'action'
+  // }
+]);
+const ReverseUseGoldData = ref();
+const ReverseUseGoldLoading = ref();
 const UseGoldDetail = ref();
 const UseGoldDialog = ref(false);
 const failedUseGoldSearch = ref();
@@ -609,6 +682,27 @@ const GetfailedUseGoldList = async () => {
     }, 10000)
   } finally {
     failedUseGoldLoading.value = false;
+  }
+};
+
+const GetReverseUseGoldList = async () => {
+  try {
+    ReverseUseGoldLoading.value = true;
+    const response = await WalletService.UseGoldList('reversed');
+    ReverseUseGoldData.value = response.data;
+    return response
+  } catch (error) {
+    if (error.response.status == 401) {
+      localStorage.clear();
+      router.replace("/login");
+    }
+    errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+    alertError.value = true;
+    setTimeout(() => {
+      alertError.value = false;
+    }, 10000)
+  } finally {
+    ReverseUseGoldLoading.value = false;
   }
 };
 
@@ -770,6 +864,7 @@ onMounted(() => {
   GetPendingUseGoldList();
   GetCompleteUseGoldList();
   GetfailedUseGoldList();
+  GetReverseUseGoldList();
   GetBranches();
 })
 
