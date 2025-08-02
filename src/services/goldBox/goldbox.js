@@ -7,6 +7,11 @@ import GoldBoxTemplate from "./api";
 
 
 const GoldBoxService = {
+    async CartToCartList(item) {
+        const response = await QueryTemplate.get(`/buy/transport/${item}`);
+        return response.data
+    },
+
     async BuyGoldBox(item) {
         const response = await QueryTemplate.get(`/admin/transactions/buy?type=${item}`);
         return response.data

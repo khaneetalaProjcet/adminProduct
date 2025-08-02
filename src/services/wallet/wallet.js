@@ -1,6 +1,7 @@
 import ReportTemplate from "../report/api";
 import ServerTemplate from "../server/api";
 import QueryTemplate from "../template/api";
+import UserTemplate from "../user/api";
 import WalletTemplate from "./api";
 
 
@@ -124,7 +125,47 @@ const WalletService = {
     async EmergencyTransferList(params) {
         const response = await ServerTemplate.get(`old/transmission/?page=${params.page}&perPage=${params.perPage}&search=${params.search}`);
         return response.data
-    }
+    },
+
+    async submitCharge(nationalCode, detail) {
+        const body = JSON.stringify(detail);
+        const response = await UserTemplate.post(`/admin/wallet/charge/${nationalCode}`, body);
+        return response.data
+    },
+
+    async chargeList() {
+        const response = await QueryTemplate.get(`/wallet/charge`);
+        return response.data
+    },
+
+    async returnChargeList() {
+        const response = await QueryTemplate.get(`/wallet/charge/return`);
+        return response.data
+    },
+
+    async submitAccountingCharge(detail, status) {
+        const body = JSON.stringify({
+            status: status,
+            description: detail.description,
+        });
+        const response = await UserTemplate.post(`/admin/wallet/charge/change/${detail.id}`, body);
+        return response.data
+    },
+
+    async submitWithdrawCharge(detail) {
+        const body = JSON.stringify({
+            status: 4,
+            invoiceId: detail.invoiceId,
+        });
+        const response = await UserTemplate.post(`/admin/wallet/charge/change/${detail.id}`, body);
+        return response.data
+    },
+
+        async sumbitUpdateWallet(detail) {
+        const body = JSON.stringify(detail);
+        const response = await UserTemplate.post(`/admin/wallet/charge/update/${detail.id}`, body);
+        return response.data
+    },
 }
 
 

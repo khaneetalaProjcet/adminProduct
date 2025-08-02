@@ -252,6 +252,30 @@ export const routes = [
         component: () => import('@/views/transfer/AccountingEmergencyTransferView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/cartToCart',
+        name: 'cartToCart',
+        component: () => import('@/views/goldbox/cartToCartView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/depositWalletPayCart',
+        name: 'depositWalletPayCart',
+        component: () => import('@/views/wallet/depositWalletPayCart.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/depositeWalletPayCartAccounting',
+        name: 'depositeWalletPayCartAccounting',
+        component: () => import('@/views/wallet/depositeWalletPayCartAccounting.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/returnWallet',
+        name: 'returnWallet',
+        component: () => import('@/views/wallet/returnWalletView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {

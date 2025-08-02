@@ -107,10 +107,11 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavGroup v-if="hasPermission('goldboxBuy') || hasPermission('goldboxSell')" :item="{
-    title: 'معاملات آنلاین',
-    icon: 'ri-line-chart-line',
-  }">
+  <VerticalNavGroup v-if="hasPermission('goldboxBuy') || hasPermission('goldboxSell') || hasPermission('cartToCart')"
+    :item="{
+      title: 'معاملات آنلاین',
+      icon: 'ri-line-chart-line',
+    }">
     <VerticalNavLink v-if="hasPermission('goldboxBuy')" :item="{
       title: 'خرید آنلاین',
       icon: 'ri-bar-chart-line',
@@ -122,6 +123,12 @@ const hasPermission = (routeName) => {
       icon: 'ri-bar-chart-grouped-line',
       href: '#',
       to: '/goldboxSell'
+    }" />
+    <VerticalNavLink v-if="hasPermission('cartToCart')" :item="{
+      title: 'کارت به کارت',
+      icon: 'ri-bank-card-line',
+      href: '#',
+      to: '/cartToCart'
     }" />
   </VerticalNavGroup>
 
@@ -161,9 +168,39 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup>
 
+  <VerticalNavGroup v-if="hasPermission('AccountingTransfer') || hasPermission('AccountingEmergencyTransfer')" :item="{
+    title: 'انتقال',
+    icon: 'ri-file-transfer-line',
+  }">
+    <VerticalNavLink v-if="hasPermission('AccountingTransfer')" :item="{
+      title: 'انتقال طلا',
+      icon: 'ri-file-transfer-line',
+      href: '#',
+      to: '/AccountingTransfer'
+    }" />
+    <VerticalNavLink v-if="hasPermission('AccountingEmergencyTransfer')" :item="{
+      title: 'انتقال اضطراری',
+      icon: 'ri-file-transfer-line',
+      href: '#',
+      to: '/AccountingEmergencyTransfer'
+    }" />
+  </VerticalNavGroup>
+
+  <VerticalNavGroup v-if="hasPermission('AccountingUseGold')" :item="{
+    title: 'استفاده',
+    icon: 'ri-diamond-ring-line',
+  }">
+    <VerticalNavLink v-if="hasPermission('AccountingUseGold')" :item="{
+      title: 'استفاده از طلا',
+      icon: 'ri-diamond-ring-line',
+      href: '#',
+      to: '/AccountingUseGold'
+    }" />
+  </VerticalNavGroup>
 
   <VerticalNavGroup
-    v-if="hasPermission('walletView') || hasPermission('withdrawWallet') || hasPermission('depositWallet')" :item="{
+    v-if="hasPermission('walletView') || hasPermission('withdrawWallet') || hasPermission('depositWallet') || hasPermission('depositeWalletPayCartAccounting')"
+    :item="{
       title: 'کیف پول',
       icon: 'ri-wallet-3-line',
     }">
@@ -185,43 +222,13 @@ const hasPermission = (routeName) => {
       href: '#',
       to: '/depositWallet'
     }" />
-  </VerticalNavGroup>
-
-
-
-  <VerticalNavGroup v-if="hasPermission('AccountingTransfer') || hasPermission('AccountingEmergencyTransfer')" :item="{
-    title: 'انتقال',
-    icon: 'ri-file-transfer-line',
-  }">
-    <VerticalNavLink v-if="hasPermission('AccountingTransfer')" :item="{
-      title: 'انتقال طلا',
-      icon: 'ri-file-transfer-line',
+    <VerticalNavLink v-if="hasPermission('depositeWalletPayCartAccounting')" :item="{
+      title: 'شارژ کیف پول',
+      icon: 'ri-bank-line',
       href: '#',
-      to: '/AccountingTransfer'
-    }" />
-    <VerticalNavLink v-if="hasPermission('AccountingEmergencyTransfer')" :item="{
-      title: 'انتقال اضطراری',
-      icon: 'ri-file-transfer-line',
-      href: '#',
-      to: '/AccountingEmergencyTransfer'
+      to: '/depositeWalletPayCartAccounting'
     }" />
   </VerticalNavGroup>
-
-
-  <VerticalNavGroup v-if="hasPermission('AccountingUseGold')" :item="{
-    title: 'استفاده',
-    icon: 'ri-diamond-ring-line',
-  }">
-    <VerticalNavLink v-if="hasPermission('AccountingUseGold')" :item="{
-      title: 'استفاده از طلا',
-      icon: 'ri-diamond-ring-line',
-      href: '#',
-      to: '/AccountingUseGold'
-    }" />
-  </VerticalNavGroup>
-
-
-
 
   <VerticalNavSectionTitle
     v-if="hasPermission('goldboxTrade') || hasPermission('remittanceTrade') || hasPermission('inPersonTrade')" :item="{
@@ -310,6 +317,25 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup>
 
+
+  <VerticalNavGroup v-if="hasPermission('depositWalletPayCart') || hasPermission('returnWallet')" :item="{
+    title: 'کیف پول',
+    icon: 'ri-wallet-3-line',
+  }">
+    <VerticalNavLink v-if="hasPermission('depositWalletPayCart')" :item="{
+      title: 'شارژ کیف پول',
+      icon: 'ri-wallet-3-line',
+      href: '#',
+      to: '/depositWalletPayCart'
+    }" />
+    <VerticalNavLink v-if="hasPermission('returnWallet')" :item="{
+      title: 'عودت کیف پول',
+      icon: 'ri-wallet-3-line',
+      href: '#',
+      to: '/returnWallet'
+    }" />
+  </VerticalNavGroup>
+
   <VerticalNavSectionTitle v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity')" :item="{
     heading: 'مدیریت',
   }" />
@@ -373,7 +399,6 @@ const hasPermission = (routeName) => {
     heading: 'سرور',
   }" />
 
-
   <VerticalNavGroup v-if="hasPermission('serverMonitor')" :item="{
     title: 'سرور',
     icon: 'ri-computer-line',
@@ -386,11 +411,9 @@ const hasPermission = (routeName) => {
     }" />
   </VerticalNavGroup>
 
-
   <VerticalNavSectionTitle v-if="hasPermission('TotalReport')" :item="{
     heading: 'گزارشات',
   }" />
-
 
   <VerticalNavGroup v-if="hasPermission('TotalReport') || hasPermission('Overview')" :item="{
     title: 'گزارشات',
