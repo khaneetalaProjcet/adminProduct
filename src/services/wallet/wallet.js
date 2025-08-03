@@ -161,10 +161,15 @@ const WalletService = {
         return response.data
     },
 
-        async sumbitUpdateWallet(detail) {
+    async sumbitUpdateWallet(detail) {
         const body = JSON.stringify(detail);
         const response = await UserTemplate.post(`/admin/wallet/charge/update/${detail.id}`, body);
         return response.data
+    },
+
+    async GetAccountingWallet(params, status) {
+        const response = await QueryTemplate.get(`wallet/charge/all?page=${params.page}&perPage=${params.perPage}&search=${params.search}&${status}`);
+        return response.data;
     },
 }
 

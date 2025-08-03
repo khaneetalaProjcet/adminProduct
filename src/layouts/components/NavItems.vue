@@ -199,7 +199,7 @@ const hasPermission = (routeName) => {
   </VerticalNavGroup>
 
   <VerticalNavGroup
-    v-if="hasPermission('walletView') || hasPermission('withdrawWallet') || hasPermission('depositWallet') || hasPermission('depositeWalletPayCartAccounting')"
+    v-if="hasPermission('walletView') || hasPermission('withdrawWallet') || hasPermission('depositWallet') || hasPermission('depositeWalletPayCartAccounting') || hasPermission('returnWallet') || hasPermission('walletChargeAccounting')"
     :item="{
       title: 'کیف پول',
       icon: 'ri-wallet-3-line',
@@ -224,9 +224,21 @@ const hasPermission = (routeName) => {
     }" />
     <VerticalNavLink v-if="hasPermission('depositeWalletPayCartAccounting')" :item="{
       title: 'شارژ کیف پول',
-      icon: 'ri-bank-line',
+      icon: 'ri-refund-line',
       href: '#',
       to: '/depositeWalletPayCartAccounting'
+    }" />
+    <VerticalNavLink v-if="hasPermission('returnWallet')" :item="{
+      title: 'عودت کیف پول',
+      icon: 'ri-refund-line',
+      href: '#',
+      to: '/returnWallet'
+    }" />
+    <VerticalNavLink v-if="hasPermission('walletChargeAccounting')" :item="{
+      title: 'حسابداری کیف پول',
+      icon: 'ri-refund-line',
+      href: '#',
+      to: '/walletChargeAccounting'
     }" />
   </VerticalNavGroup>
 
@@ -318,7 +330,7 @@ const hasPermission = (routeName) => {
   </VerticalNavGroup>
 
 
-  <VerticalNavGroup v-if="hasPermission('depositWalletPayCart') || hasPermission('returnWallet')" :item="{
+  <VerticalNavGroup v-if="hasPermission('depositWalletPayCart')" :item="{
     title: 'کیف پول',
     icon: 'ri-wallet-3-line',
   }">
@@ -327,12 +339,6 @@ const hasPermission = (routeName) => {
       icon: 'ri-wallet-3-line',
       href: '#',
       to: '/depositWalletPayCart'
-    }" />
-    <VerticalNavLink v-if="hasPermission('returnWallet')" :item="{
-      title: 'عودت کیف پول',
-      icon: 'ri-wallet-3-line',
-      href: '#',
-      to: '/returnWallet'
     }" />
   </VerticalNavGroup>
 

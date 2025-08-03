@@ -174,13 +174,19 @@
                     </v-col>
                     <v-col cols="6" class="my-1">
                         <div class="d-flex align-items-center">
-                            <p>شماره کارت :</p>
-                            <p class="mx-2">{{ chargeWalletDetail?.CartNumber }}</p>
+                            <p>شماره کارت مقصد :</p>
+                            <p class="mx-2">{{ chargeWalletDetail?.destCartNumber }}</p>
                         </div>
                     </v-col>
                     <v-col cols="6" class="my-1">
                         <div class="d-flex align-items-center">
-                            <p>وضعیت کارت : </p>
+                            <p>شماره کارت مبدا :</p>
+                            <p class="mx-2">{{ chargeWalletDetail?.CartNumber }}</p>
+                        </div>
+                    </v-col> 
+                    <v-col cols="6" class="my-1">
+                        <div class="d-flex align-items-center">
+                            <p>وضعیت کارت مبدا : </p>
                             <v-chip :text="chargeWalletDetail?.check == true ? 'احراز شده' : 'احراز نشده'"
                                 :color="chargeWalletDetail?.check == true ? '#15904f' : '#ff0000'"
                                 size="small"></v-chip>

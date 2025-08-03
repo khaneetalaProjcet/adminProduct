@@ -276,6 +276,12 @@ export const routes = [
         component: () => import('@/views/wallet/returnWalletView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/walletChargeAccounting',
+        name: 'walletChargeAccounting',
+        component: () => import('@/views/wallet/walletChargeAccountingView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {

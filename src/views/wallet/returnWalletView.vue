@@ -175,7 +175,7 @@
         <v-dialog v-model="updateReturnDialog" max-width="700" class="dialog">
             <v-card class="dialog-card">
                 <div class="k-dialog-title">
-                    <p>اطلاعات عودت</p>
+                    <p>به روز رسانی اطلاعات</p>
                 </div>
                 <div class="form-box">
                     <v-form ref="form" v-model="isValid" @submit.prevent="updateReturn">
@@ -185,11 +185,15 @@
                                     class="my-2"></v-text-field>
                             </v-col>
                             <v-col cols="6" class="my-2">
-                                <v-text-field v-model="updateDetail.CartNumber" label="شماره کارت"
+                                <v-text-field v-model="updateDetail.CartNumber" label="شماره کارت مبدا"
                                     class="my-2"></v-text-field>
                             </v-col>
                             <v-col cols="6" class="my-2">
                                 <v-text-field v-model="updateDetail.shebaNumber" label="شماره شبا"
+                                    class="my-2"></v-text-field>
+                            </v-col>
+                            <v-col cols="6" class="my-2">
+                                <v-text-field v-model="updateDetail.destCartNumber" label="شماره کارت مقصد"
                                     class="my-2"></v-text-field>
                             </v-col>
                             <v-col cols="6" class="my-2">

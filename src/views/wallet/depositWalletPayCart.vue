@@ -75,8 +75,14 @@
                                     :rules="[(v) => !!v || 'لطفا شماره پیگیری را وارد کنید']"></v-text-field>
                             </v-col>
                             <v-col cols="12" md="4">
+                                <v-select :item-props="destCartProps" :items="carts" item-value="cardNumber"
+                                    label="شماره کارت مقصد" v-model="depositDetail.destCartNumber"
+                                    :rules="[(v) => !!v || 'لطفا یک کارت انتخاب کنید']"></v-select>
+                            </v-col>
+                            <v-col md="4" class="d-none d-md-flex"></v-col>
+                            <v-col cols="12" md="4">
                                 <v-select :item-props="cartProps" :items="cartList" item-value="title"
-                                    label="شماره کارت" v-model="depositDetail.CartNumber"
+                                    label="شماره کارت مبدا" v-model="depositDetail.CartNumber"
                                     :rules="[(v) => !!v || 'لطفا یک کارت انتخاب کنید']"></v-select>
                             </v-col>
                             <v-col cols="12" md="4" v-if="depositDetail.CartNumber.id == 0">
@@ -108,8 +114,7 @@
             </div>
             <p>عملیات شارژ کیف پول با موفقیت انجام شد</p>
             <div class="d-flex justify-space-around mt-2 mb-7">
-                <v-btn text="بستن" class="pay-btn" color="#9D7E3B" block
-                    @click="closeChargeModal"></v-btn>
+                <v-btn text="بستن" class="pay-btn" color="#9D7E3B" block @click="closeChargeModal"></v-btn>
             </div>
         </v-card>
     </v-dialog>
@@ -131,6 +136,12 @@ const chargeModal = ref(false);
 const userDetail = ref({
     nationalCode: '',
 });
+const carts = ref([
+    {
+        owner: 'مطهر معصومی (کشاورزی)',
+        cardNumber: '6037701592564675',
+    }
+])
 const userInfo = ref({
     firstName: '',
     lastName: '',
@@ -146,6 +157,7 @@ const depositDetail = ref({
     time: '',
     invoiceId: '',
     CartNumber: '',
+    destCartNumber: '',
 });
 const otherCart = ref({
     cardNumber: "شماره کارت احراز نشده",
@@ -214,6 +226,13 @@ const cartProps = (item) => {
         subtitle: item.shebaNumber,
     }
 }
+
+const destCartProps = (item) => {
+    return {
+        title: item.cardNumber,
+        subtitle: item.owner,
+    }
+};
 
 const submitCharge = async () => {
     try {
