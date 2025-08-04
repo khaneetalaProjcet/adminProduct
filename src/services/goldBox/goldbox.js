@@ -12,8 +12,9 @@ const GoldBoxService = {
         return response.data
     },
 
-    async BuyGoldBox(item) {
-        const response = await QueryTemplate.get(`/admin/transactions/buy?type=${item}`);
+    async BuyGoldBox(params, item) {
+        console.log(params)
+        const response = await QueryTemplate.get(`/admin/transactions/buy?type=${item}&page=${params.page}&perPage=${params.perPage}&search=${params.search}`);
         return response.data
     },
 

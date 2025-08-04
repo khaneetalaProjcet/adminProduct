@@ -43,33 +43,25 @@
                     :rules="nationalCodeRules"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="searchFilter.goldPrice" label="قیمت طلا" density="compact"
+                  <v-text-field v-model="searchFilter.goldPrice" label="موجودی کیف پول" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
                   <v-text-field v-model="searchFilter.goldWeight" label="وزن طلا" density="compact" variant="outlined"
                     :rules="validateWeight"></v-text-field>
                 </v-col>
-                <v-col cols="6" md="3">
-                  <v-text-field v-model="searchFilter.admin" label="ادمین" density="compact"
-                    variant="outlined"></v-text-field>
-                </v-col>
-                <v-col cols="6" md="3">
-                  <v-text-field v-model="searchFilter.accounter" label="حسابدار" density="compact"
-                    variant="outlined"></v-text-field>
-                </v-col>
-                <v-col md="6" class="d-none d-md-flex">
-                </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('pending')">به
+                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" :loading="newUserFilterLoading" block
+                      @click="SubmitFilter('new')">به
                       روز
                       رسانی</v-btn>
                   </div>
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" :disabled="newExportExcel" @click="exportExcel"
+                      :loading="exportLoading" block>خروجی اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -152,33 +144,25 @@
                     :rules="nationalCodeRules"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="searchFilter.goldPrice" label="قیمت طلا" density="compact"
+                  <v-text-field v-model="searchFilter.goldPrice" label="موجودی کیف پول" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
                   <v-text-field v-model="searchFilter.goldWeight" label="وزن طلا" density="compact" variant="outlined"
                     :rules="validateWeight"></v-text-field>
                 </v-col>
-                <v-col cols="6" md="3">
-                  <v-text-field v-model="searchFilter.admin" label="ادمین" density="compact"
-                    variant="outlined"></v-text-field>
-                </v-col>
-                <v-col cols="6" md="3">
-                  <v-text-field v-model="searchFilter.accounter" label="حسابدار" density="compact"
-                    variant="outlined"></v-text-field>
-                </v-col>
-                <v-col md="6" class="d-none d-md-flex">
-                </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('pending')">به
+                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" :loading="newUserFilterLoading" block
+                      @click="SubmitFilter('old')">به
                       روز
                       رسانی</v-btn>
                   </div>
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" :disabled="oldExportExcel" @click="exportExcel"
+                      :loading="exportLoading" block>خروجی اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -443,25 +427,24 @@ const OldUserHeader = ref([
     key: 'action'
   }
 ]);
-
+const oldUserFilterLoading = ref(false);
+const newUserFilterLoading = ref(false);
 const searchFilter = ref({
   firstName: '',
   lastName: '',
   nationalCode: '',
   phoneNumber: '',
-  tradeType: 1,
-  type: 'buy',
-  goldPrice: '',
+  balance: '',
   goldWeight: '',
-  admin: '',
-  accounter: '',
   startDate: '',
   startTime: '',
   endDate: '',
   endTime: '',
-  invoiceId: '',
   status: '',
 });
+const newExportExcel = ref(true);
+const oldExportExcel = ref(true);
+const exportLoading = ref(false);
 
 
 const VerifyInfo = ref({
@@ -472,7 +455,7 @@ const VerifyInfo = ref({
 })
 
 const UserInfo = ref();
-
+const exportLink = ref('');
 
 const selectedDate = ref();
 const selectedMonth = ref();
@@ -840,40 +823,38 @@ const limitNumber = () => {
 }
 
 const SubmitFilter = async (status) => {
-  console.log(status)
-  // try {
-  //     if (status == 'pending') {
-  //         PendingAccountingReviewLoading.value = true;
-  //     } else if (status == 'completed') {
-  //         CompleteAccountingReviewLoading.value = true;
-  //     } else if (status == 'failed') {
-  //         rejectAccountingReviewLoading.value = true;
-  //     }
-  //     filter.value.status = status;
-  //     const response = await InPersonService.SubmitFilterInvoice(filter.value);
-  //     if (status == 'pending') {
-  //         PendingAccountingReviewData.value = response.data;
-  //     } else if (status == 'completed') {
-  //         CompleteAccountingReviewData.value = response.data;
-  //     } else if (status == 'failed') {
-  //         rejectAccountingReviewData.value = response.data;
-  //     }
-  //     return response
-  // } catch (error) {
-  //     if (error.response.status == 401) {
-  //         localStorage.clear();
-  //         router.replace("/login");
-  //     }
-  //     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-  //     alertError.value = true;
-  //     setTimeout(() => {
-  //         alertError.value = false;
-  //     }, 10000)
-  // } finally {
-  //     PendingAccountingReviewLoading.value = false;
-  //     CompleteAccountingReviewLoading.value = false;
-  //     rejectAccountingReviewLoading.value = false;
-  // }
+  try {
+    if (status == 'new') {
+      oldUserFilterLoading.value = true;
+    } else if (status == 'old') {
+      newUserFilterLoading.value = true;
+    }
+    searchFilter.value.status = status;
+    const response = await UserService.SubmitFilterUser(searchFilter.value);
+    exportLink.value = response.link;
+    if (status == 'new') {
+      userData.value = response.data;
+      newExportExcel.value = false;
+    } else if (status == 'old') {
+      OldUser.value = response.data;
+      oldExportExcel.value = false;
+    }
+    return response
+  } catch (error) {
+    console.log(error)
+    if (error.response.status == 401) {
+      localStorage.clear();
+      router.replace("/login");
+    }
+    errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+    alertError.value = true;
+    setTimeout(() => {
+      alertError.value = false;
+    }, 10000)
+  } finally {
+    oldUserFilterLoading.value = false;
+    newUserFilterLoading.value = false;
+  }
 }
 
 const phoneRules = [
@@ -902,17 +883,23 @@ const validateWeight = [
 const changeTabs = () => {
   searchFilter.value.firstName = '';
   searchFilter.value.lastName = '';
-  searchFilter.value.accounter = '';
-  searchFilter.value.admin = '';
   searchFilter.value.endDate = '';
   searchFilter.value.endTime = '';
   searchFilter.value.goldPrice = '';
   searchFilter.value.goldWeight = '';
-  searchFilter.value.invoiceId = '';
+  searchFilter.value.balance = '';
   searchFilter.value.nationalCode = '';
   searchFilter.value.phoneNumber = '';
   searchFilter.value.startTime = '';
   searchFilter.value.startDate = '';
+}
+
+const exportExcel = async () => {
+  exportLoading.value = true;
+  window.location.href = exportLink.value;
+  setTimeout(() => {
+    exportLoading.value = false;
+  }, 5000);
 }
 
 

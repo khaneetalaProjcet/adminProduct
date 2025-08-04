@@ -46,6 +46,12 @@ const UserService = {
         const response = await UserTemplate.post(`/user/handle`, body);
         return response.data
     },
+
+    async SubmitFilterUser(userForm) {
+        const body = JSON.stringify(userForm);
+        const response = await ReportTemplate.post(`/report/analyze/report/user`, body);
+        return response.data
+    },
 }
 
 

@@ -84,10 +84,14 @@
                                         خریدهایی که کاربر تا مرحله ورود به درگاه بانکی پیش رفته است، اما به دلیل انصراف
                                         یا بروز اختلال در درگاه بانکی تکمیل نشده‌اند.
                                     </li>
-
+                                    <v-text-field v-model="searchPending" label="جستجو"
+                                        prepend-inner-icon="ri-search-line" class="my-3"></v-text-field>
                                 </ul>
                                 <v-data-table :headers="PendingGoldBoxBuyHeader" :items="PendingGoldBoxBuyData"
-                                    :loading="PendingGoldBoxBuyLoading">
+                                    :loading="PendingGoldBoxBuyLoading" :page="currentNewPagePending"
+                                    :items-per-page="itemsNewPerPagePending" :server-items-length="totalNewItemsPending"
+                                    :items-per-page-options="itemsPerPageOptionsPending"
+                                    @update:options="handleOptionsChangeNewUserPending">
                                     <template v-slot:item.totalPrice="{ item }">
                                         <p>{{ formatNumber(item.totalPrice) }}</p>
                                     </template>
@@ -101,6 +105,12 @@
                                     <template v-slot:item.action="{ item }">
                                         <v-icon class="me-2" size="small" icon="ri-refund-2-line" color="#d4af37"
                                             @click="PendingGoldBoxBuyInfo(item)"></v-icon>
+                                    </template>
+                                    <template v-slot:bottom>
+                                        <div class="text-center pt-2">
+                                            <v-pagination v-model="currentPagePending" :length="totalPagesPending"
+                                                :total-visible="4"></v-pagination>
+                                        </div>
                                     </template>
                                 </v-data-table>
                             </v-card>
@@ -177,9 +187,15 @@
                                         خریدهایی که تمامی مراحل به‌درستی انجام شده و مبلغ نیز از طریق درگاه بانکی پرداخت
                                         گردیده است.
                                     </li>
+                                    <v-text-field v-model="searchComplete" label="جستجو"
+                                        prepend-inner-icon="ri-search-line" class="my-3"></v-text-field>
                                 </ul>
                                 <v-data-table :headers="CompleteGoldBoxBuyHeader" :items="CompleteGoldBoxBuyData"
-                                    :loading="CompleteGoldBoxBuyLoading">
+                                    :loading="CompleteGoldBoxBuyLoading" :page="currentNewPageComplete"
+                                    :items-per-page="itemsNewPerPageComplete"
+                                    :server-items-length="totalNewItemsComplete"
+                                    :items-per-page-options="itemsPerPageOptionsComplete"
+                                    @update:options="handleOptionsChangeNewUserComplete">
                                     <template v-slot:item.totalPrice="{ item }">
                                         <p>{{ formatNumber(item.totalPrice) }}</p>
                                     </template>
@@ -194,6 +210,12 @@
                                     <template v-slot:item.action="{ item }">
                                         <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
                                             @click="PayInfo(item)" :loading="DetailPayLoading"></v-icon>
+                                    </template>
+                                    <template v-slot:bottom>
+                                        <div class="text-center pt-2">
+                                            <v-pagination v-model="currentPageComplete" :length="totalPagesComplete"
+                                                :total-visible="4"></v-pagination>
+                                        </div>
                                     </template>
                                 </v-data-table>
                             </v-card>
@@ -272,8 +294,13 @@
                                         است.
                                     </li>
                                 </ul>
+                                <v-text-field v-model="searchFailed" label="جستجو" prepend-inner-icon="ri-search-line"
+                                    class="my-3"></v-text-field>
                                 <v-data-table :headers="FailedGoldBoxBuyHeader" :items="FailedGoldBoxBuyData"
-                                    :loading="CompleteGoldBoxBuyLoading">
+                                    :loading="FailedGoldBoxBuyLoading" :page="currentNewPageFailed"
+                                    :items-per-page="itemsNewPerPageFailed" :server-items-length="totalNewItemsFailed"
+                                    :items-per-page-options="itemsPerPageOptionsFailed"
+                                    @update:options="handleOptionsChangeNewUserFailed">
                                     <template v-slot:item.totalPrice="{ item }">
                                         <p>{{ formatNumber(item.totalPrice) }}</p>
                                     </template>
@@ -288,6 +315,12 @@
                                     <template v-slot:item.action="{ item }">
                                         <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
                                             @click="PayInfo(item)" :loading="DetailPayLoading"></v-icon>
+                                    </template>
+                                    <template v-slot:bottom>
+                                        <div class="text-center pt-2">
+                                            <v-pagination v-model="currentPageFailed" :length="totalPagesFailed"
+                                                :total-visible="4"></v-pagination>
+                                        </div>
                                     </template>
                                 </v-data-table>
                             </v-card>
@@ -366,8 +399,14 @@
                                     </li>
                                 </ul>
 
+                                <v-text-field v-model="searchInit" label="جستجو" prepend-inner-icon="ri-search-line"
+                                    class="my-3"></v-text-field>
+
                                 <v-data-table :headers="InitGoldBoxBuyHeader" :items="InitGoldBoxBuyData"
-                                    :loading="InitGoldBoxBuyLoading">
+                                    :loading="InitGoldBoxBuyLoading" :page="currentNewPageInit"
+                                    :items-per-page="itemsNewPerPageInit" :server-items-length="totalNewItemsInit"
+                                    :items-per-page-options="itemsPerPageOptionsInit"
+                                    @update:options="handleOptionsChangeNewUserInit">
                                     <template v-slot:item.totalPrice="{ item }">
                                         <p>{{ formatNumber(item.totalPrice) }}</p>
                                     </template>
@@ -381,6 +420,12 @@
                                     <template v-slot:item.action="{ item }">
                                         <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
                                             @click="PayInfo(item)"></v-icon>
+                                    </template>
+                                    <template v-slot:bottom>
+                                        <div class="text-center pt-2">
+                                            <v-pagination v-model="currentPageInit" :length="totalPagesInit"
+                                                :total-visible="4"></v-pagination>
+                                        </div>
                                     </template>
                                 </v-data-table>
                             </v-card>
@@ -475,6 +520,7 @@
 import { router } from '@/plugins/router';
 import GoldBoxService from '@/services/goldBox/goldbox';
 import InPersonService from '@/services/inperson/inperson';
+import { debounce } from 'lodash'
 import { onMounted, ref } from 'vue';
 
 
@@ -696,11 +742,58 @@ const initExportExcel = ref(true);
 const exportLink = ref('');
 const exportLoading = ref(false);
 
+
+const itemsPerPagePending = ref(50);
+const itemsNewPerPagePending = ref(50);
+const currentPagePending = ref(1);
+const currentNewPagePending = ref(1)
+const itemsPerPageOptionsPending = ref([10, 25]);
+const totalNewItemsPending = ref(0);
+const totalPagesPending = ref(1);
+const totalNewPagesPending = ref(1);
+const searchPending = ref('');
+
+const itemsPerPageComplete = ref(50);
+const itemsNewPerPageComplete = ref(50);
+const currentPageComplete = ref(1);
+const currentNewPageComplete = ref(1)
+const itemsPerPageOptionsComplete = ref([10, 25]);
+const totalNewItemsComplete = ref(0);
+const totalPagesComplete = ref(1);
+const totalNewPagesComplete = ref(1);
+const searchComplete = ref('');
+
+const itemsPerPageFailed = ref(50);
+const itemsNewPerPageFailed = ref(50);
+const currentPageFailed = ref(1);
+const currentNewPageFailed = ref(1)
+const itemsPerPageOptionsFailed = ref([10, 25]);
+const totalNewItemsFailed = ref(0);
+const totalPagesFailed = ref(1);
+const totalNewPagesFailed = ref(1);
+const searchFailed = ref('');
+
+const itemsPerPageInit = ref(50);
+const itemsNewPerPageInit = ref(50);
+const currentPageInit = ref(1);
+const currentNewPageInit = ref(1)
+const itemsPerPageOptionsInit = ref([10, 25]);
+const totalNewItemsInit = ref(0);
+const totalPagesInit = ref(1);
+const totalNewPagesInit = ref(1);
+const searchInit = ref('');
+
 const GetPendingGoldBoxBuyList = async () => {
     try {
         PendingGoldBoxBuyLoading.value = true;
-        const response = await GoldBoxService.BuyGoldBox(2);
+        const response = await GoldBoxService.BuyGoldBox({
+            page: currentNewPagePending.value,
+            perPage: itemsNewPerPagePending.value,
+            search: searchPending.value,
+        }, 2);
+        totalNewItemsPending.value = response.data.totalItem;
         PendingGoldBoxBuyData.value = response.data;
+        totalNewPagesPending.value = Math.ceil(totalNewItemsPending.value / itemsNewPerPagePending.value)
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -717,11 +810,30 @@ const GetPendingGoldBoxBuyList = async () => {
     }
 };
 
+const handleOptionsChangeNewUserPending = (options) => {
+    currentPagePending.value = options.page;
+    itemsPerPagePending.value = options.itemsPerPage;
+    GetPendingGoldBoxBuyList();
+};
+
+watch(
+    searchPending,
+    debounce(() => {
+        GetPendingGoldBoxBuyList()
+    }, 1000)
+)
+
 const GetCompleteGoldBoxBuyList = async () => {
     try {
         CompleteGoldBoxBuyLoading.value = true;
-        const response = await GoldBoxService.BuyGoldBox(1);
+        const response = await GoldBoxService.BuyGoldBox({
+            page: currentNewPageComplete.value,
+            perPage: itemsNewPerPageComplete.value,
+            search: searchComplete.value,
+        }, 1);
+        totalNewItemsComplete.value = response.data.totalItem;
         CompleteGoldBoxBuyData.value = response.data;
+        totalNewPagesComplete.value = Math.ceil(totalNewItemsComplete.value / itemsNewPerPageComplete.value)
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -738,11 +850,31 @@ const GetCompleteGoldBoxBuyList = async () => {
     }
 };
 
+
+const handleOptionsChangeNewUserComplete = (options) => {
+    currentPageComplete.value = options.page;
+    itemsPerPageComplete.value = options.itemsPerPage;
+    GetCompleteGoldBoxBuyList();
+};
+
+watch(
+    searchComplete,
+    debounce(() => {
+        GetCompleteGoldBoxBuyList()
+    }, 1000)
+)
+
 const GetFailedGoldBoxBuyList = async () => {
     try {
         FailedGoldBoxBuyLoading.value = true;
-        const response = await GoldBoxService.BuyGoldBox(0);
+        const response = await GoldBoxService.BuyGoldBox({
+            page: currentNewPageFailed.value,
+            perPage: itemsNewPerPageFailed.value,
+            search: searchFailed.value,
+        },0);
+        totalNewItemsFailed.value = response.data.totalItem;
         FailedGoldBoxBuyData.value = response.data;
+        totalNewPagesFailed.value = Math.ceil(totalNewItemsFailed.value / itemsNewPerPageFailed.value)
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -759,11 +891,30 @@ const GetFailedGoldBoxBuyList = async () => {
     }
 };
 
+const handleOptionsChangeNewUserFailed = (options) => {
+    currentPageFailed.value = options.page;
+    itemsPerPageFailed.value = options.itemsPerPage;
+    GetFailedGoldBoxBuyList();
+};
+
+watch(
+    searchFailed,
+    debounce(() => {
+        GetFailedGoldBoxBuyList()
+    }, 1000)
+)
+
 const GetInitGoldBoxBuyList = async () => {
     try {
         InitGoldBoxBuyLoading.value = true;
-        const response = await GoldBoxService.BuyGoldBox(3);
+        const response = await GoldBoxService.BuyGoldBox({
+            page: currentNewPageInit.value,
+            perPage: itemsNewPerPageInit.value,
+            search: searchInit.value,
+        },3);
+        totalNewItemsInit.value = response.data.totalItem;
         InitGoldBoxBuyData.value = response.data;
+        totalNewPagesInit.value = Math.ceil(totalNewItemsInit.value / itemsNewPerPageInit.value)
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -779,6 +930,19 @@ const GetInitGoldBoxBuyList = async () => {
         InitGoldBoxBuyLoading.value = false;
     }
 };
+
+const handleOptionsChangeNewUserInit = (options) => {
+    currentPageInit.value = options.page;
+    itemsPerPageInit.value = options.itemsPerPage;
+    GetInitGoldBoxBuyList();
+};
+
+watch(
+    searchPending,
+    debounce(() => {
+        GetPendingGoldBoxBuyList()
+    }, 1000)
+)
 
 const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
