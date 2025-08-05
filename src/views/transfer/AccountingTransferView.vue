@@ -63,14 +63,16 @@
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('pending')">به
+                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block :loading="PendingTransferGoldLoading"
+                      @click="SubmitFilter('pending')">به
                       روز
                       رسانی</v-btn>
                   </div>
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" :disabled="pendingExportExcel" @click="exportExcel"
+                      :loading="exportLoading" block>خروجی اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -154,14 +156,16 @@
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('pending')">به
+                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" :loading="CompleteTransferGoldLoading" block
+                      @click="SubmitFilter('complete')">به
                       روز
                       رسانی</v-btn>
                   </div>
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" :disabled="completeExportExcel" @click="exportExcel"
+                      :loading="exportLoading" block>خروجی اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -243,14 +247,16 @@
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" block @click="SubmitFilter('pending')">به
+                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" :loading="failedTransferGoldLoading" block
+                      @click="SubmitFilter('failed')">به
                       روز
                       رسانی</v-btn>
                   </div>
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-file-excel-line" block>خروجی اکسل</v-btn>
+                    <v-btn prepend-icon="ri-file-excel-line" :disabled="failedExportExcel" @click="exportExcel"
+                      :loading="exportLoading" block>خروجی اکسل</v-btn>
                   </div>
                 </v-col>
               </v-row>
@@ -396,6 +402,11 @@ const errorMsg = ref('');
 const alertError = ref(false);
 const PendingTransferGoldLoading = ref(false);
 const tab = ref(null);
+const exportLoading = ref(false);
+const exportLink = ref('');
+const pendingExportExcel = ref(true);
+const completeExportExcel = ref(true);
+const failedExportExcel = ref(true);
 const PendingTransferGoldHeader = ref([
   {
     title: 'نام فرستنده',
@@ -620,41 +631,43 @@ const failedTransferGoldInfo = (item) => {
 }
 
 const SubmitFilter = async (status) => {
-  console.log(status);
-
-  // try {
-  //     if (status == 'pending') {
-  //         PendingAccountingReviewLoading.value = true;
-  //     } else if (status == 'completed') {
-  //         CompleteAccountingReviewLoading.value = true;
-  //     } else if (status == 'failed') {
-  //         rejectAccountingReviewLoading.value = true;
-  //     }
-  //     filter.value.status = status;
-  //     const response = await InPersonService.SubmitFilterInvoice(filter.value);
-  //     if (status == 'pending') {
-  //         PendingAccountingReviewData.value = response.data;
-  //     } else if (status == 'completed') {
-  //         CompleteAccountingReviewData.value = response.data;
-  //     } else if (status == 'failed') {
-  //         rejectAccountingReviewData.value = response.data;
-  //     }
-  //     return response
-  // } catch (error) {
-  //     if (error.response.status == 401) {
-  //         localStorage.clear();
-  //         router.replace("/login");
-  //     }
-  //     errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-  //     alertError.value = true;
-  //     setTimeout(() => {
-  //         alertError.value = false;
-  //     }, 10000)
-  // } finally {
-  //     PendingAccountingReviewLoading.value = false;
-  //     CompleteAccountingReviewLoading.value = false;
-  //     rejectAccountingReviewLoading.value = false;
-  // }
+  try {
+    if (status == 'pending') {
+      PendingTransferGoldLoading.value = true;
+    } else if (status == 'completed') {
+      CompleteTransferGoldLoading.value = true;
+    } else if (status == 'failed') {
+      failedTransferGoldLoading.value = true;
+    }
+    filter.value.status = status;
+    const response = await InPersonService.SubmitFilterInvoice(filter.value);
+    exportLink.value = response.link;
+    if (status == 'pending') {
+      PendingTransferGoldData.value = response.data;
+      pendingExportExcel.value = false;
+    } else if (status == 'completed') {
+      CompleteTransferGoldData.value = response.data;
+      completeExportExcel.value = false;
+    } else if (status == 'failed') {
+      failedTransferGoldData.value = response.data;
+      failedExportExcel.value = false;
+    }
+    return response
+  } catch (error) {
+    if (error.response.status == 401) {
+      localStorage.clear();
+      router.replace("/login");
+    }
+    errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+    alertError.value = true;
+    setTimeout(() => {
+      alertError.value = false;
+    }, 10000)
+  } finally {
+    PendingTransferGoldLoading.value = false;
+    CompleteTransferGoldLoading.value = false;
+    failedTransferGoldLoading.value = false;
+  }
 }
 
 
@@ -697,6 +710,14 @@ const changeTabs = () => {
   filter.value.phoneNumber = '';
   filter.value.startTime = '';
   filter.value.startDate = '';
+}
+
+const exportExcel = async () => {
+  exportLoading.value = true;
+  window.location.href = exportLink.value;
+  setTimeout(() => {
+    exportLoading.value = false;
+  }, 5000);
 }
 
 
