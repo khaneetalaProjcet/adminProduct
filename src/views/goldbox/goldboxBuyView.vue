@@ -295,7 +295,7 @@
                                     </li>
                                 </ul>
                                 <v-text-field v-model="searchFailed" label="جستجو" prepend-inner-icon="ri-search-line"
-                                    class="my-3"></v-text-field>
+                                    class="ma-3"></v-text-field>
                                 <v-data-table :headers="FailedGoldBoxBuyHeader" :items="FailedGoldBoxBuyData"
                                     :loading="FailedGoldBoxBuyLoading" :page="currentNewPageFailed"
                                     :items-per-page="itemsNewPerPageFailed" :server-items-length="totalNewItemsFailed"
@@ -400,7 +400,7 @@
                                 </ul>
 
                                 <v-text-field v-model="searchInit" label="جستجو" prepend-inner-icon="ri-search-line"
-                                    class="my-3"></v-text-field>
+                                    class="ma-3"></v-text-field>
 
                                 <v-data-table :headers="InitGoldBoxBuyHeader" :items="InitGoldBoxBuyData"
                                     :loading="InitGoldBoxBuyLoading" :page="currentNewPageInit"
@@ -520,7 +520,7 @@
 import { router } from '@/plugins/router';
 import GoldBoxService from '@/services/goldBox/goldbox';
 import InPersonService from '@/services/inperson/inperson';
-import { debounce } from 'lodash'
+import { debounce } from 'lodash';
 import { onMounted, ref } from 'vue';
 
 
@@ -750,7 +750,6 @@ const currentNewPagePending = ref(1)
 const itemsPerPageOptionsPending = ref([10, 25]);
 const totalNewItemsPending = ref(0);
 const totalPagesPending = ref(1);
-const totalNewPagesPending = ref(1);
 const searchPending = ref('');
 
 const itemsPerPageComplete = ref(50);
@@ -760,7 +759,6 @@ const currentNewPageComplete = ref(1)
 const itemsPerPageOptionsComplete = ref([10, 25]);
 const totalNewItemsComplete = ref(0);
 const totalPagesComplete = ref(1);
-const totalNewPagesComplete = ref(1);
 const searchComplete = ref('');
 
 const itemsPerPageFailed = ref(50);
@@ -770,7 +768,6 @@ const currentNewPageFailed = ref(1)
 const itemsPerPageOptionsFailed = ref([10, 25]);
 const totalNewItemsFailed = ref(0);
 const totalPagesFailed = ref(1);
-const totalNewPagesFailed = ref(1);
 const searchFailed = ref('');
 
 const itemsPerPageInit = ref(50);
@@ -780,7 +777,6 @@ const currentNewPageInit = ref(1)
 const itemsPerPageOptionsInit = ref([10, 25]);
 const totalNewItemsInit = ref(0);
 const totalPagesInit = ref(1);
-const totalNewPagesInit = ref(1);
 const searchInit = ref('');
 
 const GetPendingGoldBoxBuyList = async () => {
@@ -791,9 +787,9 @@ const GetPendingGoldBoxBuyList = async () => {
             perPage: itemsNewPerPagePending.value,
             search: searchPending.value,
         }, 2);
-        totalNewItemsPending.value = response.data.totalItem;
-        PendingGoldBoxBuyData.value = response.data;
-        totalNewPagesPending.value = Math.ceil(totalNewItemsPending.value / itemsNewPerPagePending.value)
+        totalNewItemsPending.value = response.data.totalItems;
+        PendingGoldBoxBuyData.value = response.data.transActions;
+        totalPagesPending.value = Math.ceil(totalNewItemsPending.value / itemsNewPerPagePending.value)
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -831,9 +827,9 @@ const GetCompleteGoldBoxBuyList = async () => {
             perPage: itemsNewPerPageComplete.value,
             search: searchComplete.value,
         }, 1);
-        totalNewItemsComplete.value = response.data.totalItem;
-        CompleteGoldBoxBuyData.value = response.data;
-        totalNewPagesComplete.value = Math.ceil(totalNewItemsComplete.value / itemsNewPerPageComplete.value)
+        totalNewItemsComplete.value = response.data.totalItems;
+        CompleteGoldBoxBuyData.value = response.data.transActions;
+        totalPagesComplete.value = Math.ceil(totalNewItemsComplete.value / itemsNewPerPageComplete.value)
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -871,10 +867,10 @@ const GetFailedGoldBoxBuyList = async () => {
             page: currentNewPageFailed.value,
             perPage: itemsNewPerPageFailed.value,
             search: searchFailed.value,
-        },0);
-        totalNewItemsFailed.value = response.data.totalItem;
-        FailedGoldBoxBuyData.value = response.data;
-        totalNewPagesFailed.value = Math.ceil(totalNewItemsFailed.value / itemsNewPerPageFailed.value)
+        }, 0);
+        totalNewItemsFailed.value = response.data.totalItems;
+        FailedGoldBoxBuyData.value = response.data.transActions;
+        totalPagesFailed.value = Math.ceil(totalNewItemsFailed.value / itemsNewPerPageFailed.value)
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -911,10 +907,10 @@ const GetInitGoldBoxBuyList = async () => {
             page: currentNewPageInit.value,
             perPage: itemsNewPerPageInit.value,
             search: searchInit.value,
-        },3);
-        totalNewItemsInit.value = response.data.totalItem;
-        InitGoldBoxBuyData.value = response.data;
-        totalNewPagesInit.value = Math.ceil(totalNewItemsInit.value / itemsNewPerPageInit.value)
+        }, 3);
+        totalNewItemsInit.value = response.data.totalItems;
+        InitGoldBoxBuyData.value = response.data.transActions;
+        totalPagesInit.value = Math.ceil(totalNewItemsInit.value / itemsNewPerPageInit.value)
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -1062,16 +1058,16 @@ const SubmitFilter = async (status) => {
         const response = await InPersonService.SubmitFilterInvoice(filter.value);
         exportLink.value = response.link;
         if (status == 'pending') {
-            PendingGoldBoxBuyData.value = response.data;
+            PendingGoldBoxBuyData.value = response.data.transActions;
             pendingExportExcel.value = false;
         } else if (status == 'completed') {
-            CompleteGoldBoxBuyData.value = response.data;
+            CompleteGoldBoxBuyData.value = response.data.transActions;
             completeExportExcel.value = false;
         } else if (status == 'failed') {
-            FailedGoldBoxBuyData.value = response.data;
+            FailedGoldBoxBuyData.value = response.data.transActions;
             failedExportExcel.value = false;
         } else if (status == 'init') {
-            InitGoldBoxBuyData.value = response.data;
+            InitGoldBoxBuyData.value = response.data.transActions;
             initExportExcel.value = false;
         }
         return response

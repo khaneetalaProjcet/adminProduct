@@ -79,13 +79,17 @@
                             <v-card title="فروش موفق">
                                 <ul class="listGuide">
                                     <li>
-                                        معاملاتی که فرآیند فروش آن‌ها توسط کاربران در سایت و اپلیکیشن انجام شده و مبلغ
-                                        مورد نظر از سوی حسابداری به حساب منتخب کاربر بازگردانده شده است.
-
+                                        معاملاتی که فرآیند فروش آن‌ها توسط کاربران در سایت و اپلیکیشن انجام شده است
                                     </li>
                                 </ul>
+                                <v-text-field v-model="searchComplete" label="جستجو" prepend-inner-icon="ri-search-line"
+                                    class="ma-3"></v-text-field>
                                 <v-data-table :headers="CompleteGoldBoxSellHeader" :items="CompleteGoldBoxSellData"
-                                    :loading="CompleteGoldBoxSellLoading">
+                                    :loading="CompleteGoldBoxSellLoading" :page="currentNewPageComplete"
+                                    :items-per-page="itemsNewPerPageComplete"
+                                    :server-items-length="totalNewItemsComplete"
+                                    :items-per-page-options="itemsPerPageOptionsComplete"
+                                    @update:options="handleOptionsChangeNewUserComplete">
                                     <template v-slot:item.totalPrice="{ item }">
                                         <p>{{ formatNumber(item.totalPrice) }}</p>
                                     </template>
@@ -97,6 +101,12 @@
                                             <v-chip :text="item.status == 'completed' ? 'موفق' : 'نامشخص'"
                                                 :color="item.status == 'completed' ? '#00853f' : '#66666'"
                                                 size="small"></v-chip>
+                                        </div>
+                                    </template>
+                                    <template v-slot:bottom>
+                                        <div class="text-center pt-2">
+                                            <v-pagination v-model="currentPageComplete" :length="totalPagesComplete"
+                                                :total-visible="4"></v-pagination>
                                         </div>
                                     </template>
                                 </v-data-table>
@@ -177,8 +187,14 @@
 
                                     </li>
                                 </ul>
+                                <v-text-field v-model="searchFailed" label="جستجو" prepend-inner-icon="ri-search-line"
+                                    class="ma-3"></v-text-field>
                                 <v-data-table :headers="FailedGoldBoxSellHeader" :items="FailedGoldBoxSellData"
-                                    :search="FailedGoldBoxSellSearch" :loading="CompleteGoldBoxSellLoading">
+                                    :search="FailedGoldBoxSellSearch" :loading="FailedGoldBoxSellLoading"
+                                    :page="currentNewPageFailed" :items-per-page="itemsNewPerPageFailed"
+                                    :server-items-length="totalNewItemsFailed"
+                                    :items-per-page-options="itemsPerPageOptionsFailed"
+                                    @update:options="handleOptionsChangeNewUserFailed">
                                     <template v-slot:item.totalPrice="{ item }">
                                         <p>{{ formatNumber(item.totalPrice) }}</p>
                                     </template>
@@ -190,6 +206,12 @@
                                             <v-chip :text="item.status == 'failed' ? 'ناموفق' : 'نامشخص'"
                                                 :color="item.status == 'failed' ? '#ff0000' : '#66666'"
                                                 size="small"></v-chip>
+                                        </div>
+                                    </template>
+                                    <template v-slot:bottom>
+                                        <div class="text-center pt-2">
+                                            <v-pagination v-model="currentPageFailed" :length="totalPagesFailed"
+                                                :total-visible="4"></v-pagination>
                                         </div>
                                     </template>
                                 </v-data-table>
@@ -220,6 +242,7 @@ import { router } from '@/plugins/router';
 import GoldBoxService from '@/services/goldBox/goldbox';
 import InPersonService from '@/services/inperson/inperson';
 import { onMounted, ref } from 'vue';
+import { debounce } from 'lodash';
 
 
 const errorMsg = ref('');
@@ -324,12 +347,36 @@ const failedExportExcel = ref(true);
 const exportLink = ref('');
 const exportLoading = ref(false);
 
+const itemsPerPageComplete = ref(50);
+const itemsNewPerPageComplete = ref(50);
+const currentPageComplete = ref(1);
+const currentNewPageComplete = ref(1)
+const itemsPerPageOptionsComplete = ref([10, 25]);
+const totalNewItemsComplete = ref(0);
+const totalPagesComplete = ref(1);
+const searchComplete = ref('');
+
+const itemsPerPageFailed = ref(50);
+const itemsNewPerPageFailed = ref(50);
+const currentPageFailed = ref(1);
+const currentNewPageFailed = ref(1)
+const itemsPerPageOptionsFailed = ref([10, 25]);
+const totalNewItemsFailed = ref(0);
+const totalPagesFailed = ref(1);
+const searchFailed = ref('');
+
 
 const GetCompleteGoldBoxSellList = async () => {
     try {
         CompleteGoldBoxSellLoading.value = true;
-        const response = await GoldBoxService.SellGoldBox(1);
-        CompleteGoldBoxSellData.value = response.data;
+        const response = await GoldBoxService.SellGoldBox({
+            page: currentNewPageComplete.value,
+            perPage: itemsNewPerPageComplete.value,
+            search: searchComplete.value,
+        }, 1);
+        totalNewItemsComplete.value = response.data.totalItems;
+        CompleteGoldBoxSellData.value = response.data.transActions;
+        totalPagesComplete.value = Math.ceil(totalNewItemsComplete.value / itemsNewPerPageComplete.value)
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -346,11 +393,30 @@ const GetCompleteGoldBoxSellList = async () => {
     }
 };
 
+const handleOptionsChangeNewUserComplete = (options) => {
+    currentPageComplete.value = options.page;
+    itemsPerPageComplete.value = options.itemsPerPage;
+    GetCompleteGoldBoxSellList();
+};
+
+watch(
+    searchComplete,
+    debounce(() => {
+        GetCompleteGoldBoxSellList()
+    }, 1000)
+)
+
 const GetFailedGoldBoxSellList = async () => {
     try {
         FailedGoldBoxSellLoading.value = true;
-        const response = await GoldBoxService.SellGoldBox(0);
-        FailedGoldBoxSellData.value = response.data;
+        const response = await GoldBoxService.SellGoldBox({
+            page: currentNewPageFailed.value,
+            perPage: itemsNewPerPageFailed.value,
+            search: searchFailed.value,
+        }, 0);
+        totalNewItemsFailed.value = response.data.totalItems;
+        FailedGoldBoxSellData.value = response.data.transActions;
+        totalPagesFailed.value = Math.ceil(totalNewItemsFailed.value / itemsNewPerPageFailed.value)
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -366,6 +432,19 @@ const GetFailedGoldBoxSellList = async () => {
         FailedGoldBoxSellLoading.value = false;
     }
 };
+
+const handleOptionsChangeNewUserFailed = (options) => {
+    currentPageFailed.value = options.page;
+    itemsPerPageFailed.value = options.itemsPerPage;
+    GetFailedGoldBoxSellList();
+};
+
+watch(
+    searchFailed,
+    debounce(() => {
+        GetFailedGoldBoxSellList()
+    }, 1000)
+)
 
 const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -424,10 +503,10 @@ const SubmitFilter = async (status) => {
         const response = await InPersonService.SubmitFilterInvoice(filter.value);
         exportLink.value = response.link;
         if (status == 'completed') {
-            CompleteGoldBoxSellData.value = response.data;
+            CompleteGoldBoxSellData.value = response.data.transActions;
             completeExportExcel.value = false;
         } else if (status == 'failed') {
-            FailedGoldBoxSellData.value = response.data;
+            FailedGoldBoxSellData.value = response.data.transActions;
             failedExportExcel.value = false;
         }
         return response
