@@ -108,7 +108,7 @@
                                     </template>
                                     <template v-slot:bottom>
                                         <div class="text-center pt-2">
-                                            <v-pagination v-model="currentPagePending" :length="totalPagesPending"
+                                            <v-pagination v-model="currentNewPagePending" :length="totalPagesPending"
                                                 :total-visible="4"></v-pagination>
                                         </div>
                                     </template>
@@ -213,7 +213,7 @@
                                     </template>
                                     <template v-slot:bottom>
                                         <div class="text-center pt-2">
-                                            <v-pagination v-model="currentPageComplete" :length="totalPagesComplete"
+                                            <v-pagination v-model="currentNewPageComplete" :length="totalPagesComplete"
                                                 :total-visible="4"></v-pagination>
                                         </div>
                                     </template>
@@ -318,7 +318,7 @@
                                     </template>
                                     <template v-slot:bottom>
                                         <div class="text-center pt-2">
-                                            <v-pagination v-model="currentPageFailed" :length="totalPagesFailed"
+                                            <v-pagination v-model="currentNewPageFailed" :length="totalPagesFailed"
                                                 :total-visible="4"></v-pagination>
                                         </div>
                                     </template>
@@ -423,7 +423,7 @@
                                     </template>
                                     <template v-slot:bottom>
                                         <div class="text-center pt-2">
-                                            <v-pagination v-model="currentPageInit" :length="totalPagesInit"
+                                            <v-pagination v-model="currentNewPageInit" :length="totalPagesInit"
                                                 :total-visible="4"></v-pagination>
                                         </div>
                                     </template>
@@ -807,8 +807,8 @@ const GetPendingGoldBoxBuyList = async () => {
 };
 
 const handleOptionsChangeNewUserPending = (options) => {
-    currentPagePending.value = options.page;
-    itemsPerPagePending.value = options.itemsPerPage;
+    currentNewPagePending.value = options.page;
+    itemsNewPerPagePending.value = options.itemsPerPage;
     GetPendingGoldBoxBuyList();
 };
 
@@ -818,6 +818,10 @@ watch(
         GetPendingGoldBoxBuyList()
     }, 1000)
 )
+
+watch([currentNewPagePending, itemsNewPerPagePending], () => {
+  GetPendingGoldBoxBuyList();
+});
 
 const GetCompleteGoldBoxBuyList = async () => {
     try {
@@ -846,10 +850,9 @@ const GetCompleteGoldBoxBuyList = async () => {
     }
 };
 
-
 const handleOptionsChangeNewUserComplete = (options) => {
-    currentPageComplete.value = options.page;
-    itemsPerPageComplete.value = options.itemsPerPage;
+    currentNewPageComplete.value = options.page;
+    itemsNewPerPageComplete.value = options.itemsPerPage;
     GetCompleteGoldBoxBuyList();
 };
 
@@ -858,7 +861,11 @@ watch(
     debounce(() => {
         GetCompleteGoldBoxBuyList()
     }, 1000)
-)
+);
+
+watch([currentNewPageComplete, itemsNewPerPageComplete], () => {
+  GetCompleteGoldBoxBuyList();
+});
 
 const GetFailedGoldBoxBuyList = async () => {
     try {
@@ -888,10 +895,14 @@ const GetFailedGoldBoxBuyList = async () => {
 };
 
 const handleOptionsChangeNewUserFailed = (options) => {
-    currentPageFailed.value = options.page;
-    itemsPerPageFailed.value = options.itemsPerPage;
+    currentNewPageFailed.value = options.page;
+    itemsNewPerPageFailed.value = options.itemsPerPage;
     GetFailedGoldBoxBuyList();
 };
+
+watch([currentNewPageFailed, itemsNewPerPageFailed], () => {
+  GetFailedGoldBoxBuyList();
+});
 
 watch(
     searchFailed,
@@ -928,8 +939,8 @@ const GetInitGoldBoxBuyList = async () => {
 };
 
 const handleOptionsChangeNewUserInit = (options) => {
-    currentPageInit.value = options.page;
-    itemsPerPageInit.value = options.itemsPerPage;
+    currentNewPageInit.value = options.page;
+    itemsNewPerPageInit.value = options.itemsPerPage;
     GetInitGoldBoxBuyList();
 };
 
@@ -938,7 +949,11 @@ watch(
     debounce(() => {
         GetPendingGoldBoxBuyList()
     }, 1000)
-)
+);
+
+watch([currentNewPageInit, itemsNewPerPageInit], () => {
+  GetInitGoldBoxBuyList();
+});
 
 const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');

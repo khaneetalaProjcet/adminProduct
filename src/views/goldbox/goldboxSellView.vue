@@ -105,7 +105,7 @@
                                     </template>
                                     <template v-slot:bottom>
                                         <div class="text-center pt-2">
-                                            <v-pagination v-model="currentPageComplete" :length="totalPagesComplete"
+                                            <v-pagination v-model="currentNewPageComplete" :length="totalPagesComplete"
                                                 :total-visible="4"></v-pagination>
                                         </div>
                                     </template>
@@ -210,7 +210,7 @@
                                     </template>
                                     <template v-slot:bottom>
                                         <div class="text-center pt-2">
-                                            <v-pagination v-model="currentPageFailed" :length="totalPagesFailed"
+                                            <v-pagination v-model="currentNewPageFailed" :length="totalPagesFailed"
                                                 :total-visible="4"></v-pagination>
                                         </div>
                                     </template>
@@ -394,8 +394,8 @@ const GetCompleteGoldBoxSellList = async () => {
 };
 
 const handleOptionsChangeNewUserComplete = (options) => {
-    currentPageComplete.value = options.page;
-    itemsPerPageComplete.value = options.itemsPerPage;
+    currentNewPageComplete.value = options.page;
+    itemsNewPerPageComplete.value = options.itemsPerPage;
     GetCompleteGoldBoxSellList();
 };
 
@@ -404,7 +404,11 @@ watch(
     debounce(() => {
         GetCompleteGoldBoxSellList()
     }, 1000)
-)
+);
+
+watch([currentNewPageComplete, itemsNewPerPageComplete], () => {
+  GetCompleteGoldBoxSellList();
+});
 
 const GetFailedGoldBoxSellList = async () => {
     try {
@@ -434,8 +438,8 @@ const GetFailedGoldBoxSellList = async () => {
 };
 
 const handleOptionsChangeNewUserFailed = (options) => {
-    currentPageFailed.value = options.page;
-    itemsPerPageFailed.value = options.itemsPerPage;
+    currentNewPageFailed.value = options.page;
+    itemsNewPerPageFailed.value = options.itemsPerPage;
     GetFailedGoldBoxSellList();
 };
 
@@ -444,7 +448,11 @@ watch(
     debounce(() => {
         GetFailedGoldBoxSellList()
     }, 1000)
-)
+);
+
+watch([currentNewPageFailed, itemsNewPerPageFailed], () => {
+  GetCompleteGoldBoxBuyList();
+});
 
 const formatNumber = (num) => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');

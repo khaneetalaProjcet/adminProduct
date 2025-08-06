@@ -80,7 +80,7 @@
                 </template>
 
                 <v-data-table :page="currentNewPage" :items-per-page="itemsNewPerPage" :headers="userHeader"
-                  :items="userData" :search="search" :loading="userLoading" :server-items-length="totalNewItems"
+                  :items="userData" :loading="userLoading" :server-items-length="totalNewItems"
                   :items-per-page-options="itemsPerPageOptions" @update:options="handleOptionsChangeNewUser">
                   <template v-slot:item.wallet.balance="{ item }">
                     <p>{{ formatNumber(item?.wallet?.balance) }}</p>

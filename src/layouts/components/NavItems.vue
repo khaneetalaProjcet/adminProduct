@@ -124,12 +124,12 @@ const hasPermission = (routeName) => {
       href: '#',
       to: '/goldboxSell'
     }" />
-    <VerticalNavLink v-if="hasPermission('cartToCart')" :item="{
+    <!-- <VerticalNavLink v-if="hasPermission('cartToCart')" :item="{
       title: 'کارت به کارت',
       icon: 'ri-bank-card-line',
       href: '#',
       to: '/cartToCart'
-    }" />
+    }" /> -->
   </VerticalNavGroup>
 
   <VerticalNavGroup v-if="hasPermission('remiitanceSell') || hasPermission('remiitanceBuy')" :item="{
