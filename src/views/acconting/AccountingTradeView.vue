@@ -346,6 +346,12 @@
               <p class="mx-2">{{ AccountingReviewDetail.adminId }}</p>
             </div>
           </v-col>
+          <v-col cols="6" class="my-1">
+            <div class="d-flex align-items-center">
+              <p>شماره کارت مقصد : </p>
+              <p class="mx-2">{{ AccountingReviewDetail.destCardPan }}</p>
+            </div>
+          </v-col>
           <v-col cols="12" class="my-1">
             <div class="d-flex align-items-center">
               <p>توضیحات : </p>
