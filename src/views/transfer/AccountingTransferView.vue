@@ -86,11 +86,14 @@
                     </li>
                   </ul>
 
-                  <v-text-field v-model="PendingTransferGoldSearch" label="جستجو"
+                  <v-text-field v-model="searchPendingTransfer" label="جستجو"
                     prepend-inner-icon="ri-search-line"></v-text-field>
                 </template>
                 <v-data-table :headers="PendingTransferGoldHeader" :items="PendingTransferGoldData"
-                  :search="PendingTransferGoldSearch" :loading="PendingTransferGoldLoading">
+                  :loading="PendingTransferGoldLoading" :page="currentPagePendingTransfer"
+                  :items-per-page="itemsPerPagePendingTransfer" :server-items-length="totalItemsPendingTransfer"
+                  :items-per-page-options="itemsPerPageOptionsPendingTransfer"
+                  @update:options="handleOptionsChangePendingTransfer">
                   <template v-slot:item.status="{ item }">
                     <div>
                       <v-chip :text="item.status == 'pending' ? 'نامشخص' : 'بررسی شده'"
@@ -100,6 +103,12 @@
                   <template v-slot:item.action="{ item }">
                     <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
                       @click="PendingTransferGoldInfo(item)"></v-icon>
+                  </template>
+                  <template v-slot:bottom>
+                    <div class="text-center pt-2">
+                      <v-pagination v-model="currentPagePendingTransfer" :length="totalPagesPendingTransfer"
+                        :total-visible="4"></v-pagination>
+                    </div>
                   </template>
                 </v-data-table>
               </v-card>
@@ -177,11 +186,14 @@
                     <li>
                       درخواست انتقال طلا که تمامی مراحل آن با موفقیت انجام شده است. </li>
                   </ul>
-                  <v-text-field v-model="CompleteTransferGoldSearch" label="جستجو"
+                  <v-text-field v-model="searchCompleteTransfer" label="جستجو"
                     prepend-inner-icon="ri-search-line"></v-text-field>
                 </template>
                 <v-data-table :headers="CompleteTransferGoldHeader" :items="CompleteTransferGoldData"
-                  :search="CompleteTransferGoldSearch" :loading="CompleteTransferGoldLoading">
+                  :loading="CompleteTransferGoldLoading" :page="currentPageCompleteTransfer"
+                  :items-per-page="itemsPerPageCompleteTransfer" :server-items-length="totalItemsCompleteTransfer"
+                  :items-per-page-options="itemsPerPageOptionsCompleteTransfer"
+                  @update:options="handleOptionsChangeCompleteTransfer">
                   <template v-slot:item.status="{ item }">
                     <div>
                       <v-chip :text="item.status == 'completed' ? 'موفق' : 'در انتظار بررسی'"
@@ -191,6 +203,12 @@
                   <template v-slot:item.action="{ item }">
                     <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
                       @click="CompleteTransferGoldInfo(item)"></v-icon>
+                  </template>
+                  <template v-slot:bottom>
+                    <div class="text-center pt-2">
+                      <v-pagination v-model="currentPageCompleteTransfer" :length="totalPagesCompleteTransfer"
+                        :total-visible="4"></v-pagination>
+                    </div>
                   </template>
                 </v-data-table>
               </v-card>
@@ -269,11 +287,15 @@
                       درخواست انتقال طلا که تا مراحل پایانی پیش رفته، اما به دلایل مختلف به نتیجه نرسیده است.
                     </li>
                   </ul>
-                  <v-text-field v-model="failedTransferGoldSearch" label="جستجو"
+                  <v-text-field v-model="searchFailedTransfer" label="جستجو"
                     prepend-inner-icon="ri-search-line"></v-text-field>
                 </template>
                 <v-data-table :headers="failedTransferGoldHeader" :items="failedTransferGoldData"
-                  :search="failedTransferGoldSearch" :loading="failedTransferGoldLoading">
+                  :search="failedTransferGoldSearch" :loading="failedTransferGoldLoading"
+                  :page="currentPageFailedTransfer" :items-per-page="itemsPerPageFailedTransfer"
+                  :server-items-length="totalItemsFailedTransfer"
+                  :items-per-page-options="itemsPerPageOptionsFailedTransfer"
+                  @update:options="handleOptionsChangeFailedTransfer">
                   <template v-slot:item.status="{ item }">
                     <div>
                       <v-chip :text="item.status == 'failed' ? 'رد شده' : 'در انتظار بررسی'"
@@ -283,6 +305,12 @@
                   <template v-slot:item.action="{ item }">
                     <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
                       @click="failedTransferGoldInfo(item)"></v-icon>
+                  </template>
+                  <template v-slot:bottom>
+                    <div class="text-center pt-2">
+                      <v-pagination v-model="currentPageFailedTransfer" :length="totalPagesFailedTransfer"
+                        :total-visible="4"></v-pagination>
+                    </div>
                   </template>
                 </v-data-table>
               </v-card>
@@ -397,6 +425,7 @@
 import { router } from '@/plugins/router';
 import WalletService from '@/services/wallet/wallet';
 import { onMounted, ref } from 'vue';
+import { debounce } from 'lodash';
 
 const errorMsg = ref('');
 const alertError = ref(false);
@@ -445,7 +474,6 @@ const PendingTransferGoldHeader = ref([
     key: 'action'
   }
 ]);
-const PendingTransferGoldSearch = ref();
 const PendingTransferGoldData = ref();
 const CompleteTransferGoldSearch = ref();
 const CompleteTransferGoldHeader = ref([
@@ -551,12 +579,39 @@ const filter = ref({
   status: '',
 });
 
+const itemsPerPagePendingTransfer = ref(50);
+const currentPagePendingTransfer = ref(1)
+const itemsPerPageOptionsPendingTransfer = ref([10, 25]);
+const totalItemsPendingTransfer = ref(0);
+const totalPagesPendingTransfer = ref(1);
+const searchPendingTransfer = ref('');
+
+const itemsPerPageCompleteTransfer = ref(50);
+const currentPageCompleteTransfer = ref(1)
+const itemsPerPageOptionsCompleteTransfer = ref([10, 25]);
+const totalItemsCompleteTransfer = ref(0);
+const totalPagesCompleteTransfer = ref(1);
+const searchCompleteTransfer = ref('');
+
+const itemsPerPageFailedTransfer = ref(50);
+const currentPageFailedTransfer = ref(1)
+const itemsPerPageOptionsFailedTransfer = ref([10, 25]);
+const totalItemsFailedTransfer = ref(0);
+const totalPagesFailedTransfer = ref(1);
+const searchFailedTransfer = ref('');
+
 
 const GetPendingTransferGoldList = async () => {
   try {
     PendingTransferGoldLoading.value = true;
-    const response = await WalletService.TransferGoldList('pending');
-    PendingTransferGoldData.value = response.data;
+    const response = await WalletService.TransferGoldList({
+      page: currentPagePendingTransfer.value,
+      perPage: itemsPerPagePendingTransfer.value,
+      search: searchPendingTransfer.value,
+    }, 'pending');
+    totalItemsPendingTransfer.value = response.data.totalItems;
+    PendingTransferGoldData.value = response.data.transports;
+    totalPagesPendingTransfer.value = Math.ceil(totalItemsPendingTransfer.value / itemsPerPagePendingTransfer.value)
     return response
   } catch (error) {
     if (error.response.status == 401) {
@@ -573,11 +628,34 @@ const GetPendingTransferGoldList = async () => {
   }
 };
 
+const handleOptionsChangePendingTransfer = (options) => {
+  currentPagePendingTransfer.value = options.page;
+  itemsPerPagePendingTransfer.value = options.itemsPerPage;
+  GetPendingTransferGoldList();
+};
+
+watch(
+  searchPendingTransfer,
+  debounce(() => {
+    GetPendingTransferGoldList()
+  }, 1000)
+)
+
+watch([currentPagePendingTransfer, itemsPerPagePendingTransfer], () => {
+  GetPendingTransferGoldList();
+});
+
 const GetCompleteTransferGoldList = async () => {
   try {
     CompleteTransferGoldLoading.value = true;
-    const response = await WalletService.TransferGoldList('completed');
-    CompleteTransferGoldData.value = response.data;
+    const response = await WalletService.TransferGoldList({
+      page: currentPageCompleteTransfer.value,
+      perPage: itemsPerPageCompleteTransfer.value,
+      search: searchCompleteTransfer.value,
+    }, 'completed');
+    totalItemsCompleteTransfer.value = response.data.totalItems;
+    CompleteTransferGoldData.value = response.data.transports;
+    totalPagesCompleteTransfer.value = Math.ceil(totalItemsCompleteTransfer.value / itemsPerPageCompleteTransfer.value)
     return response
   } catch (error) {
     if (error.response.status == 401) {
@@ -594,11 +672,34 @@ const GetCompleteTransferGoldList = async () => {
   }
 };
 
+const handleOptionsChangeFailedTransfer = (options) => {
+  currentPageCompleteTransfer.value = options.page;
+  itemsPerPageCompleteTransfer.value = options.itemsPerPage;
+  GetCompleteTransferGoldList();
+};
+
+watch(
+  searchCompleteTransfer,
+  debounce(() => {
+    GetCompleteTransferGoldList()
+  }, 1000)
+)
+
+watch([currentPageCompleteTransfer, itemsPerPageCompleteTransfer], () => {
+  GetCompleteTransferGoldList();
+});
+
 const GetfailedTransferGoldList = async () => {
   try {
     failedTransferGoldLoading.value = true;
-    const response = await WalletService.TransferGoldList('failed');
-    failedTransferGoldData.value = response.data;
+    const response = await WalletService.TransferGoldList({
+      page: currentPageFailedTransfer.value,
+      perPage: itemsPerPageFailedTransfer.value,
+      search: searchFailedTransfer.value,
+    }, 'failed');
+    totalItemsFailedTransfer.value = response.data.totalItems;
+    failedTransferGoldData.value = response.data.transports;
+    totalPagesFailedTransfer.value = Math.ceil(totalItemsFailedTransfer.value / itemsPerPageFailedTransfer.value)
     return response
   } catch (error) {
     if (error.response.status == 401) {
@@ -614,6 +715,23 @@ const GetfailedTransferGoldList = async () => {
     failedTransferGoldLoading.value = false;
   }
 };
+
+const handleOptionsChangeCompleteTransfer = (options) => {
+  currentPageFailedTransfer.value = options.page;
+  itemsPerPageFailedTransfer.value = options.itemsPerPage;
+  GetfailedTransferGoldList();
+};
+
+watch(
+  searchFailedTransfer,
+  debounce(() => {
+    GetfailedTransferGoldList()
+  }, 1000)
+)
+
+watch([currentPageFailedTransfer, itemsPerPageFailedTransfer], () => {
+  GetfailedTransferGoldList();
+});
 
 const PendingTransferGoldInfo = (item) => {
   TransferGoldDialog.value = true;
@@ -669,7 +787,6 @@ const SubmitFilter = async (status) => {
     failedTransferGoldLoading.value = false;
   }
 }
-
 
 
 const nationalCodeRules = [

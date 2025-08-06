@@ -743,36 +743,28 @@ const exportLink = ref('');
 const exportLoading = ref(false);
 
 
-const itemsPerPagePending = ref(50);
 const itemsNewPerPagePending = ref(50);
-const currentPagePending = ref(1);
 const currentNewPagePending = ref(1)
 const itemsPerPageOptionsPending = ref([10, 25]);
 const totalNewItemsPending = ref(0);
 const totalPagesPending = ref(1);
 const searchPending = ref('');
 
-const itemsPerPageComplete = ref(50);
 const itemsNewPerPageComplete = ref(50);
-const currentPageComplete = ref(1);
 const currentNewPageComplete = ref(1)
 const itemsPerPageOptionsComplete = ref([10, 25]);
 const totalNewItemsComplete = ref(0);
 const totalPagesComplete = ref(1);
 const searchComplete = ref('');
 
-const itemsPerPageFailed = ref(50);
 const itemsNewPerPageFailed = ref(50);
-const currentPageFailed = ref(1);
 const currentNewPageFailed = ref(1)
 const itemsPerPageOptionsFailed = ref([10, 25]);
 const totalNewItemsFailed = ref(0);
 const totalPagesFailed = ref(1);
 const searchFailed = ref('');
 
-const itemsPerPageInit = ref(50);
 const itemsNewPerPageInit = ref(50);
-const currentPageInit = ref(1);
 const currentNewPageInit = ref(1)
 const itemsPerPageOptionsInit = ref([10, 25]);
 const totalNewItemsInit = ref(0);

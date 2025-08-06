@@ -347,18 +347,14 @@ const failedExportExcel = ref(true);
 const exportLink = ref('');
 const exportLoading = ref(false);
 
-const itemsPerPageComplete = ref(50);
 const itemsNewPerPageComplete = ref(50);
-const currentPageComplete = ref(1);
 const currentNewPageComplete = ref(1)
 const itemsPerPageOptionsComplete = ref([10, 25]);
 const totalNewItemsComplete = ref(0);
 const totalPagesComplete = ref(1);
 const searchComplete = ref('');
 
-const itemsPerPageFailed = ref(50);
 const itemsNewPerPageFailed = ref(50);
-const currentPageFailed = ref(1);
 const currentNewPageFailed = ref(1)
 const itemsPerPageOptionsFailed = ref([10, 25]);
 const totalNewItemsFailed = ref(0);

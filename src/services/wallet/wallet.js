@@ -96,8 +96,8 @@ const WalletService = {
         return response.data
     },
 
-    async TransferGoldList(status) {
-        const response = await QueryTemplate.get(`/admin/transport/all?status=${status}`);
+    async TransferGoldList(params, status) {
+        const response = await QueryTemplate.get(`/admin/transport/all?status=${status}&page=${params.page}&perPage=${params.perPage}&search=${params.search}`);
         return response.data
     },
 
