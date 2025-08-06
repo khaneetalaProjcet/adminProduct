@@ -14,3 +14,11 @@
 .v-stepper-window {
   margin: 0.3rem !important;
 }
+
+.nav-badge{
+  background-color: #FFCDD2 !important;
+  color: #D50000 !important;
+  padding-block: 0 !important;
+  padding-inline: 0 !important;
+  padding: 0.3rem 0.5rem !important;
+}

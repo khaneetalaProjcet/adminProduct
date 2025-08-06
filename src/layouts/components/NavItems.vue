@@ -2,11 +2,14 @@
 import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue'
 import VerticalNavGroup from '@layouts/components/VerticalNavGroup.vue'
 import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
+import { ref } from 'vue';
 
 
 const hasPermission = (routeName) => {
   return JSON.parse(localStorage.getItem("permissions") || "[]").includes(routeName);
 };
+
+const AccountingTradeBuy = ref(0);
 
 </script>
 
@@ -97,7 +100,9 @@ const hasPermission = (routeName) => {
       title: 'خرید تلفنی',
       icon: 'ri-survey-line',
       href: '#',
-      to: '/AccountingTrade'
+      to: '/AccountingTrade',
+      badgeContent: AccountingTradeBuy,
+      badgeClass: 'nav-badge',
     }" />
     <VerticalNavLink v-if="hasPermission('AccountingSellTrade')" :item="{
       title: 'فروش تلفنی',
@@ -440,3 +445,10 @@ const hasPermission = (routeName) => {
   </VerticalNavGroup>
 
 </template>
+
+<style scoped>
+.nav-badge{
+  background-color: #FFCDD2 !important;
+  color: #D50000 !important;
+}
+</style>
