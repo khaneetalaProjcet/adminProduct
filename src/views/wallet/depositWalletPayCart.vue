@@ -59,8 +59,9 @@
                         @submit.prevent="submitCharge">
                         <v-row>
                             <v-col cols="12" md="4">
-                                <v-text-field v-model="depositDetail.amount" label="مبلغ شارژ(تومان)" variant="outlined"
-                                    :rules="[(v) => !!v || 'لطفا مبلغ را وارد کنید']"></v-text-field>
+                                <!-- <v-text-field v-model="depositDetail.amount" label="مبلغ شارژ(تومان)" variant="outlined"
+                                    :rules="[(v) => !!v || 'لطفا مبلغ را وارد کنید']"></v-text-field> -->
+                                <MoneyInput v-model="depositDetail.amount" label="مبلغ (تومان)" variant="outlined" />
                             </v-col>
                             <v-col cols="12" md="4">
                                 <persian-date-picker v-model="depositDetail.date" placeholder="تاریخ"
@@ -86,8 +87,8 @@
                                     :rules="[(v) => !!v || 'لطفا یک کارت انتخاب کنید']"></v-select>
                             </v-col>
                             <v-col cols="12" md="4" v-if="depositDetail.CartNumber.id == 0">
-                                <v-text-field v-model="otherCartNumber" label="شماره کارت" variant="outlined"
-                                    :rules="cartRule"></v-text-field>
+                                <v-text-field v-model="otherCartNumber" label="شماره کارت(4 رقم آخر)" variant="outlined"
+                                    :rules="cartRule" @input=limitInput4></v-text-field>
                             </v-col>
                         </v-row>
                         <v-row v-if="userInfoShow">
@@ -188,9 +189,18 @@ const nationalCodeRules = [
     }
 ];
 
+const limitInput4 = () => {
+    otherCartNumber.value = otherCartNumber.value
+        .replace(/[٠-٩۰-۹]/g, (d) =>
+            String.fromCharCode(d.charCodeAt(0) - (d.charCodeAt(0) >= 0x06F0 ? 1728 : 1584))
+        )
+        .replace(/\D/g, '')
+        .slice(0, 4);
+}
+
 const cartRule = [
     (v) => !!v || 'لطفا شماره کارت را وارد نمایید',
-    (v) => /^\d{16}$/.test(v) || 'شماره کارت باید 16 رقم باشد',
+    (v) => /^\d{4}$/.test(v) || 'فقط 4 رقم آخر شماره کارت را وارد کنید!',
 ]
 
 const validateNationalCodeSender = () => {
