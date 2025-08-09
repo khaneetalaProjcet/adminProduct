@@ -28,38 +28,47 @@
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.firstName" label="نام" density="compact"
+                  <v-text-field v-model="filter.recieverName" label="نام گیرنده" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.lastName" label="نام خانوادگی" density="compact"
+                  <v-text-field v-model="filter.recieverLastName" label="نام خانوادگی گیرنده" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.phoneNumber" label="شماره موبایل" density="compact" variant="outlined"
-                    :rules="phoneRules" @input="limitNumber"></v-text-field>
+                  <v-text-field v-model="filter.recieverPhoneNumber" label="شماره موبایل گیرنده" density="compact"
+                    variant="outlined" :rules="phoneRules" @input="limitNumber"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.nationalCode" label="کد ملی" density="compact" variant="outlined"
-                    :rules="nationalCodeRules"></v-text-field>
+                  <v-text-field v-model="filter.recieverNationalCode" label="کد ملی گیرنده" density="compact"
+                    variant="outlined" :rules="nationalCodeRules"></v-text-field>
                 </v-col>
+
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.goldPrice" label="قیمت طلا" density="compact"
+                  <v-text-field v-model="filter.senderName" label="نام فرستنده" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.senderLastName" label="نام خانوادگی فرستنده" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.senderPhoneNumber" label="شماره موبایل فرستنده" density="compact"
+                    variant="outlined" :rules="phoneRules" @input="limitNumber"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.senderNationalCode" label="کد ملی فرستنده" density="compact"
+                    variant="outlined" :rules="nationalCodeRules"></v-text-field>
+                </v-col>
+
                 <v-col cols="6" md="3">
                   <v-text-field v-model="filter.goldWeight" label="وزن طلا" density="compact" variant="outlined"
                     :rules="validateWeight"></v-text-field>
                 </v-col>
+
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.admin" label="ادمین" density="compact"
+                  <v-text-field v-model="filter.invoiceId" label="شماره فاکتور" density="compact"
                     variant="outlined"></v-text-field>
-                </v-col>
-                <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
-                    variant="outlined"></v-text-field>
-                </v-col>
-                <v-col md="6" class="d-none d-md-flex">
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
@@ -130,38 +139,47 @@
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.firstName" label="نام" density="compact"
+                  <v-text-field v-model="filter.recieverName" label="نام گیرنده" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.lastName" label="نام خانوادگی" density="compact"
+                  <v-text-field v-model="filter.recieverLastName" label="نام خانوادگی گیرنده" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.phoneNumber" label="شماره موبایل" density="compact" variant="outlined"
-                    :rules="phoneRules" @input="limitNumber"></v-text-field>
+                  <v-text-field v-model="filter.recieverPhoneNumber" label="شماره موبایل گیرنده" density="compact"
+                    variant="outlined" :rules="phoneRules" @input="limitNumber"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.nationalCode" label="کد ملی" density="compact" variant="outlined"
-                    :rules="nationalCodeRules"></v-text-field>
+                  <v-text-field v-model="filter.recieverNationalCode" label="کد ملی گیرنده" density="compact"
+                    variant="outlined" :rules="nationalCodeRules"></v-text-field>
                 </v-col>
+
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.goldPrice" label="قیمت طلا" density="compact"
+                  <v-text-field v-model="filter.senderName" label="نام فرستنده" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.senderLastName" label="نام خانوادگی فرستنده" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.senderPhoneNumber" label="شماره موبایل فرستنده" density="compact"
+                    variant="outlined" :rules="phoneRules" @input="limitNumber"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.senderNationalCode" label="کد ملی فرستنده" density="compact"
+                    variant="outlined" :rules="nationalCodeRules"></v-text-field>
+                </v-col>
+
                 <v-col cols="6" md="3">
                   <v-text-field v-model="filter.goldWeight" label="وزن طلا" density="compact" variant="outlined"
                     :rules="validateWeight"></v-text-field>
                 </v-col>
+
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.admin" label="ادمین" density="compact"
+                  <v-text-field v-model="filter.invoiceId" label="شماره فاکتور" density="compact"
                     variant="outlined"></v-text-field>
-                </v-col>
-                <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
-                    variant="outlined"></v-text-field>
-                </v-col>
-                <v-col md="6" class="d-none d-md-flex">
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
@@ -230,38 +248,47 @@
                     format="HH:mm:ss"></persian-date-picker>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.firstName" label="نام" density="compact"
+                  <v-text-field v-model="filter.recieverName" label="نام گیرنده" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.lastName" label="نام خانوادگی" density="compact"
+                  <v-text-field v-model="filter.recieverLastName" label="نام خانوادگی گیرنده" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.phoneNumber" label="شماره موبایل" density="compact" variant="outlined"
-                    :rules="phoneRules" @input="limitNumber"></v-text-field>
+                  <v-text-field v-model="filter.recieverPhoneNumber" label="شماره موبایل گیرنده" density="compact"
+                    variant="outlined" :rules="phoneRules" @input="limitNumber"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.nationalCode" label="کد ملی" density="compact" variant="outlined"
-                    :rules="nationalCodeRules"></v-text-field>
+                  <v-text-field v-model="filter.recieverNationalCode" label="کد ملی گیرنده" density="compact"
+                    variant="outlined" :rules="nationalCodeRules"></v-text-field>
                 </v-col>
+
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.goldPrice" label="قیمت طلا" density="compact"
+                  <v-text-field v-model="filter.senderName" label="نام فرستنده" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.senderLastName" label="نام خانوادگی فرستنده" density="compact"
+                    variant="outlined"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.senderPhoneNumber" label="شماره موبایل فرستنده" density="compact"
+                    variant="outlined" :rules="phoneRules" @input="limitNumber"></v-text-field>
+                </v-col>
+                <v-col cols="6" md="3">
+                  <v-text-field v-model="filter.senderNationalCode" label="کد ملی فرستنده" density="compact"
+                    variant="outlined" :rules="nationalCodeRules"></v-text-field>
+                </v-col>
+
                 <v-col cols="6" md="3">
                   <v-text-field v-model="filter.goldWeight" label="وزن طلا" density="compact" variant="outlined"
                     :rules="validateWeight"></v-text-field>
                 </v-col>
+
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.admin" label="ادمین" density="compact"
+                  <v-text-field v-model="filter.invoiceId" label="شماره فاکتور" density="compact"
                     variant="outlined"></v-text-field>
-                </v-col>
-                <v-col cols="6" md="3">
-                  <v-text-field v-model="filter.accounter" label="حسابدار" density="compact"
-                    variant="outlined"></v-text-field>
-                </v-col>
-                <v-col md="6" class="d-none d-md-flex">
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
@@ -426,6 +453,7 @@ import { router } from '@/plugins/router';
 import WalletService from '@/services/wallet/wallet';
 import { onMounted, ref } from 'vue';
 import { debounce } from 'lodash';
+import ServerService from '@/services/server/server';
 
 const errorMsg = ref('');
 const alertError = ref(false);
@@ -561,21 +589,20 @@ const failedTransferGoldHeader = ref([
 const failedTransferGoldData = ref();
 const failedTransferGoldLoading = ref();
 const filter = ref({
-  firstName: '',
-  lastName: '',
-  nationalCode: '',
-  phoneNumber: '',
-  tradeType: 1,
-  type: 'buy',
-  goldPrice: '',
-  goldWeight: '',
-  admin: '',
-  accounter: '',
   startDate: '',
   startTime: '',
   endDate: '',
   endTime: '',
+  senderName: '',
+  senderLastName: '',
+  senderPhoneNumber: '',
+  senderNationalCode: '',
+  recieverName: '',
+  recieverLastName: '',
+  recieverPhoneNumber: '',
+  recieverNationalCode: '',
   invoiceId: '',
+  goldWeight: '',
   status: '',
 });
 
@@ -758,7 +785,7 @@ const SubmitFilter = async (status) => {
       failedTransferGoldLoading.value = true;
     }
     filter.value.status = status;
-    const response = await InPersonService.SubmitFilterInvoice(filter.value);
+    const response = await ServerService.SubmitFilterTransferInvoice(filter.value);
     exportLink.value = response.link;
     if (status == 'pending') {
       PendingTransferGoldData.value = response.data;
@@ -772,6 +799,7 @@ const SubmitFilter = async (status) => {
     }
     return response
   } catch (error) {
+    console.log(error)
     if (error.response.status == 401) {
       localStorage.clear();
       router.replace("/login");
@@ -814,19 +842,21 @@ const validateWeight = [
 ];
 
 const changeTabs = () => {
-  filter.value.firstName = '';
-  filter.value.lastName = '';
-  filter.value.accounter = '';
-  filter.value.admin = '';
   filter.value.endDate = '';
   filter.value.endTime = '';
-  filter.value.goldPrice = '';
-  filter.value.goldWeight = '';
-  filter.value.invoiceId = '';
-  filter.value.nationalCode = '';
-  filter.value.phoneNumber = '';
   filter.value.startTime = '';
   filter.value.startDate = '';
+  filter.value.goldWeight = '';
+  filter.value.senderName = '';
+  filter.value.senderLastName = '';
+  filter.value.senderNationalCode = '';
+  filter.value.senderPhoneNumber = '';
+  filter.value.recieverName = '';
+  filter.value.recieverLastName = '';
+  filter.value.recieverNationalCode = '';
+  filter.value.recieverPhoneNumber = '';
+  filter.value.invoiceId = '';
+  filter.value.status = '';
 }
 
 const exportExcel = async () => {
