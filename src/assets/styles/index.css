@@ -15,10 +15,20 @@
   margin: 0.3rem !important;
 }
 
-.nav-badge{
-  background-color: #FFCDD2 !important;
-  color: #D50000 !important;
+.nav-badge {
+  background-color: #ffcdd2 !important;
+  color: #d50000 !important;
   padding-block: 0 !important;
   padding-inline: 0 !important;
   padding: 0.3rem 0.5rem !important;
+}
+
+@media (max-width: 768px) {
+  .timeline .v-card-text {
+    padding: 0.5rem !important;
+  }
+
+  .timeline .v-card-title {
+    padding: 0.5rem !important;
+  }
 }

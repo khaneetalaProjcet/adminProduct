@@ -1,8 +1,15 @@
 <script setup>
 import VerticalNavSectionTitle from '@/@layouts/components/VerticalNavSectionTitle.vue'
+import { useNotificationStore } from '@/plugins/pinia';
 import VerticalNavGroup from '@layouts/components/VerticalNavGroup.vue'
 import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+
+const notificationStore = useNotificationStore();
+
+onMounted(()=>{
+  notificationStore.GetNotification();
+})
 
 
 const hasPermission = (routeName) => {

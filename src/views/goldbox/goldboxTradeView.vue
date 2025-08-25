@@ -893,8 +893,6 @@ const TradeBuy = async () => {
     }
 }
 
-
-
 const SubmitTradeBuy = async () => {
     try {
         stepThreeLoading.value = true;
@@ -918,7 +916,6 @@ const SubmitTradeBuy = async () => {
         stepThreeLoading.value = false;
     }
 }
-
 
 const TradeSell = async () => {
     try {

@@ -43,7 +43,7 @@ GoldBoxTemplate.interceptors.response.use(
     (error) => {
         if (error.response.status == 401) {
             localStorage.removeItem("token");
-            router.replace('/login');;
+            router.replace('/login');
         }
         console.error("API Error:", error.response || error.message);
         return Promise.reject(error);

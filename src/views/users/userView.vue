@@ -43,7 +43,7 @@
                     :rules="nationalCodeRules"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="searchFilter.goldPrice" label="موجودی کیف پول" density="compact"
+                  <v-text-field v-model="searchFilter.balance" label="موجودی کیف پول" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
@@ -144,7 +144,7 @@
                     :rules="nationalCodeRules"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-text-field v-model="searchFilter.goldPrice" label="موجودی کیف پول" density="compact"
+                  <v-text-field v-model="searchFilter.balance" label="موجودی کیف پول" density="compact"
                     variant="outlined"></v-text-field>
                 </v-col>
                 <v-col cols="6" md="3">
@@ -153,7 +153,7 @@
                 </v-col>
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
-                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" :loading="newUserFilterLoading" block
+                    <v-btn prepend-icon="ri-loop-left-line" variant="tonal" :loading="oldUserFilterLoading" block
                       @click="SubmitFilter('old')">به
                       روز
                       رسانی</v-btn>
@@ -822,12 +822,12 @@ const limitNumber = () => {
   searchFilter.value.phoneNumber = searchFilter.value.phoneNumber.replace(/\D/g, '').slice(0, 11);
 }
 
-const SubmitFilter = async (status) => {
+const SubmitFilter = async (status) => { 
   try {
     if (status == 'new') {
-      oldUserFilterLoading.value = true;
-    } else if (status == 'old') {
       newUserFilterLoading.value = true;
+    } else if (status == 'old') {
+      oldUserFilterLoading.value = true;
     }
     searchFilter.value.status = status;
     const response = await UserService.SubmitFilterUser(searchFilter.value);
