@@ -184,7 +184,7 @@
                 <v-col cols="12" md="3">
                   <div class="w-100 d-flex justify-end">
                     <v-btn prepend-icon="ri-loop-left-line" variant="tonal" :loading="CompleteTransferGoldLoading" block
-                      @click="SubmitFilter('complete')">به
+                      @click="SubmitFilter('completed')">به
                       روز
                       رسانی</v-btn>
                   </div>

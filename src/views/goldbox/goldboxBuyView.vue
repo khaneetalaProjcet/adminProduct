@@ -1065,16 +1065,16 @@ const SubmitFilter = async (status) => {
         const response = await InPersonService.SubmitFilterInvoice(filter.value);
         exportLink.value = response.link;
         if (status == 'pending') {
-            PendingGoldBoxBuyData.value = response.data.transActions;
+            PendingGoldBoxBuyData.value = response.data;
             pendingExportExcel.value = false;
         } else if (status == 'completed') {
-            CompleteGoldBoxBuyData.value = response.data.transActions;
+            CompleteGoldBoxBuyData.value = response.data;
             completeExportExcel.value = false;
         } else if (status == 'failed') {
-            FailedGoldBoxBuyData.value = response.data.transActions;
+            FailedGoldBoxBuyData.value = response.data;
             failedExportExcel.value = false;
         } else if (status == 'init') {
-            InitGoldBoxBuyData.value = response.data.transActions;
+            InitGoldBoxBuyData.value = response.data;
             initExportExcel.value = false;
         }
         return response
