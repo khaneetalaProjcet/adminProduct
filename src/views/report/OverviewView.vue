@@ -72,7 +72,8 @@
           <div class="icon-box">
             <VIcon icon="ri-bar-chart-box-ai-line" class="icon" />
           </div>
-          <p class="mb-0 mx-2 notif-text">گزارشات این قسمت از ساعت 12 بامداد روز قبل تا الان محاسبه میشوند. (به روز رسانی هر 30 دقیقه)</p>
+          <p class="mb-0 mx-2 notif-text">گزارشات این قسمت از ساعت 12 بامداد روز قبل تا الان محاسبه میشوند. (به روز
+            رسانی هر 30 دقیقه)</p>
         </div>
         <v-row>
           <v-col cols="12" md="6">
@@ -110,6 +111,13 @@
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="dailyStatLoading"></v-progress-circular>
               <p v-else class="total">{{ formatNumber(dailyReport.sumOfTheDeposit) }} تومان</p>
+            </div>
+            <v-divider></v-divider>
+            <div class="my-3 d-flex justify-space-between align-center w-100">
+              <p>انتقال از احراز نشده ها به احراز شده ها</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="dailyStatLoading"></v-progress-circular>
+              <p v-else class="total">{{ formatNumber(dailyReport.sumOfTheTransPortFromOldToNew) }} تومان</p>
             </div>
           </v-col>
           <v-col cols="12">
@@ -388,7 +396,8 @@ const dailyReport = ref({
   sumOfTheSellInToDay: 0,
   sumOfTheUseGold: 0,
   sumOfTheDeposit: 0,
-  sumOfTheWithdrawal: 0
+  sumOfTheWithdrawal: 0,
+  sumOfTheTransPortFromOldToNew: 0
 })
 
 const filter = ref({
@@ -613,6 +622,7 @@ const reportDaily = async () => {
     dailyReport.value.sumOfTheSellInToDay = response.data.sumOfTheSellInToDay;
     dailyReport.value.sumOfTheUseGold = response.data.sumOfTheUseGold;
     dailyReport.value.sumOfTheWithdrawal = response.data.sumOfTheWithdrawal;
+    dailyReport.value.sumOfTheTransPortFromOldToNew = response.data.sumOfTheTransPortFromOldToNew;
     return response
   } catch (error) {
     if (error.response.status == 401) {
@@ -698,7 +708,7 @@ onMounted(() => {
   border-left: 2px solid #d4d4d4;
 }
 
-.notif-text{
+.notif-text {
   color: rgb(163, 0, 0);
 }
 </style>

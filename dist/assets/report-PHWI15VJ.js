@@ -1,0 +1,1 @@
+import{bR as e}from"./index-jmKtwc_E.js";const s={async ReportSubmit(r){const t=JSON.stringify(r);return(await e.post("/report/analyze/data",t)).data},async ReportHour(r){const t=JSON.stringify(r);return(await e.post("/report/analyze/report/hour",t)).data},async ReportDaily(){return(await e.get("/report/analyze/report/daily")).data}};export{s as R};
