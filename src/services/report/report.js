@@ -13,6 +13,11 @@ const ReportService = {
         const response = await ReportTemplate.post('/report/analyze/report/hour', body);
         return response.data;
     },
+
+    async ReportDaily() {
+        const response = await ReportTemplate.get('/report/analyze/report/daily');
+        return response.data;
+    },
 }
 
 

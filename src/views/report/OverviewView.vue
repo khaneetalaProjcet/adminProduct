@@ -66,6 +66,60 @@
         </div>
       </div>
     </v-col>
+    <v-col>
+      <div class="box">
+        <div class="mt-1 mb-4 d-flex align-center">
+          <div class="icon-box">
+            <VIcon icon="ri-bar-chart-box-ai-line" class="icon" />
+          </div>
+          <p class="mb-0 mx-2 notif-text">گزارشات این قسمت از ساعت 12 بامداد روز قبل تا الان محاسبه میشوند. (به روز رسانی هر 30 دقیقه)</p>
+        </div>
+        <v-row>
+          <v-col cols="12" md="6">
+            <div class="my-3 d-flex justify-space-between align-center w-100">
+              <p>خرید</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="dailyStatLoading"></v-progress-circular>
+              <p v-else class="total">{{ dailyReport.sumOfTheBuyInToDay }} گرم</p>
+            </div>
+            <v-divider></v-divider>
+            <div class="my-3 d-flex justify-space-between align-center w-100">
+              <p>فروش</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="dailyStatLoading"></v-progress-circular>
+              <p v-else class="total">{{ dailyReport.sumOfTheSellInToDay }} گرم</p>
+            </div>
+            <v-divider></v-divider>
+            <div class="my-3 d-flex justify-space-between align-center w-100">
+              <p>استفاده</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="dailyStatLoading"></v-progress-circular>
+              <p v-else class="total">{{ dailyReport.sumOfTheUseGold }} گرم</p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6">
+            <div class="my-3 d-flex justify-space-between align-center w-100">
+              <p>برداشت</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="dailyStatLoading"></v-progress-circular>
+              <p v-else class="total">{{ formatNumber(dailyReport.sumOfTheWithdrawal) }} تومان</p>
+            </div>
+            <v-divider></v-divider>
+            <div class="my-3 d-flex justify-space-between align-center w-100">
+              <p>واریز</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="dailyStatLoading"></v-progress-circular>
+              <p v-else class="total">{{ formatNumber(dailyReport.sumOfTheDeposit) }} تومان</p>
+            </div>
+          </v-col>
+          <v-col cols="12">
+            <div class="d-flex justify-end">
+              <v-btn class="px-15" color="#b08c4d" @click="reportDaily">محاسبه</v-btn>
+            </div>
+          </v-col>
+        </v-row>
+      </div>
+    </v-col>
     <v-col cols="12">
       <div class="box h-100">
         <div class="icon-box">
@@ -315,6 +369,7 @@ import { onMounted, ref } from 'vue';
 
 const DahboardLoading = ref(false);
 const statisticLoading = ref(false);
+const dailyStatLoading = ref(false);
 const Statistics = ref({
   successUsers: '-',
   failedUsers: '-',
@@ -327,6 +382,13 @@ const Statistics = ref({
   allSell: '-',
   allWeight: '-',
   buyChart: {},
+});
+const dailyReport = ref({
+  sumOfTheBuyInToDay: 0,
+  sumOfTheSellInToDay: 0,
+  sumOfTheUseGold: 0,
+  sumOfTheDeposit: 0,
+  sumOfTheWithdrawal: 0
 })
 
 const filter = ref({
@@ -542,6 +604,31 @@ const reportWithHour = async () => {
   }
 }
 
+const reportDaily = async () => {
+  try {
+    dailyStatLoading.value = true;
+    const response = await ReportService.ReportDaily();
+    dailyReport.value.sumOfTheBuyInToDay = response.data.sumOfTheBuyInToDay;
+    dailyReport.value.sumOfTheDeposit = response.data.sumOfTheDeposit;
+    dailyReport.value.sumOfTheSellInToDay = response.data.sumOfTheSellInToDay;
+    dailyReport.value.sumOfTheUseGold = response.data.sumOfTheUseGold;
+    dailyReport.value.sumOfTheWithdrawal = response.data.sumOfTheWithdrawal;
+    return response
+  } catch (error) {
+    if (error.response.status == 401) {
+      localStorage.clear();
+      router.replace("/login");
+    }
+    errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
+    alertError.value = true;
+    setTimeout(() => {
+      alertError.value = false;
+    }, 10000)
+  } finally {
+    dailyStatLoading.value = false;
+  }
+}
+
 
 onMounted(() => {
   GetStatistics();
@@ -609,5 +696,9 @@ onMounted(() => {
 .middle-border {
   border-right: 2px solid #d4d4d4;
   border-left: 2px solid #d4d4d4;
+}
+
+.notif-text{
+  color: rgb(163, 0, 0);
 }
 </style>
