@@ -18,6 +18,11 @@ const ReportService = {
         const response = await ReportTemplate.get('/report/analyze/report/daily');
         return response.data;
     },
+
+    async ReportHistoryList() {
+        const response = await ReportTemplate.get('/admin/reports/all');
+        return response.data;
+    },
 }
 
 

@@ -433,7 +433,7 @@ const AccountingTradeBuy = ref(0);
     heading: 'گزارشات',
   }" />
 
-  <VerticalNavGroup v-if="hasPermission('TotalReport') || hasPermission('Overview')" :item="{
+  <VerticalNavGroup v-if="hasPermission('TotalReport') || hasPermission('Overview') || hasPermission('ReportHistory')" :item="{
     title: 'گزارشات',
     icon: 'ri-file-chart-2-line',
   }">
@@ -442,6 +442,12 @@ const AccountingTradeBuy = ref(0);
       icon: 'ri-folder-chart-line',
       href: '#',
       to: '/TotalReport'
+    }" />
+    <VerticalNavLink v-if="hasPermission('ReportHistory')" :item="{
+      title: 'تاریخچه گزارشات',
+      icon: 'ri-history-line',
+      href: '#',
+      to: '/ReportHistory'
     }" />
     <VerticalNavLink v-if="hasPermission('Overview')" :item="{
       title: 'آمار',

@@ -133,6 +133,12 @@ export const routes = [
         meta: { requiresAuth: true }
       },
       {
+        path: '/ReportHistory',
+        name: 'ReportHistory',
+        component: () => import('@/views/report/ReportHistoryView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
         path: '/remittanceTrade',
         name: 'remittanceTrade',
         component: () => import('@/views/remittance/remittanceTradeView.vue'),
