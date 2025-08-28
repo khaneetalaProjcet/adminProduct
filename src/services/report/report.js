@@ -1,10 +1,13 @@
+import ManagmentTemplate from "../managment/api";
 import ReportTemplate from "./api";
 
 
 const ReportService = {
     async ReportSubmit(item) {
-        const body = JSON.stringify(item);
-        const response = await ReportTemplate.post('/report/analyze/data', body);
+        const body = JSON.stringify({
+            'reportBody': item
+        });
+        const response = await ManagmentTemplate.post('/reports/create', body);
         return response.data;
     },
 

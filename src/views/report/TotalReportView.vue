@@ -8,7 +8,7 @@
                         item-value="value"></v-select>
                 </v-col>
             </v-row>
-            <v-row v-if="filterList.report != 4"> 
+            <v-row v-if="filterList.report != 4">
                 <v-col cols="6" md="4" class="my-4">
                     <div class="d-flex justify-start align-center">
                         <p class="mb-0">زمان شروع: </p>
@@ -73,6 +73,15 @@
             </v-row>
         </v-container>
     </v-form>
+
+    <v-alert v-if="alertSuccess" color="success" border="bottom" elevation="2" class="k-alert alert-animatiton"
+        closable>
+        {{ successMsg }}
+    </v-alert>
+
+    <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
+        {{ errorMsg }}
+    </v-alert>
 </template>
 
 <script setup>
@@ -83,6 +92,8 @@ import { ref } from 'vue';
 const filterLoading = ref(false);
 const errorMsg = ref('');
 const alertError = ref(false);
+const successMsg = ref('');
+const alertSuccess = ref(false);
 const filterList = ref({
     report: 1,
     startDate: '',
@@ -142,7 +153,13 @@ const submitExport = async () => {
     try {
         filterLoading.value = true;
         const response = await ReportService.ReportSubmit(filterList.value);
-        reportData.value.link.push(response[1])
+        reportData.value.link.push(response[1]);
+        successMsg.value = response.msg;
+        alertSuccess.value = true;
+        setTimeout(() => {
+            alertSuccess.value = false;
+            router.replace('/ReportHistory');
+        }, 5000)
         return response
     } catch (error) {
         if (error.response.status == 401) {
@@ -173,5 +190,14 @@ const submitExport = async () => {
     background-color: #e2e2e2;
     padding: 0.5rem;
     border-radius: 8px;
+}
+
+.k-alert {
+    position: absolute;
+    top: 10px;
+    left: 40%;
+    font-size: 12px;
+    padding: 10px !important;
+    z-index: 100000;
 }
 </style>
