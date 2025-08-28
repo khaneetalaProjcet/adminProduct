@@ -193,7 +193,7 @@ const submitExport = async () => {
 }
 
 .k-alert {
-    position: absolute;
+    position: fixed;
     top: 10px;
     left: 40%;
     font-size: 12px;
