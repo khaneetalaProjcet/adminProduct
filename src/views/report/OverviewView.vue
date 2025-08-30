@@ -222,7 +222,7 @@
           </v-col>
           <v-col cols="12" md="6" class="my-2">
             <div class="d-flex justify-space-between">
-              <p>طلای فروخته شده:</p>
+              <p>فروش:</p>
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="statisticLoading"></v-progress-circular>
               <p v-else>{{ filterStatistics.sold }} گرم</p>
@@ -230,7 +230,7 @@
           </v-col>
           <v-col cols="12" md="6" class="my-2">
             <div class="d-flex justify-space-between">
-              <p>طلای خریداری شده:</p>
+              <p>خرید:</p>
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="statisticLoading"></v-progress-circular>
               <p v-else>{{ filterStatistics.bought }} گرم</p>
@@ -238,7 +238,7 @@
           </v-col>
           <v-col cols="12" md="6" class="my-2">
             <div class="d-flex justify-space-between">
-              <p> مجموع موجودی های ریالی:</p>
+              <p>مجموع کیف پول:</p>
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="statisticLoading"></v-progress-circular>
               <p v-else>{{ formatNumber(filterStatistics.allBalance) }} تومان</p>
@@ -246,18 +246,34 @@
           </v-col>
           <v-col cols="12" md="6" class="my-2">
             <div class="d-flex justify-space-between">
-              <p>برداشت های تایید شده:</p>
+              <p>برداشت:</p>
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="statisticLoading"></v-progress-circular>
               <p v-else>{{ formatNumber(filterStatistics.succeedWithdraw) }} تومان</p>
             </div>
           </v-col>
           <v-col cols="12" md="6" class="my-2">
-            <div class="d-flex justify-space-between stat-bold">
-              <p>مجموع واریزی ها:</p>
+            <div class="d-flex justify-space-between">
+              <p>طلای منتقل شده(از احراز نشده به شده):</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ filterStatistics.sumOfTransferGold }} گرم</p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6" class="my-2">
+            <div class="d-flex justify-space-between">
+              <p>واریز:</p>
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="statisticLoading"></v-progress-circular>
               <p v-else>{{ formatNumber(filterStatistics.deposit) }} تومان</p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6" class="my-2">
+            <div class="d-flex justify-space-between">
+              <p>طلای استفاده شده:</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ formatNumber(filterStatistics.sumOfUseGold) }} تومان</p>
             </div>
           </v-col>
           <v-col cols="12" md="6" class="my-2">
@@ -421,6 +437,8 @@ const filterStatistics = ref({
   deposit: '-',
   allGoldWeight: null,
   oldWeight: null,
+  sumOfTransferGold: '-',
+  sumOfUseGold: '-',
 })
 const errorMsg = ref('');
 const alertError = ref(false);
@@ -597,6 +615,8 @@ const reportWithHour = async () => {
     filterStatistics.value.phoneSold = response.data.phoneSold;
     filterStatistics.value.allGoldWeight = response.data.allGoldWeight;
     filterStatistics.value.oldWeight = response.data.oldWeight;
+    filterStatistics.value.sumOfTransferGold = response.data.sumOfTransferGold;
+    filterStatistics.value.sumOfUseGold = response.data.sumOfUseGold;
     return response
   } catch (error) {
     if (error.response.status == 401) {
