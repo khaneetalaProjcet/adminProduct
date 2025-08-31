@@ -159,7 +159,7 @@ const submitExport = async () => {
         setTimeout(() => {
             alertSuccess.value = false;
             router.replace('/ReportHistory');
-        }, 5000)
+        }, 1000)
         return response
     } catch (error) {
         if (error.response.status == 401) {

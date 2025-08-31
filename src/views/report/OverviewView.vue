@@ -117,7 +117,7 @@
               <p>انتقال از احراز نشده ها به احراز شده ها</p>
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="dailyStatLoading"></v-progress-circular>
-              <p v-else class="total">{{ formatNumber(dailyReport.sumOfTheTransPortFromOldToNew) }} تومان</p>
+              <p v-else class="total">{{ dailyReport.sumOfTheTransPortFromOldToNew }} گرم</p>
             </div>
           </v-col>
           <v-col cols="12">

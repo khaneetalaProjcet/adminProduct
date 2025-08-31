@@ -22,6 +22,16 @@
                                 <v-chip v-if="item.status == 3" text="به مشکل خورده" color="#B71C1C"
                                     size="small"></v-chip>
                             </template>
+
+
+                            <template v-slot:item.reportType="{ item }">
+                                <v-chip v-if="item.reportType == 1" text="واریز و برداشت" 
+                                    size="small"></v-chip>
+                                <v-chip v-if="item.reportType == 2" text="معاملات"
+                                    size="small"></v-chip>
+                                <v-chip v-if="item.reportType == 3" text="کاربران" size="small"></v-chip>
+                            </template>
+
                             <template v-slot:item.action="{ item }">
 
                                 <v-tooltip text="جزئیات" location="top">
@@ -153,6 +163,10 @@ const ReportListHeader = ref([
     {
         title: 'زمان',
         key: 'time',
+    },
+    {
+        title: 'نوع گزارش',
+        key: 'reportType',
     },
     {
         title: 'گزارش گیرنده',
