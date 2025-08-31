@@ -222,14 +222,6 @@
           </v-col>
           <v-col cols="12" md="6" class="my-2">
             <div class="d-flex justify-space-between">
-              <p>فروش:</p>
-              <v-progress-circular color="#d4af37" indeterminate :size="20"
-                v-if="statisticLoading"></v-progress-circular>
-              <p v-else>{{ filterStatistics.sold }} گرم</p>
-            </div>
-          </v-col>
-          <v-col cols="12" md="6" class="my-2">
-            <div class="d-flex justify-space-between">
               <p>خرید:</p>
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="statisticLoading"></v-progress-circular>
@@ -238,10 +230,10 @@
           </v-col>
           <v-col cols="12" md="6" class="my-2">
             <div class="d-flex justify-space-between">
-              <p>معادل ریالی فروش:</p>
+              <p>فروش:</p>
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="statisticLoading"></v-progress-circular>
-              <p v-else>{{ formatNumber(filterStatistics.sumOfThePriceOfTheSellInvoices) }} تومان</p>
+              <p v-else>{{ filterStatistics.sold }} گرم</p>
             </div>
           </v-col>
           <v-col cols="12" md="6" class="my-2">
@@ -250,6 +242,14 @@
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="statisticLoading"></v-progress-circular>
               <p v-else>{{ formatNumber(filterStatistics.sumOfThePriceOfTheBuyInvoices) }} تومان</p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6" class="my-2">
+            <div class="d-flex justify-space-between">
+              <p>معادل ریالی فروش:</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ formatNumber(filterStatistics.sumOfThePriceOfTheSellInvoices) }} تومان</p>
             </div>
           </v-col>
           <v-col cols="12" md="6" class="my-2">
@@ -327,7 +327,7 @@
               <p>خرید آنلاین : </p>
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="statisticLoading"></v-progress-circular>
-              <p v-else>{{ filterStatistics.bought }} گرم</p>
+              <p v-else>{{ filterStatistics.appBought }} گرم</p>
             </div>
           </v-col>
           <v-col cols="12" md="6">
@@ -335,7 +335,7 @@
               <p>فروش آنلاین : </p>
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="statisticLoading"></v-progress-circular>
-              <p v-else>{{ filterStatistics.sold }} گرم</p>
+              <p v-else>{{ filterStatistics.appSold }} گرم</p>
             </div>
           </v-col>
         </v-row>
@@ -457,6 +457,8 @@ const filterStatistics = ref({
   sumOfUseGold: '-',
   sumOfThePriceOfTheBuyInvoices: '-',
   sumOfThePriceOfTheSellInvoices: '-',
+  appSold: '-',
+  appBought: '-',
 })
 const errorMsg = ref('');
 const alertError = ref(false);
@@ -637,6 +639,8 @@ const reportWithHour = async () => {
     filterStatistics.value.sumOfUseGold = response.data.sumOfUseGold;
     filterStatistics.value.sumOfThePriceOfTheSellInvoices = response.data.sumOfThePriceOfTheSellInvoices;
     filterStatistics.value.sumOfThePriceOfTheBuyInvoices = response.data.sumOfThePriceOfTheBuyInvoices;
+    filterStatistics.value.appSold = response.data.appSold;
+    filterStatistics.value.appBought = response.data.appBought;
     return response
   } catch (error) {
     if (error.response.status == 401) {
