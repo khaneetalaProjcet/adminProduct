@@ -238,6 +238,22 @@
           </v-col>
           <v-col cols="12" md="6" class="my-2">
             <div class="d-flex justify-space-between">
+              <p>معادل ریالی فروش:</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ formatNumber(filterStatistics.sumOfThePriceOfTheSellInvoices) }} تومان</p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6" class="my-2">
+            <div class="d-flex justify-space-between">
+              <p>معادل ریالی خرید:</p>
+              <v-progress-circular color="#d4af37" indeterminate :size="20"
+                v-if="statisticLoading"></v-progress-circular>
+              <p v-else>{{ formatNumber(filterStatistics.sumOfThePriceOfTheBuyInvoices) }} تومان</p>
+            </div>
+          </v-col>
+          <v-col cols="12" md="6" class="my-2">
+            <div class="d-flex justify-space-between">
               <p>مجموع کیف پول:</p>
               <v-progress-circular color="#d4af37" indeterminate :size="20"
                 v-if="statisticLoading"></v-progress-circular>
@@ -439,6 +455,8 @@ const filterStatistics = ref({
   oldWeight: null,
   sumOfTransferGold: '-',
   sumOfUseGold: '-',
+  sumOfThePriceOfTheBuyInvoices: '-',
+  sumOfThePriceOfTheSellInvoices: '-',
 })
 const errorMsg = ref('');
 const alertError = ref(false);
@@ -617,6 +635,8 @@ const reportWithHour = async () => {
     filterStatistics.value.oldWeight = response.data.oldWeight;
     filterStatistics.value.sumOfTransferGold = response.data.sumOfTransferGold;
     filterStatistics.value.sumOfUseGold = response.data.sumOfUseGold;
+    filterStatistics.value.sumOfThePriceOfTheSellInvoices = response.data.sumOfThePriceOfTheSellInvoices;
+    filterStatistics.value.sumOfThePriceOfTheBuyInvoices = response.data.sumOfThePriceOfTheBuyInvoices;
     return response
   } catch (error) {
     if (error.response.status == 401) {
