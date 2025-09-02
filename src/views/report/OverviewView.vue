@@ -155,7 +155,7 @@
               <v-btn class="px-15" color="#b08c4d" @click="reportWithHour">محاسبه</v-btn>
             </div>
           </v-col>
-          <v-col cols="12" class="my-4">
+          <!-- <v-col cols="12" class="my-4">
             <v-row class="total-box">
               <v-col cols="12" md="4">
                 <div class="d-flex justify-space-between font-weight-bold">
@@ -183,11 +183,7 @@
                 </div>
               </v-col>
             </v-row>
-            <!-- <div class="total-box">
-              <span>موجودی کل صندوق طلا: </span>
-              <span>{{ (+filterStatistics.allGoldWeight).toFixed(5) }}</span>
-            </div> -->
-          </v-col>
+          </v-col> -->
           <v-col cols="12" class="my-4">
             <v-row class="total-box-light">
               <v-col cols="12" md="4">
