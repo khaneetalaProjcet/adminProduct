@@ -18,7 +18,6 @@ const AuthService = {
         return response.data
     },
 
-
 }
 
 

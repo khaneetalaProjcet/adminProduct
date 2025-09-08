@@ -5,18 +5,25 @@ import VerticalNavGroup from '@layouts/components/VerticalNavGroup.vue'
 import VerticalNavLink from '@layouts/components/VerticalNavLink.vue'
 import { onMounted, ref } from 'vue';
 
+let x = import.meta.env.VITE_INSTALLMENT_BASE_URL
 const notificationStore = useNotificationStore();
+const token = ref('');
+const AccountingTradeBuy = ref(0);
 
-onMounted(()=>{
-  notificationStore.GetNotification();
-})
 
+const checkToken = () => {
+  token.value = localStorage.getItem('token')
+}
 
 const hasPermission = (routeName) => {
   return JSON.parse(localStorage.getItem("permissions") || "[]").includes(routeName);
 };
 
-const AccountingTradeBuy = ref(0);
+
+onMounted(() => {
+  notificationStore.GetNotification();
+  checkToken();
+});
 
 </script>
 
@@ -341,7 +348,6 @@ const AccountingTradeBuy = ref(0);
     }" />
   </VerticalNavGroup>
 
-
   <VerticalNavGroup v-if="hasPermission('depositWalletPayCart')" :item="{
     title: 'کیف پول',
     icon: 'ri-wallet-3-line',
@@ -353,6 +359,12 @@ const AccountingTradeBuy = ref(0);
       to: '/depositWalletPayCart'
     }" />
   </VerticalNavGroup>
+
+  <VerticalNavLink v-if="hasPermission('installment')" :item="{
+    title: 'اقساط',
+    icon: 'ri-survey-line',
+    href: `${x}?token=${token}`,
+  }" />
 
   <VerticalNavSectionTitle v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity')" :item="{
     heading: 'مدیریت',
@@ -433,10 +445,11 @@ const AccountingTradeBuy = ref(0);
     heading: 'گزارشات',
   }" />
 
-  <VerticalNavGroup v-if="hasPermission('TotalReport') || hasPermission('Overview') || hasPermission('ReportHistory')" :item="{
-    title: 'گزارشات',
-    icon: 'ri-file-chart-2-line',
-  }">
+  <VerticalNavGroup v-if="hasPermission('TotalReport') || hasPermission('Overview') || hasPermission('ReportHistory')"
+    :item="{
+      title: 'گزارشات',
+      icon: 'ri-file-chart-2-line',
+    }">
     <VerticalNavLink v-if="hasPermission('TotalReport')" :item="{
       title: 'گزارش جامع',
       icon: 'ri-folder-chart-line',
@@ -460,7 +473,7 @@ const AccountingTradeBuy = ref(0);
 </template>
 
 <style scoped>
-.nav-badge{
+.nav-badge {
   background-color: #FFCDD2 !important;
   color: #D50000 !important;
 }
