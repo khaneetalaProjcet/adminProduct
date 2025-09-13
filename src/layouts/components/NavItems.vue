@@ -323,7 +323,7 @@ onMounted(() => {
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavGroup v-if="hasPermission('transfer') || hasPermission('inquiry') || hasPermission('EmergencyTransfer')"
+  <VerticalNavGroup v-if="hasPermission('transfer') || hasPermission('inquiry')"
     :item="{
       title: 'انتقال',
       icon: 'ri-user-shared-line',
@@ -340,12 +340,12 @@ onMounted(() => {
       href: '#',
       to: '/inquiry'
     }" />
-    <VerticalNavLink v-if="hasPermission('EmergencyTransfer')" :item="{
+    <!-- <VerticalNavLink v-if="hasPermission('EmergencyTransfer')" :item="{
       title: 'انتقال اضطراری',
       icon: 'ri-swap-box-line',
       href: '#',
       to: '/EmergencyTransfer'
-    }" />
+    }" /> -->
   </VerticalNavGroup>
 
   <VerticalNavGroup v-if="hasPermission('depositWalletPayCart')" :item="{
