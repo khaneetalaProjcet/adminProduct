@@ -288,6 +288,18 @@ export const routes = [
         component: () => import('@/views/wallet/walletChargeAccountingView.vue'),
         meta: { requiresAuth: true }
       },
+      {
+        path: '/usersBirthdayView',
+        name: 'usersBirthdayView',
+        component: () => import('@/views/users/usersBirthdayView.vue'),
+        meta: { requiresAuth: true }
+      },
+      {
+        path: '/ManagementstatView',
+        name: 'ManagementstatView',
+        component: () => import('@/views/managment/ManagementstatView.vue'),
+        meta: { requiresAuth: true }
+      },
     ],
   },
   {

@@ -1,4 +1,5 @@
 import ReportTemplate from "../report/api";
+import ServerTemplate from "../server/api";
 import QueryTemplate from "../template/api";
 import VerifyTemplate from "../verify/api";
 import UserTemplate from "./api";
@@ -51,6 +52,17 @@ const UserService = {
         const body = JSON.stringify(userForm);
         const response = await ReportTemplate.post(`/report/analyze/report/user`, body);
         return response.data
+    },
+
+    async BirthdayList() {
+        const response = await ServerTemplate.get(`/birthdate/users`);
+        return response.data;
+    },
+
+    async AddBirthdayUser(user) {
+        const body = JSON.stringify(user);
+        const response = await ServerTemplate.post(`/birthdate/users`, body);
+        return response.data;
     },
 }
 

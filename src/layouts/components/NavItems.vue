@@ -74,10 +74,12 @@ onMounted(() => {
     }" />
   </VerticalNavGroup> -->
 
-  <VerticalNavGroup v-if="hasPermission('userView') || hasPermission('userReport') || hasPermission('addUser')" :item="{
-    title: 'کاربران',
-    icon: 'ri-user-line',
-  }">
+  <VerticalNavGroup
+    v-if="hasPermission('userView') || hasPermission('userReport') || hasPermission('addUser') || hasPermission('usersBirthdayView')"
+    :item="{
+      title: 'کاربران',
+      icon: 'ri-user-line',
+    }">
     <VerticalNavLink v-if="hasPermission('userView')" :item="{
       title: 'اطلاعات',
       icon: 'ri-id-card-line',
@@ -97,6 +99,12 @@ onMounted(() => {
       icon: 'ri-user-add-line',
       href: '#',
       to: '/addUser'
+    }" />
+    <VerticalNavLink v-if="hasPermission('usersBirthdayView')" :item="{
+      title: 'تولد کاربران',
+      icon: 'ri-cake-2-line',
+      href: '#',
+      to: '/usersBirthdayView'
     }" />
   </VerticalNavGroup>
 
@@ -323,11 +331,10 @@ onMounted(() => {
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavGroup v-if="hasPermission('transfer') || hasPermission('inquiry')"
-    :item="{
-      title: 'انتقال',
-      icon: 'ri-user-shared-line',
-    }">
+  <VerticalNavGroup v-if="hasPermission('transfer') || hasPermission('inquiry')" :item="{
+    title: 'انتقال',
+    icon: 'ri-user-shared-line',
+  }">
     <VerticalNavLink v-if="hasPermission('transfer')" :item="{
       title: 'انتقال طلا',
       icon: 'ri-user-shared-line',
@@ -445,7 +452,7 @@ onMounted(() => {
     heading: 'گزارشات',
   }" />
 
-  <VerticalNavGroup v-if="hasPermission('TotalReport') || hasPermission('Overview') || hasPermission('ReportHistory')"
+  <VerticalNavGroup v-if="hasPermission('TotalReport') || hasPermission('Overview') || hasPermission('ReportHistory') || hasPermission('ManagementstatView')"
     :item="{
       title: 'گزارشات',
       icon: 'ri-file-chart-2-line',
@@ -467,6 +474,12 @@ onMounted(() => {
       icon: 'ri-donut-chart-line',
       href: '#',
       to: '/Overview'
+    }" />
+    <VerticalNavLink v-if="hasPermission('ManagementstatView')" :item="{
+      title: 'آمار مدیریتی',
+      icon: 'ri-bar-chart-box-ai-line',
+      href: '#',
+      to: '/ManagementstatView'
     }" />
   </VerticalNavGroup>
 
