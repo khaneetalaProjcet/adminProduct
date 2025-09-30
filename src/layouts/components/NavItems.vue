@@ -367,11 +367,11 @@ onMounted(() => {
     }" />
   </VerticalNavGroup>
 
-  <VerticalNavLink v-if="hasPermission('installment')" :item="{
+  <!-- <VerticalNavLink v-if="hasPermission('installment')" :item="{
     title: 'اقساط',
     icon: 'ri-survey-line',
     href: `${x}?token=${token}`,
-  }" />
+  }" /> -->
 
   <VerticalNavSectionTitle v-if="hasPermission('managmentAdmin') || hasPermission('managmentActivity')" :item="{
     heading: 'مدیریت',

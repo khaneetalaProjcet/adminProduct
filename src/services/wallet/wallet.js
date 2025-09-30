@@ -6,8 +6,8 @@ import WalletTemplate from "./api";
 
 
 const WalletService = {
-    async AllWallet() {
-        const response = await QueryTemplate.get("/admin/wallet/all");
+    async AllWallet(params) {
+        const response = await QueryTemplate.get(`/admin/wallet/all/?page=${params.page}&perPage=${params.perPage}&search=${params.search}`);
         return response.data
     },
 

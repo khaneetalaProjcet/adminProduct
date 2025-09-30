@@ -14,13 +14,20 @@
 
               <v-text-field v-model="WalletSearch" label="جستجو" prepend-inner-icon="ri-search-line"></v-text-field>
             </template>
-            <v-data-table :headers="walletHeader" :items="walletData" :search="search" :loading="walletLoading">
+            <v-data-table :page="currentPage" :items-per-page="itemsPerPage" :headers="walletHeader" :items="walletData"
+              :search="search" :loading="walletLoading" :server-items-length="totalItems"
+              :items-per-page-options="itemsPerPageOptions" @update:options="handleOptionsChangeWallet">
               <template v-slot:item.balance="{ item }">
                 <p>{{ formatNumber(item.balance) }}</p>
               </template>
               <template v-slot:item.action="{ item }">
                 <v-icon class="me-2" size="small" icon="ri-information-line" color="#d4af37"
                   @click="walletInfo(item)"></v-icon>
+              </template>
+              <template v-slot:bottom>
+                <div class="text-center pt-2">
+                  <v-pagination v-model="currentPage" :length="totalPages" :total-visible="4"></v-pagination>
+                </div>
               </template>
             </v-data-table>
           </v-card>
@@ -132,6 +139,11 @@ import { router } from '@/plugins/router';
 import WalletService from '@/services/wallet/wallet';
 import { onMounted, ref } from 'vue';
 
+const itemsPerPage = ref(50);
+const currentPage = ref(1);
+const itemsPerPageOptions = ref([10, 25]);
+const totalItems = ref(0);
+const totalPages = ref(1);
 
 
 const search = ref('');
@@ -199,11 +211,17 @@ const walletDetail = ref();
 const GetWallet = async () => {
   try {
     walletLoading.value = true;
-    const response = await WalletService.AllWallet();
-    walletData.value = response.data;
-    console.log(walletData.value)
+    const response = await WalletService.AllWallet({
+      page: currentPage.value,
+      perPage: itemsPerPage.value,
+      search: WalletSearch.value
+    });
+    totalItems.value = response.data.totalItems;
+    walletData.value = response.data.all;
+    totalPages.value = Math.ceil(totalItems.value / itemsPerPage.value)
     return response
   } catch (error) {
+    console.log(error)
     if (error.response.status == 401) {
       localStorage.clear();
       router.replace("/login");
@@ -217,6 +235,16 @@ const GetWallet = async () => {
     walletLoading.value = false;
   }
 };
+
+const handleOptionsChangeWallet = (options) => {
+  currentPage.value = options.page;
+  itemsPerPage.value = options.itemsPerPage;
+  GetWallet();
+};
+
+watch([currentPage, itemsPerPage], () => {
+  GetWallet();
+});
 
 const formatNumber = (num) => {
   return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
