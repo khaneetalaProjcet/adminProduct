@@ -1,227 +1,197 @@
 <template>
   <div>
-    <v-timeline align="start" truncate-line="start" class="timeline">
-      <v-timeline-item v-for="(item, i) in userActivityData" :key="i" fill-dot>
-        <v-card>
-          <v-card-title :class="['text-h6', `bg-${item.color}`]">
-
-          </v-card-title>
-          <v-card-text class="bg-white text--primary">
-            <p>Lorem ipsum dolor sit amet, no nam oblique veritus. Commune scaevola imperdiet nec ut, sed euismod
-              convenire principes at. Est et nobis iisque percipit, an vim zril disputando voluptatibus, vix an
-              salutandi sententiae.</p>
-          </v-card-text>
-        </v-card>
-      </v-timeline-item>
-    </v-timeline>
-  </div>
-</template>
-
-<script setup>
-import ManagmentService from '@/services/managment/managment';
-import { onMounted, ref } from 'vue';
-
-
-
-const items = ref([
-  {
-    color: 'red-lighten-2',
-    icon: 'mdi-star',
-  },
-  {
-    color: 'purple-lighten-2',
-    icon: 'mdi-book-variant',
-  },
-  {
-    color: 'green-lighten-1',
-    icon: 'mdi-airballoon',
-  },
-  {
-    color: 'indigo-lighten-2',
-    icon: 'mdi-layers-triple',
-  },
-])
-const userActivityData = ref('');
-const errorMsg = ref('');
-const alertError = ref(false);
-const userActivityLoading = ref(false);
-
-
-
-const userActivity = async () => {
-  try {
-    userActivityLoading.value = true;
-    const response = await ManagmentService.GetUserActivity();
-    userActivityData.value = response.data;
-    return response
-  } catch (error) {
-    console.log(error)
-    if (error.response.status == 401) {
-      localStorage.clear();
-      router.replace("/login");
-    }
-    errorMsg.value = error.response.data.error || 'خطایی رخ داده است!';
-    alertError.value = true;
-    setTimeout(() => {
-      alertError.value = false;
-    }, 10000)
-  } finally {
-    userActivityLoading.value = false;
-  }
-};
-
-
-onMounted(() => {
-  userActivity();
-})
-
-</script>
-
-<style scoped></style>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!-- <template>
-  <div>
     <v-row>
       <v-col>
         <v-tabs v-model="tab" align-tabs="center">
-          <v-tab value="one">فعالیت های کارشناسان</v-tab>
-          <v-tab value="two">فعالیت های کاربران</v-tab>
+          <v-tab value="one">کاربران</v-tab>
+          <v-tab value="two">کارشناسان</v-tab>
         </v-tabs>
       </v-col>
       <v-col cols="12">
-        <v-card-text>
-          <v-tabs-window v-model="tab">
-            <v-tabs-window-item value="one">
-              <v-card title="کارشناسان">
-                <template v-slot:text>
-                  <ul class="listGuide">
-                    <li>
-
-                      فعالیت کارشناس مورد نظر و تمامی کارشناسان قابل مشاهده می باشد.
-                    </li>
-                  </ul>
-                  <v-text-field v-model="userActivitySearch" label="جستجو"
-                    prepend-inner-icon="ri-search-line"></v-text-field>
+        <v-tabs-window v-model="tab">
+          <v-tabs-window-item value="one">
+            <v-infinite-scroll :items="userActivityData" @load="loadMoreUser" :loading="userActivityLoading">
+              <v-timeline align="start" truncate-line="start" class="timeline" :side="$vuetify.display.xs ? 'end' : ''">
+                <v-timeline-item v-for="(item, i) in userActivityData" :key="i" dot-color="#d4af37">
+                  <v-card class="activity-card">
+                    <div class="title-box">
+                      <v-card-title :class="['text-h6']">
+                        {{ item.title }}
+                      </v-card-title>
+                    </div>
+                    <v-card-text class="bg-white text--primary">
+                      <p>{{ item.description }}</p>
+                    </v-card-text>
+                    <v-card-actions class="d-flex justify-end">
+                      <v-btn @click="moreInfoUser(item)">اطلاعات بیشتر</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                  <div class="d-flex align-center justify-end mt-3">
+                    <span class="date">{{ item.date }}</span>
+                    <span>|</span>
+                    <span class="date">{{ item.time }}</span>
+                  </div>
+                </v-timeline-item>
+                <template #loading>
+                  <div class="d-flex flex-column align-center mt-6 mb-16 pb-10">
+                    <v-progress-circular :size="24" color="#23523F" indeterminate />
+                    <span class="loading-text">در حال بارگذاری...</span>
+                  </div>
                 </template>
-
-                <v-data-table :headers="ActivityHeader" :items="userActivityData" :search="userActivitySearch"
-                  :loading="userActivityLoading">
-                </v-data-table>
-              </v-card>
-            </v-tabs-window-item>
-
-            <v-tabs-window-item value="two">
-              <v-card title="کاربران">
-                <template v-slot:text>
-                  <ul class="listGuide">
-                    <li>
-                      فعالیت کاربر مورد نظر و تمامی کاربران قابل مشاهده می باشد.
-                    </li>
-                  </ul>
-                  <v-text-field v-model="expertActivitySearch" label="جستجو"
-                    prepend-inner-icon="ri-search-line"></v-text-field>
+              </v-timeline>
+            </v-infinite-scroll>
+          </v-tabs-window-item>
+          <v-tabs-window-item value="two">
+            <v-infinite-scroll :items="adminActivityData" @load="loadMoreAdmin" :loading="adminActivityLoading">
+              <v-timeline align="start" truncate-line="start" class="timeline" :side="$vuetify.display.xs ? 'end' : ''">
+                <v-timeline-item v-for="(item, i) in adminActivityData" :key="i" dot-color="#d4af37">
+                  <v-card>
+                    <div class="title-box">
+                      <v-card-title :class="['text-h6']">
+                        {{ item.title }}
+                      </v-card-title>
+                    </div>
+                    <v-card-text class="bg-white text--primary">
+                      <p>{{ item.description }}</p>
+                    </v-card-text>
+                    <v-card-actions class="d-flex justify-end">
+                      <v-btn @click="moreInfo(item)">اطلاعات بیشتر</v-btn>
+                    </v-card-actions>
+                  </v-card>
+                  <div class="d-flex align-center justify-space-start mt-3">
+                    <span class="date">{{ item.date }}</span>
+                    <span>|</span>
+                    <span class="date">{{ item.time }}</span>
+                  </div>
+                </v-timeline-item>
+                <template #loading>
+                  <div class="d-flex flex-column align-center mt-6 mb-16 pb-10">
+                    <v-progress-circular :size="24" color="#23523F" indeterminate />
+                    <span class="loading-text">در حال بارگذاری...</span>
+                  </div>
                 </template>
-                <v-data-table :headers="ExpertActivityHeader" :items="expertActivityData" :search="expertActivitySearch"
-                  :loading="expertActivityLoading">
-                </v-data-table>
-              </v-card>
-            </v-tabs-window-item>
-          </v-tabs-window>
-        </v-card-text>
+              </v-timeline>
+            </v-infinite-scroll>
+          </v-tabs-window-item>
+        </v-tabs-window>
       </v-col>
     </v-row>
 
-    <v-alert v-if="alertError" color="error" border="bottom" elevation="2" class="k-alert alert-animatiton" closable>
-      {{ errorMsg }}
-    </v-alert>
+    <v-dialog v-model="infoDialog" max-width="500">
+      <v-card rounded="lg">
+        <v-card-title class="d-flex justify-space-between align-center">
+          <div class="text-h5 text-medium-emphasis ps-2">
+            اطلاعات کاربر
+          </div>
+
+          <v-btn icon="mdi-close" variant="text" @click="infoDialog = false"></v-btn>
+        </v-card-title>
+
+        <v-divider class="mb-4"></v-divider>
+
+        <v-card-text>
+          <v-row>
+            <v-col cols="6" class="my-3 detail-text">
+              <div class="d-flex justify-start">
+                نام : {{ infoDetail?.action?.userName }}
+              </div>
+            </v-col>
+            <v-col cols="6" class="my-3 detail-text">
+              <div class="d-flex justify-start">
+                نام خانوادگی : {{ infoDetail?.action?.lastName }}
+              </div>
+            </v-col>
+            <v-col cols="6" class="my-3 detail-text">
+              <div class="d-flex justify-start">
+                موجودی کیف پول : {{ formatNumber(infoDetail?.action?.balance) }} تومان
+              </div>
+            </v-col>
+            <v-col cols="6" class="my-3 detail-text">
+              <div class="d-flex justify-start">
+                موجودی صندوق طلا : {{ infoDetail?.action?.amount }} گرم
+              </div>
+            </v-col>
+          </v-row>
+        </v-card-text>
+
+        <v-divider class="mt-2"></v-divider>
+
+      </v-card>
+    </v-dialog>
+
+
+
+    <v-dialog v-model="userInfoDialog" max-width="500">
+      <v-card rounded="lg">
+        <v-card-title class="d-flex justify-space-between align-center">
+          <div class="text-h5 text-medium-emphasis ps-2">
+            اطلاعات کاربر
+          </div>
+
+          <v-btn icon="mdi-close" variant="text" @click="userInfoDialog = false"></v-btn>
+        </v-card-title>
+
+        <v-divider class="mb-4"></v-divider>
+
+        <v-card-text>
+          <v-row>
+            <v-col cols="6" class="my-3 detail-text">
+              <div class="d-flex justify-start">
+                نام : {{ userInfoDetail?.user?.firstName }}
+              </div>
+            </v-col>
+            <v-col cols="6" class="my-3 detail-text">
+              <div class="d-flex justify-start">
+                نام خانوادگی : {{ userInfoDetail?.user?.lastName }}
+              </div>
+            </v-col>
+            <v-col cols="6" class="my-3 detail-text">
+              <div class="d-flex justify-start">
+                شماره موبایل : {{ userInfoDetail?.user?.phoneNumber }} 
+              </div>
+            </v-col>
+          </v-row>
+        </v-card-text>
+
+        <v-divider class="mt-2"></v-divider>
+
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
 <script setup>
-import { router } from '@/plugins/router';
+import router from '@/plugins/router';
 import ManagmentService from '@/services/managment/managment';
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
 
-const userActivityLoading = ref(false);
-const expertActivityLoading = ref(false);
-const userActivitySearch = ref('');
-const expertActivitySearch = ref('');
-const tab = ref(null);
 const errorMsg = ref('');
 const alertError = ref(false);
-const userActivityData = ref();
-const expertActivityData = ref();
-const ActivityHeader = ref([
-  {
-    title: 'عنوان',
-    key: 'title',
-  },
-  {
-    title: 'توضیحات',
-    key: 'description',
-  },
-  {
-    title: 'تاریخ',
-    key: 'date',
-  },
-  {
-    title: 'زمان',
-    key: 'time',
-  },
-]);
-
-
-const ExpertActivityHeader = ref([
-  {
-    title: 'عنوان',
-    key: 'title',
-  },
-  {
-    title: 'توضیحات',
-    key: 'description',
-  },
-  {
-    title: 'تاریخ',
-    key: 'date',
-  },
-  {
-    title: 'زمان',
-    key: 'time',
-  },
-]);
+const userActivityData = ref('');
+const userActivityLoading = ref(false);
+const userPage = ref(0);
+const adminPage = ref(0);
+const tab = ref(null);
+const adminActivityData = ref('');
+const adminActivityLoading = ref(false);
+const infoDialog = ref(false);
+const userInfoDialog = ref(false);
+const infoDetail = ref('');
+const userInfoDetail = ref('');
 
 
 
-const userActivity = async () => {
+const userActivity = async (append = false) => {
   try {
     userActivityLoading.value = true;
-    const response = await ManagmentService.GetUserActivity();
-    userActivityData.value = response.data;
+    const response = await ManagmentService.GetUserActivity(userPage.value);
+
+    if (append) {
+      userActivityData.value = [...userActivityData.value, ...response.data];
+    } else {
+      userActivityData.value = response.data;
+    }
+
     return response
   } catch (error) {
     if (error.response.status == 401) {
@@ -238,11 +208,27 @@ const userActivity = async () => {
   }
 };
 
-const expertActivity = async () => {
+const loadMoreUser = async ({ done }) => {
+  userPage.value++;
+  const data = await userActivity(true);
+  if (data.length === 0) {
+    done("empty");
+  } else {
+    done("ok");
+  }
+};
+
+
+const adminActivity = async (append = false) => {
   try {
-    expertActivityLoading.value = true;
-    const response = await ManagmentService.GetExpertActivity();
-    expertActivityData.value = response.data;
+    adminActivityLoading.value = true;
+    const response = await ManagmentService.GetAdminActivity(adminPage.value);
+
+    if (append) {
+      adminActivityData.value = [...adminActivityData.value, ...response.data];
+    } else {
+      adminActivityData.value = response.data;
+    }
     return response
   } catch (error) {
     if (error.response.status == 401) {
@@ -255,69 +241,53 @@ const expertActivity = async () => {
       alertError.value = false;
     }, 10000)
   } finally {
-    expertActivityLoading.value = false;
+    adminActivityLoading.value = false;
   }
 };
 
-onMounted(() => {
-  userActivity();
-  expertActivity();
-})
+const loadMoreAdmin = async ({ done }) => {
+  adminPage.value++;
+  const data = await adminActivity(true);
+  if (data.length === 0) {
+    done("empty");
+  } else {
+    done("ok");
+  }
+};
 
+const moreInfo = (info) => {
+  infoDialog.value = true;
+  infoDetail.value = info;
+}
+
+const moreInfoUser = (info) => {
+  userInfoDialog.value = true;
+  userInfoDetail.value = info;
+}
+
+const formatNumber = (num) => {
+  return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
 
 </script>
 
 <style scoped>
-.k-alert {
-  position: fixed;
-  top: 10px;
-  left: 40%;
-  font-size: 12px;
-  padding: 10px !important;
-  z-index: 10000;
+.timeline .date {
+  font-size: 13px;
+  color: #4c4c4c;
+  margin: 0 0.5rem;
 }
 
-.user-price {
-  font-weight: bold;
+.activity-card {}
+
+.title-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #e4e4e4;
 }
 
-.dialog-card {
-  padding: 0.5rem !important;
-}
-
-.k-dialog-title {
-  border-radius: 0.5rem 0.5rem 0 0 !important;
-  background-color: #d4af37;
-  padding: 0.5rem;
-}
-
-.k-dialog-title p {
-  margin: 0.5rem;
-  font-size: 18px;
-  color: #fff;
-}
-
-.user-dialog-info {
+.detail-text {
   font-size: 14px;
 }
-
-.box {
-  border-radius: 8px;
-  padding: 0.5rem 1rem;
-  background-color: #fff;
-  box-shadow: 0px 5px 5px 0px rgba(106, 106, 106, 0.1);
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.listGuide {
-  font-size: 12px;
-  color: #2c3e50;
-  font-weight: 500px;
-  margin: 0.2rem;
-  margin-bottom: 2rem;
-  margin-right: 1rem;
-  margin-left: 0.5rem
-}
-</style> -->
+</style>

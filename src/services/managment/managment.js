@@ -27,8 +27,13 @@ const ManagmentService = {
         return response.data;
     },
 
-    async GetUserActivity() {
-        const response = await ServerTemplate.get('/logger/admin/all');
+    async GetUserActivity(page) {
+        const response = await ServerTemplate.get(`/logger/user/all?page=${page}`);
+        return response.data;
+    },
+
+    async GetAdminActivity(page) {
+        const response = await ServerTemplate.get(`/logger/admin/all?page=${page}`);
         return response.data;
     },
 
